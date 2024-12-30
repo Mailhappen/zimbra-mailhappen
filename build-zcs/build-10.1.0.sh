@@ -4,18 +4,18 @@
 
 GIT_DEFAULT_TAGS=10.1.0
 BUILD_RELEASE_NO=10.1.0
-BUILD_NO=1001
+BUILD_NO=1000
 
 # Prepare volumes and stuffs
 [ ! -d ./data ] && ( mkdir ./data; chmod 777 ./data )
 
-RUN=./run.sh.$$
+RUN=./data/run-${BUILD_RELEASE_NO}.sh
 cat > ${RUN} <<EOT
 #!/bin/bash
 
 mkdir installer-build
 cd installer-build
-git clone --depth 1 https://github.com/Zimbra/zm-build.git
+git clone --depth 1 --branch ${BUILD_RELEASE_NO} https://github.com/Zimbra/zm-build.git
 cd zm-build
 ENV_CACHE_CLEAR_FLAG=true ./build.pl \
 	--ant-options \
@@ -34,9 +34,6 @@ cp -vf ../BUILDS/*/*.tgz /data
 EOT
 chmod 777 ${RUN}
 docker run -it \
-	-v ${RUN}:/run.sh \
 	-v ./data:/data \
-	yeak/zm-base-os-rl9 /run.sh
-
-# clean up
-rm -f ${RUN}
+	yeak/zm-base-os-rl9 \
+	/data/run-${BUILD_RELEASE_NO}.sh
