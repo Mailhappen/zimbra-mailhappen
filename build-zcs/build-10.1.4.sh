@@ -4,14 +4,16 @@
 
 GIT_DEFAULT_TAGS=10.1.4,10.1.3,10.1.2,10.1.1,10.1.0
 BUILD_RELEASE_NO=10.1.4
-BUILD_NO=1000
+BUILD_NO=1001
 
-# Do not edit below
-TMPDIR=./tmp.$$
-mkdir ${TMPDIR}
-cat > ${TMPDIR}/run.sh <<EOT
+# Prepare volumes and stuffs
+[ ! -d ./data ] && ( mkdir ./data; chmod 777 ./data )
+
+RUN=./run.sh.$$
+cat > ${RUN} <<EOT
 #!/bin/bash
 
+mkdir installer-build
 cd installer-build
 git clone --depth 1 https://github.com/Zimbra/zm-build.git
 cd zm-build
@@ -27,10 +29,14 @@ ENV_CACHE_CLEAR_FLAG=true ./build.pl \
 	--build-release-candidate=GA \
 	--build-thirdparty-server=files.zimbra.com \
 	--no-interactive
+cp -vf ../BUILDS/*/*.tgz /data
+
 EOT
-chmod -R 777 ${TMPDIR}
-docker run --rm -it \
-	-v ${TMPDIR}:/home/build/installer-build \
-	yeak/zm-base-os-rl9 /home/build/installer-build/run.sh
-mv ${TMPDIR}/BUILDS/*/*.tgz .
-rm -rf ${TMPDIR}
+chmod 777 ${RUN}
+docker run -it \
+	-v ${RUN}:/run.sh \
+	-v ./data:/data \
+	yeak/zm-base-os-rl9 /run.sh
+
+# clean up
+rm -f ${RUN}
