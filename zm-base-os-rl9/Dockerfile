@@ -1,5 +1,5 @@
 # vi:ft=dockerfile
-FROM rockylinux:9
+FROM rockylinux/rockylinux:9
 
 # SYSTEM
 RUN yum clean all
