@@ -22,11 +22,11 @@ if [ ! -f /init.done ]; then
   
   # Setup Zimbra
   #
-  grep -q "CONFIGURED" /opt/zimbra/.install_history
-  RS=$?
-
-  # New install
-  if [ $RS -ne 0  ]; then
+#  grep -q "CONFIGURED" /opt/zimbra/.install_history
+#  RS=$?
+#
+#  # New install
+#  if [ $RS -ne 0  ]; then
 
       cat <<EOT > /tmp/defaultsfile
 HOSTNAME="$my_fqdn"
@@ -51,9 +51,9 @@ EOT
     cp -a /opt/zimbra/log/zmsetup.*.log /data/
 
   # Existing system. Run zmsetup.pl to localize or upgrade
-  else
-    /opt/zimbra/libexec/zmsetup.pl
-  fi
+#  else
+#    /opt/zimbra/libexec/zmsetup.pl
+#  fi
 
 # Otherwise just start up Zimbra
 #
@@ -61,18 +61,21 @@ else
   su - zimbra -c "zmcontrol start"
 fi
 
+# Finalizing
+set +x
+
 # Restart rsyslog
 supervisorctl restart rsyslog
 
+# Trap signal to stop Zimbra
 stop_zimbra () {
   su - zimbra -c "zmcontrol stop"
   exit 0
 }
 
-# Wait for supervisor to stop script
 trap stop_zimbra SIGINT SIGTERM
 
 while true
 do
-  sleep 1
+  sleep 10
 done
