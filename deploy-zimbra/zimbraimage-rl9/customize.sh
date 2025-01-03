@@ -19,6 +19,33 @@ function adjust_memory_size() {
   sed -i "s/^innodb_buffer_pool_size.*/innodb_buffer_pool_size = $bufferPoolSize/" /opt/zimbra/conf/my.cnf
 }
 
-# Adjust memory size
+# 1. Adjust memory size
 maxmem="${MAX_MEMORY_GB:=8}"
 adjust_memory_size $maxmem
+
+# 2. Install logo
+function install_logo () {
+  logo_banner="https://minio.mailhappen.com/downloads/mailhappen-docker.svg"
+  logo_url="https://github.com/Mailhappen/"
+  
+  mkdir -p /opt/zimbra/jetty/webapps/zimbra/logos
+  chmod 755 /opt/zimbra/jetty/webapps/zimbra/logos
+
+  cd /opt/zimbra/jetty/webapps/zimbra/logos
+  curl -L $logo_banner -o logo.svg
+  chmod 644 logo.svg
+  cp -f logo.svg ../modern/clients/default/assets/logo.svg
+
+  cmd="/tmp/customlogo.??"
+  cat > $cmd <<EOT
+mcf zimbraSkinLogoLoginBanner /logos/logo.svg
+mcf zimbraSkinLogoAppBanner /logos/logo.svg
+mcf zimbraSkinLogoURL $logo_url
+fc skin
+EOT
+  su - zimbra -c "zmprov -f $cmd"
+  rm -f $cmd
+}
+install_logo
+
+
