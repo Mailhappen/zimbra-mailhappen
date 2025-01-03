@@ -21,10 +21,15 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
   && rm -f ${ZCS}.tgz \
   && rm -f /tmp/keystrokes
 
-COPY --chmod=775 zimbra.sh /supervisor/
+COPY --chmod=775 start.sh /supervisor/
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
 
 VOLUME /data
+VOLUME /opt/zimbra/store
+VOLUME /opt/zimbra/redolog
+VOLUME /opt/zimbra/index
+VOLUME /opt/zimbra/backup
+VOLUME /opt/zimbra/db/data
 
 EXPOSE 22
 EXPOSE 80
