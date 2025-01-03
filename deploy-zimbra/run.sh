@@ -4,7 +4,8 @@
 #docker run -d -h mail.example.com yeak/zimbraimage-rl9
 
 # Testing use
-docker run --rm \
+#docker run --rm \
+docker run -d \
 	-h zmail.example.com \
 	-v data:/data \
 	-e DEFAULT_ADMIN=mailadmin \

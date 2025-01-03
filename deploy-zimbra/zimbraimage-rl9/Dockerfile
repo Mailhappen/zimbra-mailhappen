@@ -21,7 +21,7 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
   && rm -f ${ZCS}.tgz \
   && rm -f /tmp/keystrokes
 
-COPY --chmod=775 functions.sh start.sh ./
+COPY --chmod=775 zimbra.sh /supervisor/
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
 
 VOLUME /data
