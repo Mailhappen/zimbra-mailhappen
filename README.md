@@ -10,16 +10,17 @@ Deploying Zimbra in Docker manner has these benefits:
 
 The `build-installer` contain script to make your own Zimbra FOSS from Github.
 
-THe `deploy-zimbra` is using what we have compiled Zimbra FOSS to deploy.
+The `deploy-zimbra` is using what we have compiled Zimbra FOSS to deploy Zimbra.
 
 - **zm-base-os-rl9**. This prepare the RockyLinux9 build environment to run the compilation. See the script `build-10.*.sh` that actually carry out the making process.
 - **baseimage**. This is the OS image that must include all rpms so that **zimbraimage** does not require to do any yum update task.
 - **zimbraimage**. This is Zimbra image for you to deploy Zimbra.
 
 ## Usage
-Create a compose.yaml file from the sample given.
+Create a `compose.yaml` file from the sample given.
 
 NOTE:
+
 You should only edit *container-name*, *hostname*, and all those in *environment* section.
 
 Run Zimbra normally:
