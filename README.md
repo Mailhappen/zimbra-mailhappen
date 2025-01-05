@@ -20,7 +20,6 @@ The `deploy-zimbra` is using what we have compiled Zimbra FOSS to deploy Zimbra.
 Create a `compose.yaml` file from the sample given.
 
 NOTE:
-
 You should only edit *container-name*, *hostname*, and all those in *environment* section.
 
 Run Zimbra normally:
