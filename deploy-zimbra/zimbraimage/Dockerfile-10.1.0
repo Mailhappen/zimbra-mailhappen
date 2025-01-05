@@ -1,8 +1,8 @@
-FROM yeak/baseimage-rl9
+FROM yeak/baseimage
 
-LABEL version=10.1.1
+LABEL version=10.1.0
 
-ARG ZCS=zcs-10.1.1_GA_1000.RHEL9_64.20241230180803
+ARG ZCS=zcs-10.1.0_GA_1000.RHEL9_64.20241230195710
 
 WORKDIR /root
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Start the container this way to use it.
-#docker run -d -h mail.example.com yeak/zimbraimage-rl9
+#docker run -d -h mail.example.com yeak/zimbraimage
 
 # Testing use
 #docker run --rm \
@@ -19,7 +19,7 @@ docker run -d \
 	-e TIMEZONE=Asia/Kuala_Lumpur \
 	-e CUSTOMIZE=y \
 	-e MAX_MEMORY_GB=8 \
-	yeak/zimbraimage-rl9
+	yeak/zimbraimage
 exit
 
 # Testing use
@@ -42,4 +42,4 @@ docker run --rm \
 	-v jettyetc:/opt/zimbra/jetty_base/etc \
 	-v maincf:/opt/zimbra/common/conf/main.cf \
 	-v mastercf:/opt/zimbra/common/conf/master.cf \
-	yeak/zimbraimage-rl9
+	yeak/zimbraimage

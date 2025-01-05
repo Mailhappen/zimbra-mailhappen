@@ -1,8 +1,8 @@
-FROM yeak/baseimage-rl9
+FROM yeak/baseimage
 
-LABEL version=10.1.4
+LABEL version=10.1.1
 
-ARG ZCS=zcs-10.1.4_GA_1000.RHEL9_64.20241230184123
+ARG ZCS=zcs-10.1.1_GA_1000.RHEL9_64.20241230180803
 
 WORKDIR /root
 
@@ -23,7 +23,7 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
 
 COPY --chmod=775 start.sh /supervisor/
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
-COPY --chmod=775 customize.sh mailhappen-docker.svg /root/
+COPY --chmod=775 customize.sh /root/
 
 VOLUME /data
 VOLUME /opt/zimbra/data

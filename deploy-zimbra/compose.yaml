@@ -1,7 +1,8 @@
 services:
   zimbra:
-    image: yeak/zimbraimage-rl9
+    image: yeak/zimbraimage
     restart: unless-stopped
+    stop_grace_period: 3m
     container_name: zimbra-mailhappen
     hostname: mail.zimbra.lab
     volumes:
