@@ -6,13 +6,11 @@ Deploying Zimbra in Docker manner has these benefits:
 2. The deployment will be consistent with what we packaged.
 3. Everything we do is properly recorded and able to pass down to new team.
 
-`build-installer`
-: Make Zimbra FOSS
-
-`deploy-zimbra`
-: Deploy our Zimbra service
-
 ## Build
+
+The `build-installer` contain script to make your own Zimbra FOSS from Github.
+
+THe `deploy-zimbra` is using what we have compiled Zimbra FOSS to deploy.
 
 - **zm-base-os-rl9**. This prepare the RockyLinux9 build environment to run the compilation. See the script `build-10.*.sh` that actually carry out the making process.
 - **baseimage**. This is the OS image that must include all rpms so that **zimbraimage** does not require to do any yum update task.
