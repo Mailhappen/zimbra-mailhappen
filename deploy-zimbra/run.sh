@@ -7,10 +7,17 @@
 #docker run --rm \
 docker run -d \
 	-h zmail.example.com \
-	-v data:/data \
+	-v zimbra:/data \
+	-v data:/opt/zimbra/data \
+	-v mysql:/opt/zimbra/db/data \
+	-v store:/opt/zimbra/store \
+	-v index:/opt/zimbra/index \
+	-v redolog:/opt/zimbra/redolog \
+	-v backup:/opt/zimbra/backup \
 	-e DEFAULT_ADMIN=mailadmin \
 	-e DEFAULT_PASSWORD=Zimbra \
 	-e TIMEZONE=Asia/Kuala_Lumpur \
+	-e CUSTOMIZE=y \
 	-e MAX_MEMORY_GB=8 \
 	yeak/zimbraimage-rl9
 exit

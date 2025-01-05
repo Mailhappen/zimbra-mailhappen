@@ -20,7 +20,7 @@ function copyln() {
   source=$1
   target=$2
   [ -z "$source" -o -z "$target" ] && return
-  [ ! -e $source ] && cp -a $target $source
+  [ ! -e $source ] && /usr/bin/cp -a $target $source
   rm -rf $target && ln -s $source $target
 }
 
@@ -28,32 +28,30 @@ function init() {
   # setup container to use data from our volumes
   # in case volume not attached, we create it
   [ ! -d /data ] && mkdir /data
-  # do the job
-
   # zimbra all
   copyln /data/conf             /opt/zimbra/conf
   copyln /data/ssh              /opt/zimbra/.ssh
   copyln /data/ssl              /opt/zimbra/ssl
-
-  # ldap and misc
-  copyln /data/data             /opt/zimbra/data
-
-  # mailbox
-  copyln /data/db               /opt/zimbra/db
-  copyln /data/store            /opt/zimbra/store
-  copyln /data/index            /opt/zimbra/index
-  copyln /data/redolog          /opt/zimbra/redolog
   copyln /data/logger           /opt/zimbra/logger
   copyln /data/zimlets-deployed /opt/zimbra/zimlets-deployed
   copyln /data/jetty-etc        /opt/zimbra/jetty_base/etc
   #copyln /data/common-jetty     /opt/zimbra/common/jetty_home
-
-  # mta
   #copyln /data/common-conf      /opt/zimbra/common/conf
 
   # done initialize
   touch /init.done
 }
+
+# Pause for debugging
+if [ "$DEV_MODE" = "y" ]; then
+  set +x
+  while true
+  do
+    echo "Dev Mode."
+    sleep 30
+  done
+  exit 0
+fi
 
 # Set system timezone
 set_timezone
@@ -77,44 +75,54 @@ SMTPSOURCE="$my_admin@$my_fqdn"
 CREATEADMINPASS="$my_password"
 EOT
 
-  # run zmsetup.pl
-  /opt/zimbra/libexec/zmsetup.pl -c /data/defaultsfile
-
-  # keep results after configure
-  cp -a /opt/zimbra/config.* /data/config.zimbra
-  cp -a /opt/zimbra/log/zmsetup.*.log /data/
-
   # save install history
   copyln /data/install_history /opt/zimbra/.install_history
 
-# CONFIGURED
+  # run zmsetup.pl
+  /opt/zimbra/libexec/zmsetup.pl -d -c /data/defaultsfile
+
+  # keep results after configure
+  /usr/bin/cp -a /opt/zimbra/config.* /data/
+  /usr/bin/cp -a /opt/zimbra/config.* /data/config.zimbra
+  /usr/bin/cp -a /opt/zimbra/log/zmsetup.*.log /data/
+
+
+# IT IS CONFIGURED
 else
 
   # Check if SAME or NEW image is used to start this container
   diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
   cmp -s /data/install_history /tmp/c
   RS=$?
-
-  if [ $RS -ne 0 ]; then # new image
+  if [ $RS -ne 0 ]; then # new image (will run upgrade)
     # Bring in new image as UPGRADED
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
-    cp -f /tmp/c /data/install_history
-    copyln /data/install_history /opt/zimbra/.install_history
+    /usr/bin/cp -a /tmp/c /data/install_history
   fi
+
+  # save install history
+  copyln /data/install_history /opt/zimbra/.install_history
 
   # Start Zimbra if it was only stopped
   if [ -e /var/spool/cron/zimbra ]; then
     su - zimbra -c "zmcontrol start"
   else
-    /opt/zimbra/libexec/zmsetup.pl -c /data/config.zimbra
-    cp -a /opt/zimbra/config.* /data/config.zimbra
-    cp -a /opt/zimbra/log/zmsetup.*.log /data/
+    # run zmsetup.pl
+    /opt/zimbra/libexec/zmsetup.pl -d -c /data/config.zimbra
+    # keep results after configure
+    /usr/bin/cp -a /opt/zimbra/config.* /data/
+    /usr/bin/cp -a /opt/zimbra/config.* /data/config.zimbra
+    /usr/bin/cp -a /opt/zimbra/log/zmsetup.*.log /data/
   fi
-
 fi
 
-# Finalizing
+# Run customizations
+if [ "$CUSTOMIZE" = "y" -o "$CUSTOMIZE" = "Y" ]; then
+  /root/customize.sh
+fi
+
+# Done
 set +x
 
 # Restart rsyslog
