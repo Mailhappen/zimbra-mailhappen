@@ -1,6 +1,6 @@
 services:
   zimbra:
-    image: yeak/zimbraimage-rl9:10.1.0
+    image: yeak/zimbraimage-rl9
     restart: unless-stopped
     container_name: zimbra-mailhappen
     hostname: mail.zimbra.lab
@@ -34,7 +34,7 @@ services:
       MAX_MEMORY_GB: 8
       LOGO_BANNER: https://minio.mailhappen.com/downloads/mailhappen-docker.svg
       LOGO_URL: https://github.com/Mailhappen/
-      DEV_MODE: y
+      DEV_MODE: n
 
 volumes:
   zimbra:

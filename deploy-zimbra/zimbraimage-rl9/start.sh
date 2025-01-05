@@ -82,9 +82,9 @@ EOT
   /opt/zimbra/libexec/zmsetup.pl -d -c /data/defaultsfile
 
   # keep results after configure
-  /usr/bin/cp -a /opt/zimbra/config.* /data/
-  /usr/bin/cp -a /opt/zimbra/config.* /data/config.zimbra
-  /usr/bin/cp -a /opt/zimbra/log/zmsetup.*.log /data/
+  /usr/bin/cp -f /opt/zimbra/config.* /data/
+  /usr/bin/cp -f /opt/zimbra/config.* /data/config.zimbra
+  /usr/bin/cp -f /opt/zimbra/log/zmsetup.*.log /data/
 
 
 # IT IS CONFIGURED
@@ -98,7 +98,7 @@ else
     # Bring in new image as UPGRADED
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
-    /usr/bin/cp -a /tmp/c /data/install_history
+    /usr/bin/cp -f /tmp/c /data/install_history
   fi
 
   # save install history
@@ -111,9 +111,9 @@ else
     # run zmsetup.pl
     /opt/zimbra/libexec/zmsetup.pl -d -c /data/config.zimbra
     # keep results after configure
-    /usr/bin/cp -a /opt/zimbra/config.* /data/
-    /usr/bin/cp -a /opt/zimbra/config.* /data/config.zimbra
-    /usr/bin/cp -a /opt/zimbra/log/zmsetup.*.log /data/
+    /usr/bin/cp -f /opt/zimbra/config.* /data/
+    /usr/bin/cp -f /opt/zimbra/config.* /data/config.zimbra
+    /usr/bin/cp -f /opt/zimbra/log/zmsetup.*.log /data/
   fi
 fi
 

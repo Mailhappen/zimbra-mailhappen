@@ -31,7 +31,9 @@ function install_logo () {
   chmod 755 /opt/zimbra/jetty/webapps/zimbra/logos
 
   cd /opt/zimbra/jetty/webapps/zimbra/logos
-  /usr/bin/cp $banner logo.svg
+  curl -L --max-time 30 $banner -o logo.svg
+  RS=$?
+  [ $RS -ne 0 ] && /usr/bin/cp -f /root/mailhappen-docker.svg logo.svg
   chmod 644 logo.svg
 
   tmp="/tmp/logo.$$"
@@ -44,7 +46,7 @@ EOT
   su - zimbra -c "zmprov -f $tmp"
   rm -f $tmp
 }
-logobanner="${LOGO_BANNER:=/root/mailhappen-docker.svg}"
+logobanner="${LOGO_BANNER:=http://minio.mailhappen.com/downloads/mailhappen-docker.svg}"
 logourl="${LOGO_URL:=https://github.com/Mailhappen/}"
 install_logo $logobanner $logourl
 
