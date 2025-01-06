@@ -1,6 +1,5 @@
 #!/bin/bash
 
-docker build -t yeak/zimbraimage:latest .
 docker build -t yeak/zimbraimage:10.1.4 .
 
 # archive - still needed for upgrade testing
