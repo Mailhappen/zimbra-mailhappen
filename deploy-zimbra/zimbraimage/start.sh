@@ -90,12 +90,12 @@ EOT
 # IT IS CONFIGURED
 else
 
-  # Check if SAME or NEW image is used to start this container
+  # check if the SAME or NEW image is used to start this container
   diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
   cmp -s /data/install_history /tmp/c
   RS=$?
   if [ $RS -ne 0 ]; then # new image (will run upgrade)
-    # Bring in new image as UPGRADED
+    # consider new image as UPGRADED
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
     /usr/bin/cp -f /tmp/c /data/install_history
@@ -104,16 +104,14 @@ else
   # save install history
   copyln /data/install_history /opt/zimbra/.install_history
 
-  # Start Zimbra if it was only stopped
-  if [ -e /var/spool/cron/zimbra ]; then
-    su - zimbra -c "zmcontrol start"
-  else
-    # run zmsetup.pl
+  # run zmsetup.pl for new container
+  if [ ! -e /var/spool/cron/zimbra ]; then
     /opt/zimbra/libexec/zmsetup.pl -d -c /data/config.zimbra
-    # keep results after configure
     /usr/bin/cp -f /opt/zimbra/config.* /data/
     /usr/bin/cp -f /opt/zimbra/config.* /data/config.zimbra
     /usr/bin/cp -f /opt/zimbra/log/zmsetup.*.log /data/
+  else
+    su - zimbra -c "zmcontrol start"
   fi
 fi
 

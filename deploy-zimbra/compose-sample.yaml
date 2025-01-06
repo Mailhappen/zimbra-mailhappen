@@ -1,6 +1,6 @@
 services:
   zimbra:
-    image: yeak/zimbraimage
+    image: yeak/zimbraimage:10.1.4
     restart: unless-stopped
     stop_grace_period: 3m
     container_name: zimbra-mailhappen
