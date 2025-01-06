@@ -14,13 +14,10 @@ services:
       - redolog:/opt/zimbra/redolog
       - backup:/opt/zimbra/backup
     ports:
-      - "80:80"
-      - "443:443"
       - "25:25"
+      - "443:443"
       - "465:465"
       - "587:587"
-      - "110:110"
-      - "143:143"
       - "993:993"
       - "995:995"
       - "7071:7071"
@@ -31,10 +28,10 @@ services:
       DEFAULT_ADMIN: mailadmin
       DEFAULT_PASSWORD: Zimbra
       TIMEZONE: Asia/Kuala_Lumpur
-      CUSTOMIZE: y
       MAX_MEMORY_GB: 8
       LOGO_BANNER: https://minio.mailhappen.com/downloads/mailhappen-docker.svg
       LOGO_URL: https://github.com/Mailhappen/
+      CUSTOMIZE: y
       DEV_MODE: n
 
 volumes:

@@ -50,3 +50,10 @@ logobanner="${LOGO_BANNER:=http://minio.mailhappen.com/downloads/mailhappen-dock
 logourl="${LOGO_URL:=https://github.com/Mailhappen/}"
 install_logo $logobanner $logourl
 
+# 3. zmstat-cleanup
+function cleanup_zmstat() {
+  keep=$1
+  [ -z "$keep" ] && keep=60
+  /opt/zimbra/libexec/zmstat-cleanup -k $keep
+}
+cleanup_zmstat 30

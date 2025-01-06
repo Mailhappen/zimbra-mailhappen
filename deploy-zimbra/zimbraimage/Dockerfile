@@ -21,8 +21,8 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
   && rm -f ${ZCS}.tgz \
   && rm -f /tmp/keystrokes
 
-COPY --chmod=775 start.sh /supervisor/
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
+COPY --chmod=775 start.sh /supervisor/
 COPY --chmod=775 customize.sh mailhappen-docker.svg /root/
 
 VOLUME /data
@@ -33,13 +33,10 @@ VOLUME /opt/zimbra/index
 VOLUME /opt/zimbra/redolog
 VOLUME /opt/zimbra/backup
 
-EXPOSE 80
-EXPOSE 443
 EXPOSE 25
+EXPOSE 443
 EXPOSE 465
 EXPOSE 587
-EXPOSE 110
-EXPOSE 143
 EXPOSE 993
 EXPOSE 995
 EXPOSE 7071
