@@ -15,7 +15,7 @@ For minimum setup, consider this:
 
 ## Install Docker Engine if not yet done
 
-Refer to (INSTALL-DOCKER.md) for info.
+Refer to [INSTALL DOCKER](INSTALL-DOCKER.md) for info.
 
 ## Run Zimbra Docker
 
