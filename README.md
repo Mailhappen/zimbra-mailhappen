@@ -32,7 +32,7 @@ bash build-10.1.5.sh
 
 It will take a while to complete the building. The result will be a docker image called **yeak/zimbraimage:10.1.5** in your own computer.
 
-You can skip the building steps. Refer to QUICKSTART.md to learn how to run it quickly.
+You can skip the building steps. Refer to [QUICKSTART](QUICKSTART.md) to learn how to run it quickly.
 
 ## Test run Zimbra
 
