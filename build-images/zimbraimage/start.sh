@@ -17,6 +17,8 @@ function set_timezone() {
 }
 
 function copyln() {
+  # we copy what we don't have
+  # and always override what we have to the target
   source=$1
   target=$2
   [ -z "$source" -o -z "$target" ] && return
@@ -24,11 +26,11 @@ function copyln() {
   rm -rf $target && ln -s $source $target
 }
 
-function init() {
+function init_data() {
   # setup container to use data from our volumes
   # in case volume not attached, we create it
   [ ! -d /data ] && mkdir /data
-  # zimbra all
+  # items we shall keep track in /data volume
   copyln /data/conf             /opt/zimbra/conf
   copyln /data/ssh              /opt/zimbra/.ssh
   copyln /data/ssl              /opt/zimbra/ssl
@@ -39,7 +41,38 @@ function init() {
   #copyln /data/common-conf      /opt/zimbra/common/conf
 
   # done initialize
-  touch /init.done
+  touch /init_data.done
+}
+
+function adjust_memory_size() {
+  # size must be 4 and above. Default 8
+  size=$1
+  [ -z $size ] && size=8
+  [ $size -lt 4 ] && size=4
+  if [ $size -ge 16 ]; then
+    memory=$(($size*1024/5))
+  else
+    memory=$(($size*1024/4))
+  fi
+  su - zimbra -c "zmlocalconfig -e mailboxd_java_heap_size=$memory"
+  # mysql always use 30 percent
+  memKB=$(($size * 1024 * 1024))
+  ((bufferPoolSize=memKB * 1024 * 30 / 100))
+  sed -i "s/^innodb_buffer_pool_size.*/innodb_buffer_pool_size = $bufferPoolSize/" /opt/zimbra/conf/my.cnf
+}
+
+function zmstat_cleanup_crontab() {
+  crontab -u zimbra -l > /tmp/cron.zimbra
+  grep -q zmstat-cleanup /tmp/cron.zimbra
+  RS=$?
+  [ $RS -eq 0 ] && return 0
+  cat >> /tmp/cron.zimbra <<EOT
+#
+# zmstat_cleanup
+#
+15 0 * * 7 /opt/zimbra/libexec/zmstat-cleanup -k 30
+EOT
+  crontab -u zimbra /tmp/cron.zimbra
 }
 
 # Pause for debugging
@@ -56,14 +89,19 @@ fi
 # Set system timezone
 set_timezone
 
-# New container
-if [ ! -f /init.done ]; then
-  init
+# Prepare /data volume
+if [ ! -f /init_data.done ]; then
+  init_data
 fi
 
-# NEW INSTALL
+# Totally new install
 if [ ! -e /data/install_history ]; then
-  cat <<EOT > /data/defaultsfile
+  copyln /data/install_history /opt/zimbra/.install_history
+fi
+
+# New config for new setup
+if [ ! -e /data/config.zimbra ]; then
+  cat <<EOT > /data/config.zimbra
 HOSTNAME="$my_fqdn"
 LDAPHOST="$my_fqdn"
 AVDOMAIN="$my_fqdn"
@@ -74,54 +112,68 @@ SMTPDEST="$my_admin@$my_fqdn"
 SMTPSOURCE="$my_admin@$my_fqdn"
 CREATEADMINPASS="$my_password"
 EOT
+fi
 
-  # save install history
+#
+# Ready to setup Zimbra
+# 
+
+if [ ! -e /var/spool/cron/zimbra ]; then
+
+  # check if the SAME or NEW image is used
+  diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
+  cmp -s /data/install_history /tmp/c
+  RS=$?
+  if [ $RS -ne 0 ]; then
+    # New image. This will be an UPGRADE; Merge it into our install_history
+    sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
+    diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
+    /usr/bin/cp -f /tmp/c /data/install_history
+  fi
+
+  # save and keep track of .install_history
   copyln /data/install_history /opt/zimbra/.install_history
 
-  # run zmsetup.pl
-  /opt/zimbra/libexec/zmsetup.pl -d -c /data/defaultsfile
+  # run zmsetup.pl to complete setup
+  /opt/zimbra/libexec/zmsetup.pl -d -c /data/config.zimbra
+
+  # tune the container RAM usage to 8GB by default
+  adjust_memory_size ${MAX_MEMORY_GB:=8}
+
+  # add zmstat cleanup crontab
+  zmstat_cleanup_crontab
 
   # keep results after configure
   /usr/bin/cp -f /opt/zimbra/config.* /data/
   /usr/bin/cp -f /opt/zimbra/config.* /data/config.zimbra
   /usr/bin/cp -f /opt/zimbra/log/zmsetup.*.log /data/
 
-
-# IT IS CONFIGURED
 else
-
-  # check if the SAME or NEW image is used to start this container
-  diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
-  cmp -s /data/install_history /tmp/c
-  RS=$?
-  if [ $RS -ne 0 ]; then # new image (will run upgrade)
-    # consider new image as UPGRADED
-    sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
-    diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
-    /usr/bin/cp -f /tmp/c /data/install_history
-  fi
-
-  # save install history
-  copyln /data/install_history /opt/zimbra/.install_history
-
-  # run zmsetup.pl for new container
-  if [ ! -e /var/spool/cron/zimbra ]; then
-    /opt/zimbra/libexec/zmsetup.pl -d -c /data/config.zimbra
-    /usr/bin/cp -f /opt/zimbra/config.* /data/
-    /usr/bin/cp -f /opt/zimbra/config.* /data/config.zimbra
-    /usr/bin/cp -f /opt/zimbra/log/zmsetup.*.log /data/
-  else
-    su - zimbra -c "zmcontrol start"
-  fi
+  # existing container that was stopped; simply start up zimbra
+  su - zimbra -c "zmcontrol start"
 fi
 
-# Run customizations
-if [ "$CUSTOMIZE" = "y" -o "$CUSTOMIZE" = "Y" ]; then
-  /root/customize.sh
-fi
+# Apply customizations
 
-# Done
-set +x
+# If this dir exist mean we got scripts to run (inspired by run-parts)
+if [ -d /customize.d ]; then
+  for i in $(LC_ALL=C; echo /customize.d/*[^~,]); do
+    [ -d ${i} ] && continue
+    # Don't run *.{rpmsave,rpmorig,rpmnew,swp,cfsaved} scripts
+    [ "${i%.cfsaved}" != "${i}" ] && continue
+    [ "${i%.rpmsave}" != "${i}" ] && continue
+    [ "${i%.rpmorig}" != "${i}" ] && continue
+    [ "${i%.rpmnew}" != "${i}" ] && continue
+    [ "${i%.swp}" != "${i}" ] && continue
+    [ "${i%,v}" != "${i}" ] && continue
+
+    if [ -x ${i} ]; then
+      echo "starting $(basename ${i})"
+      ${i} 2>&1
+      echo "finished $(basename ${i})"
+    fi
+  done
+fi
 
 # Restart rsyslog
 supervisorctl restart rsyslog
@@ -138,3 +190,4 @@ while true
 do
   sleep 10
 done
+

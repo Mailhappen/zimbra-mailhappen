@@ -14,10 +14,10 @@ docker run -d \
 	-v index:/opt/zimbra/index \
 	-v redolog:/opt/zimbra/redolog \
 	-v backup:/opt/zimbra/backup \
+	-v ./customize.d:/customize.d \
 	-e DEFAULT_ADMIN=mailadmin \
 	-e DEFAULT_PASSWORD=Zimbra \
 	-e TIMEZONE=Asia/Kuala_Lumpur \
-	-e CUSTOMIZE=y \
 	-e MAX_MEMORY_GB=8 \
 	yeak/zimbraimage
 exit
