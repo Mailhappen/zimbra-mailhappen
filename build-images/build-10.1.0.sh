@@ -2,8 +2,8 @@
 
 # Edit the version to build
 
-GIT_DEFAULT_TAGS=10.1.5,10.1.4,10.1.3,10.1.2,10.1.1,10.1.0
-BUILD_RELEASE_NO=10.1.5
+GIT_DEFAULT_TAGS=10.1.0
+BUILD_RELEASE_NO=10.1.0
 BUILD_CANDIDATE=GA
 BUILD_NO=1000
 BUILD_TS=`date +'%Y%m%d%H%M%S'`
@@ -18,8 +18,7 @@ cat > ${RUN} <<EOT
 
 mkdir installer-build
 cd installer-build
-#git clone --depth 1 --branch ${BUILD_RELEASE_NO} https://github.com/Zimbra/zm-build.git
-git clone --depth 1 https://github.com/Zimbra/zm-build.git
+git clone --depth 1 --branch ${BUILD_RELEASE_NO} https://github.com/Zimbra/zm-build.git
 cd zm-build
 ENV_CACHE_CLEAR_FLAG=true ./build.pl \
 	--ant-options \

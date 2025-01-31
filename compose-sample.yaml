@@ -45,3 +45,5 @@ volumes:
 
 networks:
   zimbranet:
+    #external: true
+
