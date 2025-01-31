@@ -1,6 +1,6 @@
 # Quickstart
 
-This guide show you how to quickly run your own Zimbra 10.1.5 in container with style...
+This guide show you how to quickly run your own Zimbra 10.1.x in container with style...
 
 ## Prepare a Virtual Machine
 
