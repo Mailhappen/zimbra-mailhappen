@@ -1,6 +1,6 @@
 # Install Docker Engine
 
-The Docker Engine is all you need to run the container. Please refer to this page for installation guide: https://docs.docker.com/engine/install/
+The Docker Engine is all you need to run the container. Please refer to the official [Docker Engine Installation Guide](https://docs.docker.com/engine/install/)
 
 Or you can just copy and paste below for selected OS:
 
