@@ -46,7 +46,7 @@ if [ -f ./data/zcs-${BUILD_RELEASE_NO}* -a x"$1" != "xremake-installer" ]; then
 	ZCS=${ZCS%.tgz}
 else
 	ZCS=zcs-${BUILD_RELEASE_NO}_${BUILD_CANDIDATE}_${BUILD_NO}.RHEL9_64.${BUILD_TS}
-	docker run -it \
+	docker run -it --rm \
 		-v ./data:/data \
 		zm-base-os \
 		/data/run-${BUILD_RELEASE_NO}.sh

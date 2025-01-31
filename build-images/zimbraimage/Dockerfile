@@ -20,7 +20,6 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
 
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
 COPY --chmod=775 start.sh /supervisor/
-COPY --chmod=775 customize.sh /root/
 
 VOLUME /data
 VOLUME /opt/zimbra/data
