@@ -13,7 +13,7 @@ services:
       - index:/opt/zimbra/index
       - redolog:/opt/zimbra/redolog
       - backup:/opt/zimbra/backup
-      - ./customize.d:/customize.d
+      - ./custom:/custom
     ports:
       - "25:25"
       - "443:443"
