@@ -1,69 +1,74 @@
-# Deploy Zimbra Mailhappen
+# Deploy Zimbra in Docker
 
-## Description
-Deploying Zimbra in Docker manner has these benefits:
+Deploying Zimbra in Docker has these benefits:
 1. Able to test the deployment before going live.
-2. The deployment will be consistent with what we have packaged.
-3. Easily train new team to pick up Zimbra.
+2. The deployment will be consistent with what we have tested.
+3. Easier to train new team member to learn Zimbra.
 
-This docker covers the following:
+This project covers the following:
 1. Compile the latest zcs installer from the Zimbra official github.
-2. Create the Zimbra docker image for container deployment.
-3. Make it easy to upgrade to newer vesion by simply redeploying it.
+2. Create the Zimbra docker image.
+3. Easy upgrade to a newer vesion by simply redeploying the container.
 
-Basically we simplify the Zimbra deployment so that you don't need to worry about OS preparation, Zimbra installation, post tuning and troubleshooting.
+Basically we try to simplify the Zimbra deployment so that you don't have to worry about OS preparation, Zimbra installation, tuning and troubleshooting. We also put in customizations whenever possible to ensure consistent result after upgrade.
 
-## How to build
+## How to build your own Zimbra FOSS installer and images
 
-The `build-images` contain scripts to make your own Zimbra FOSS.
+The `build-images` contains scripts to make your own Zimbra FOSS.
 
-- **zm-base-os**. This prepares the RockyLinux9 build environment for compiling Zimbra FOSS. It will create the zcs installer that you normally download from zimbra.com website.
-- **baseimage**. This is the OS image to run Zimbra in production.
-- **zimbraimage**. This is Zimbra image for you to deploy Zimbra in container.
+- `zm-base-os` prepares the RockyLinux9 build environment for compiling Zimbra FOSS
+- `baseimage` is the RockyLinux9 OS image for running Zimbra
+- `zimbraimage` is the Zimbra FOSS image designed to run as container.
 
 You are encouraged to build your own zcs tgz file. Please refer to `build-images/build-10.*.sh` for details.
 
 Example to build Zimbra FOSS 10.1.5,
 
 ```
-cd build-images
-bash build-10.1.5.sh
+$ cd build-images
+$ bash build-10.1.5.sh
 ```
 
-It will take a while to complete the building. The result will be a docker image called **yeak/zimbraimage:10.1.5** in your own computer.
+This will take a while to complete. You will get a docker image called `yeak/zimbraimage:10.1.5` in your images list.
 
-You can skip the building steps. Refer to [QUICKSTART](QUICKSTART.md) to learn how to run it quickly.
+You can skip the building steps and use the images we have made and published in Docker Hub. Refer to [QUICKSTART](QUICKSTART.md) for guide.
 
 ## Test run Zimbra
 
-Create a `compose.yaml` file from the sample given. Our sample is a working sample.
+Create a `compose.yaml` file from the sample given.
 
 ```
-cp compose-sample.yaml compose.yaml
-vi compose.yaml
+$ cp compose-sample.yaml compose.yaml
+$ vi compose.yaml
+$ docker compose up -d
 ```
 
-NOTE:
-1. Edit *image* to use the zcs version you want to deploy.
-2. Edit *container-name*, *hostname*, and *environment* to your site.
-3. Leave the *volumes* as is. You can enhance it later with external volumes.
+- Edit `image:` section to specify the zcs version you want to deploy. We currently have 10.1.5 only
+- Edit `container-name:` section for your `hostname` and `environment`
+- Leave the `volumes:` section as is. You can enhance it later with external volumes.
 
-This is all you need to run Zimbra normally:
+For day-to-day operation, if you need to stop Zimbra, simply do this:
 
-1. `docker compose up -d`
-2. `docker compose stop`
-3. `docker compose start`
+```
+$ docker compose stop
+$ docker compose start
+```
 
 When there is new image available, you simply do this:
 
-1. `docker compose pull`
-2. `docker compose down`
-3. `docker compose up -d`
+```
+$ docker compose pull
+$ docker compose down
+$ docker compose up -d
+```
 
-NOTE:
-Everytime when you `down` and `up` the container, it will take a while to start up because it needs to reconfigure itself. This is similar to process of downloading new zcs release and run install.sh to upgrade your Zimbra. Now it is all automated.
+Everytime when you down and up the container, it will take a while to start up because it needs to reconfigure itself.
 
-To view any progress when container is starting, type `docker compose logs -f`.
+To view any progress when container is starting, type:
+
+```
+$ docker compose logs -f
+```
 
 ## Support
 Use the Github issue to open case.
