@@ -134,7 +134,7 @@ if [ ! -e /var/spool/cron/zimbra ]; then
   copyln /data/install_history /opt/zimbra/.install_history
 
   # run zmsetup.pl to complete setup
-  /opt/zimbra/libexec/zmsetup.pl -d -c /data/config.zimbra
+  /opt/zimbra/libexec/zmsetup.pl -c /data/config.zimbra
 
   # tune the container RAM usage to 8GB by default
   adjust_memory_size ${MAX_MEMORY_GB:=8}
