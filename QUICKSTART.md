@@ -1,6 +1,6 @@
 # Quickstart
 
-This guide show you how to quickly run your own Zimbra 10.1.x in container with style...
+This guide show you how to quickly run your own Zimbra 10.1.x in container, with style...
 
 ## Prepare a Virtual Machine
 
@@ -22,27 +22,27 @@ Refer to [INSTALL DOCKER](INSTALL-DOCKER.md) for info.
 Clone our repository and run it.
 
 ```
-git clone https://github.com/Mailhappen/zimbra-mailhappen.git
-cd zimbra-mailhappen
-cp compose-sample.yaml compose.yaml
-docker compose up -d
-docker compose logs -f
+$ git clone https://github.com/Mailhappen/zimbra-mailhappen.git
+$ cd zimbra-mailhappen
+$ cp compose-sample.yaml compose.yaml
+$ docker compose up -d
+$ docker compose logs -f
 ```
 
 The container is running and you can visit the Zimbra Admin Console at https://your-vm:7071/.
 
 ## Other useful commands
 
+### Stop and start container
+
 ```
-# Stop the container
-docker compose stop
-
-# Start the container
-docker compose start
-
-# Upgrade container
-docker compose pull
-docker compose down
-docker compose up -d
+$ docker compose stop
+$ docker compose start
 ```
+### Upgrade to newer Zimbra release
 
+```
+$ docker compose pull
+$ docker compose down
+$ docker compose up -d
+```
