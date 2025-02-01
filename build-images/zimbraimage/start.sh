@@ -120,14 +120,13 @@ fi
 if [ ! -e /var/spool/cron/zimbra ]; then
 
   # check if the SAME or NEW image is used
-  diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
-  cmp -s /data/install_history /tmp/c
+  v=$(sed -nE 's/.*zimbra-core-([0-9.]+_\w+)\..*/\1/p' /opt/zimbra/.install_history)
+  grep -q "zimbra-core-$v" /data/install_history
   RS=$?
   if [ $RS -ne 0 ]; then
-    # New image. This will be an UPGRADE; Merge it into our install_history
+    # New version. This will be an UPGRADE
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
-    diff -DNAME /data/install_history /opt/zimbra/.install_history | awk '!/NAME/' > /tmp/c
-    /usr/bin/cp -f /tmp/c /data/install_history
+    cat /opt/zimbra/.install_history >> /data/install_history
   fi
 
   # save and keep track of .install_history
