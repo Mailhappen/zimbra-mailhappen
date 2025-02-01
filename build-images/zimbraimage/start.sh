@@ -156,8 +156,8 @@ fi
 # Apply customizations
 
 # If this dir exist mean we got scripts to run (inspired by run-parts)
-if [ -d /customize.d ]; then
-  for i in $(LC_ALL=C; echo /customize.d/*[^~,]); do
+if [ -d /custom ]; then
+  for i in $(LC_ALL=C; echo /custom/*[^~,]); do
     [ -d ${i} ] && continue
     # Don't run *.{rpmsave,rpmorig,rpmnew,swp,cfsaved} scripts
     [ "${i%.cfsaved}" != "${i}" ] && continue
