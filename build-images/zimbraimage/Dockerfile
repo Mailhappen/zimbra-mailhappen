@@ -19,7 +19,7 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
   && rm -f /tmp/keystrokes
 
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
-COPY --chmod=775 start.sh /supervisor/
+COPY --chmod=755 start.sh /supervisor/
 
 VOLUME /data
 VOLUME /opt/zimbra/data

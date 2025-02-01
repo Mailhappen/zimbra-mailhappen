@@ -20,7 +20,7 @@ RUN  yum groupinstall -y "Minimal Install" --allowerasing \
 
 COPY --chmod=644 supervisord.conf /etc/supervisord.conf
 COPY --chmod=644 default.ini /etc/supervisord.d/default.ini
-COPY --chmod=775 supervisor/ /supervisor/
+COPY --chmod=755 supervisor/ /supervisor/
 COPY --chmod=644 sysstat.cron /etc/cron.d/sysstat
 
 ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]

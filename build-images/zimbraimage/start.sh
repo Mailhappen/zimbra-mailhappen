@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+#set -x
 
 my_hostname="$(hostname -s)"
 my_domain="$(hostname -d)"
@@ -77,7 +77,6 @@ EOT
 
 # Pause for debugging
 if [ "$DEV_MODE" = "y" ]; then
-  set +x
   while true
   do
     echo "Dev Mode."
@@ -148,31 +147,31 @@ if [ ! -e /var/spool/cron/zimbra ]; then
   /usr/bin/cp -f /opt/zimbra/config.* /data/config.zimbra
   /usr/bin/cp -f /opt/zimbra/log/zmsetup.*.log /data/
 
+  # Apply customizations
+
+  # If this dir exist mean we got scripts to run (inspired by run-parts)
+  if [ -d /custom ]; then
+    for i in $(LC_ALL=C; echo /custom/*[^~,]); do
+      [ -d ${i} ] && continue
+      # Don't run *.{rpmsave,rpmorig,rpmnew,swp,cfsaved} scripts
+      [ "${i%.cfsaved}" != "${i}" ] && continue
+      [ "${i%.rpmsave}" != "${i}" ] && continue
+      [ "${i%.rpmorig}" != "${i}" ] && continue
+      [ "${i%.rpmnew}" != "${i}" ] && continue
+      [ "${i%.swp}" != "${i}" ] && continue
+      [ "${i%,v}" != "${i}" ] && continue
+
+      if [ -x ${i} ]; then
+        echo "starting $(basename ${i})"
+        ${i} 2>&1
+        echo "finished $(basename ${i})"
+      fi
+    done
+  fi
+
 else
   # existing container that was stopped; simply start up zimbra
   su - zimbra -c "zmcontrol start"
-fi
-
-# Apply customizations
-
-# If this dir exist mean we got scripts to run (inspired by run-parts)
-if [ -d /custom ]; then
-  for i in $(LC_ALL=C; echo /custom/*[^~,]); do
-    [ -d ${i} ] && continue
-    # Don't run *.{rpmsave,rpmorig,rpmnew,swp,cfsaved} scripts
-    [ "${i%.cfsaved}" != "${i}" ] && continue
-    [ "${i%.rpmsave}" != "${i}" ] && continue
-    [ "${i%.rpmorig}" != "${i}" ] && continue
-    [ "${i%.rpmnew}" != "${i}" ] && continue
-    [ "${i%.swp}" != "${i}" ] && continue
-    [ "${i%,v}" != "${i}" ] && continue
-
-    if [ -x ${i} ]; then
-      echo "starting $(basename ${i})"
-      ${i} 2>&1
-      echo "finished $(basename ${i})"
-    fi
-  done
 fi
 
 # Restart rsyslog
