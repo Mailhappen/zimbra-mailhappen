@@ -11,11 +11,13 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
   && cd ${ZCS} \
   && sed -i '/checkRequired/d' install.sh \
   && ./install.sh -s < /tmp/keystrokes \
-  && mv /tmp/install.log.* /opt/zimbra/log/ \
   && cp -a /var/log/zimbra.log /var/log/zimbra-stats.log \
+  && mv /tmp/install.log.* /opt/zimbra/log/ \
+  && rm -f /tmp/install.log \
   && cd .. \
   && rm -rf ${ZCS} \
   && rm -f ${ZCS}.tgz \
+  && rm -f /root/keystrokes \
   && rm -f /tmp/keystrokes
 
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
