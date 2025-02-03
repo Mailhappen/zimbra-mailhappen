@@ -14,4 +14,11 @@ curl --max-time 30 -LO https://github.com/maldua-suite/zimbra-ose-2fa/releases/d
 tar xf zimbra-ose-2fa_0.8.0.tar.gz
 cd zimbra-ose-2fa_0.8.0
 ./install.sh
+
+# Temp fix errorMessage showing
+cat <<EOT >> /opt/zimbra/jetty/webapps/zimbra/skins/_base/base3/skin.css
+.twoFactorForm .errorMessage{
+        display: none;
+}
+EOT
 su - zimbra -c 'zmmailboxdctl restart'
