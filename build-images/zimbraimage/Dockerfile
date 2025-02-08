@@ -32,6 +32,7 @@ VOLUME /opt/zimbra/redolog
 VOLUME /opt/zimbra/backup
 
 EXPOSE 25
+EXPOSE 80
 EXPOSE 443
 EXPOSE 465
 EXPOSE 587
