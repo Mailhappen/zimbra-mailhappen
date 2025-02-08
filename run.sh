@@ -20,6 +20,7 @@ docker run -d \
 	-e MAX_MEMORY_GB=8 \
 	-e DEV_MODE=n \
 	-p 25:25 \
+	-p 80:80 \
 	-p 443:443 \
 	-p 465:465 \
 	-p 587:587 \
