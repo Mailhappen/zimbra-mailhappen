@@ -26,24 +26,6 @@ function copyln() {
   rm -rf $target && ln -s $source $target
 }
 
-function init_data() {
-  # setup container to use data from our volumes
-  # in case volume not attached, we create it
-  [ ! -d /data ] && mkdir /data
-  # items we shall keep track in /data volume
-  copyln /data/conf             /opt/zimbra/conf
-  copyln /data/ssh              /opt/zimbra/.ssh
-  copyln /data/ssl              /opt/zimbra/ssl
-  copyln /data/logger           /opt/zimbra/logger
-  copyln /data/zimlets-deployed /opt/zimbra/zimlets-deployed
-  copyln /data/jetty-etc        /opt/zimbra/jetty_base/etc
-  #copyln /data/common-jetty     /opt/zimbra/common/jetty_home
-  #copyln /data/common-conf      /opt/zimbra/common/conf
-
-  # done initialize
-  touch /init_data.done
-}
-
 function adjust_memory_size() {
   # size must be 4 and above. Default 8
   size=$1
@@ -61,20 +43,6 @@ function adjust_memory_size() {
   sed -i "s/^innodb_buffer_pool_size.*/innodb_buffer_pool_size = $bufferPoolSize/" /opt/zimbra/conf/my.cnf
 }
 
-function zmstat_cleanup_crontab() {
-  crontab -u zimbra -l > /tmp/cron.zimbra
-  grep -q zmstat-cleanup /tmp/cron.zimbra
-  RS=$?
-  [ $RS -eq 0 ] && return 0
-  cat >> /tmp/cron.zimbra <<EOT
-#
-# zmstat_cleanup
-#
-15 0 * * 7 /opt/zimbra/libexec/zmstat-cleanup -k 30
-EOT
-  crontab -u zimbra /tmp/cron.zimbra
-}
-
 # Pause for debugging
 if [ "$DEV_MODE" = "y" ]; then
   while true
@@ -88,19 +56,14 @@ fi
 # Set system timezone
 set_timezone
 
-# Prepare /data volume
-if [ ! -f /init_data.done ]; then
-  init_data
-fi
-
-# Totally new install
-if [ ! -e /data/install_history ]; then
-  copyln /data/install_history /opt/zimbra/.install_history
+# New install
+if [ ! -e /zmsetup/install_history ]; then
+  copyln /zmsetup/install_history /opt/zimbra/.install_history
 fi
 
 # New config for new setup
-if [ ! -e /data/config.zimbra ]; then
-  cat <<EOT > /data/config.zimbra
+if [ ! -e /zmsetup/config.zimbra ]; then
+  cat <<EOT > /zmsetup/config.zimbra
 HOSTNAME="$my_fqdn"
 LDAPHOST="$my_fqdn"
 AVDOMAIN="$my_fqdn"
@@ -120,31 +83,28 @@ fi
 if [ ! -e /var/spool/cron/zimbra ]; then
 
   # check if the SAME or NEW image is used
-  v=$(sed -nE 's/.*zimbra-core-([0-9.]+_\w+)\..*/\1/p' /opt/zimbra/.install_history)
-  grep -q "zimbra-core-$v" /data/install_history
+  v=$(sed -nE 's/.*zimbra-core-([0-9.]+_.*)\.rpm$/\1/p' /opt/zimbra/.install_history | tail -1)
+  grep -q "zimbra-core-$v" /zmsetup/install_history
   RS=$?
   if [ $RS -ne 0 ]; then
     # New version. This will be an UPGRADE
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
-    cat /opt/zimbra/.install_history >> /data/install_history
+    cat /opt/zimbra/.install_history >> /zmsetup/install_history
   fi
 
   # save and keep track of .install_history
-  copyln /data/install_history /opt/zimbra/.install_history
+  copyln /zmsetup/install_history /opt/zimbra/.install_history
 
   # run zmsetup.pl to complete setup
-  /opt/zimbra/libexec/zmsetup.pl -c /data/config.zimbra
+  /opt/zimbra/libexec/zmsetup.pl -c /zmsetup/config.zimbra
 
   # tune the container RAM usage to 8GB by default
   adjust_memory_size ${MAX_MEMORY_GB:=8}
 
-  # add zmstat cleanup crontab
-  zmstat_cleanup_crontab
-
   # keep results after configure
-  /usr/bin/cp -f /opt/zimbra/config.* /data/
-  /usr/bin/cp -f /opt/zimbra/config.* /data/config.zimbra
-  /usr/bin/cp -f /opt/zimbra/log/zmsetup.*.log /data/
+  /usr/bin/cp -f /opt/zimbra/config.* /zmsetup/
+  /usr/bin/cp -f /opt/zimbra/config.* /zmsetup/config.zimbra
+  /usr/bin/cp -f /opt/zimbra/log/zmsetup.*.log /zmsetup/
 
   # Apply customizations
 

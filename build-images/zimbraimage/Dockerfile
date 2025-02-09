@@ -23,9 +23,14 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
 COPY --chmod=755 start.sh /supervisor/
 
-VOLUME /data
+VOLUME /zmsetup
+VOLUME /opt/zimbra/.ssh
+VOLUME /opt/zimbra/conf
+VOLUME /opt/zimbra/ssl
 VOLUME /opt/zimbra/data
 VOLUME /opt/zimbra/db/data
+VOLUME /opt/zimbra/jetty_base/etc
+VOLUME /opt/zimbra/zimlets-deployed
 VOLUME /opt/zimbra/store
 VOLUME /opt/zimbra/index
 VOLUME /opt/zimbra/redolog

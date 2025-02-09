@@ -6,13 +6,24 @@ services:
     container_name: zimbra-mailhappen
     hostname: mail.zimbra.lab
     volumes:
-      - zimbra:/data
+      # zmsetup
+      - zmsetup:/zmsetup
+      # all
+      - dotssh:/opt/zimbra/.ssh
+      - conf:/opt/zimbra/conf
+      - ssl:/opt/zimbra/ssl
+      # all+ldap
       - data:/opt/zimbra/data
-      - mysql:/opt/zimbra/db/data
+      # mailbox
+      - dbdata:/opt/zimbra/db/data
+      - jettyetc:/opt/zimbra/jetty_base/etc
+      - zimletsdeployed:/opt/zimbra/zimlets-deployed
       - store:/opt/zimbra/store
       - index:/opt/zimbra/index
       - redolog:/opt/zimbra/redolog
+      # backup
       - backup:/opt/zimbra/backup
+      # our post startup scripts
       - ./custom:/custom
     ports:
       - "25:25"
@@ -34,9 +45,14 @@ services:
       DEV_MODE: n
 
 volumes:
-  zimbra:
+  zmsetup:
+  dotssh:
+  conf:
+  ssl:
   data:
-  mysql:
+  dbdata:
+  jettyetc:
+  zimletsdeployed:
   store:
   index:
   redolog:
@@ -45,4 +61,3 @@ volumes:
 networks:
   zimbranet:
     #external: true
-
