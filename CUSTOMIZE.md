@@ -32,3 +32,7 @@ The scripts will only be executed if it is set to executable (chmod +x). We skip
 
 More to come as we learn along the way.
 
+## Folder permission of `custom`
+
+The folder may be owned by root user if you didn't create it in the first place. You can simply change the ownership to yourself.
+
