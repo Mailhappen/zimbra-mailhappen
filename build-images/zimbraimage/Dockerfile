@@ -1,12 +1,14 @@
 FROM yeak/baseimage
 
+ARG DOWNLOAD=$URL
 ARG ZCS=$ZCS
 
 WORKDIR /root
 
-COPY keystrokes ${ZCS}.tgz ./
+COPY keystrokes ./
 
 RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
+  && curl -LO ${DOWNLOAD} \
   && tar xf ${ZCS}.tgz \
   && cd ${ZCS} \
   && sed -i '/checkRequired/d' install.sh \
