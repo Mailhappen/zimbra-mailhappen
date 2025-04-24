@@ -27,11 +27,9 @@ COPY --chmod=755 start.sh /supervisor/
 
 VOLUME /zmsetup
 VOLUME /opt/zimbra/.ssh
-VOLUME /opt/zimbra/conf
 VOLUME /opt/zimbra/ssl
 VOLUME /opt/zimbra/data
 VOLUME /opt/zimbra/db/data
-VOLUME /opt/zimbra/jetty_base/etc
 VOLUME /opt/zimbra/zimlets-deployed
 VOLUME /opt/zimbra/store
 VOLUME /opt/zimbra/index

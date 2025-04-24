@@ -1,22 +1,19 @@
 services:
   zimbra:
-    image: yeak/zimbraimage:10.1.5
+    image: yeak/zimbraimage:10.1.6
     restart: unless-stopped
     stop_grace_period: 3m
-    container_name: zimbra-mailhappen
     hostname: mail.zimbra.lab
     volumes:
       # zmsetup
       - zmsetup:/zmsetup
       # all
       - dotssh:/opt/zimbra/.ssh
-      - conf:/opt/zimbra/conf
       - ssl:/opt/zimbra/ssl
       # all+ldap
       - data:/opt/zimbra/data
       # mailbox
       - dbdata:/opt/zimbra/db/data
-      - jettyetc:/opt/zimbra/jetty_base/etc
       - zimletsdeployed:/opt/zimbra/zimlets-deployed
       - store:/opt/zimbra/store
       - index:/opt/zimbra/index
@@ -47,11 +44,9 @@ services:
 volumes:
   zmsetup:
   dotssh:
-  conf:
   ssl:
   data:
   dbdata:
-  jettyetc:
   zimletsdeployed:
   store:
   index:

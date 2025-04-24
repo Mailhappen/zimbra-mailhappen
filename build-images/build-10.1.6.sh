@@ -2,8 +2,8 @@
 
 # Edit the version to build
 
-GIT_DEFAULT_TAGS=10.1.7,10.1.6,10.1.5,10.1.4,10.1.3,10.1.2,10.1.1,10.1.0
-BUILD_RELEASE_NO=10.1.7
+GIT_DEFAULT_TAGS=10.1.6,10.1.5,10.1.4,10.1.3,10.1.2,10.1.1,10.1.0
+BUILD_RELEASE_NO=10.1.6
 BUILD_CANDIDATE=GA
 BUILD_NO=1040000
 BUILD_TS=`date +'%Y%m%d%H%M%S'`
@@ -18,8 +18,8 @@ cat > ${RUN} <<EOT
 
 mkdir installer-build
 cd installer-build
-#git clone --depth 1 --branch ${BUILD_RELEASE_NO} https://github.com/Zimbra/zm-build.git
-git clone --depth 1 https://github.com/Zimbra/zm-build.git
+git clone --depth 1 --branch ${BUILD_RELEASE_NO} https://github.com/Zimbra/zm-build.git
+#git clone --depth 1 https://github.com/Zimbra/zm-build.git
 cd zm-build
 ENV_CACHE_CLEAR_FLAG=true ./build.pl \
 	--ant-options \
@@ -53,20 +53,4 @@ else
 		/data/run-${BUILD_RELEASE_NO}.sh
 fi
 
-# 3. Make the yeak/baseimage for deployment
-docker build -t yeak/baseimage ./baseimage
-
-# 4. Make the yeak/zimbraimage for deployment
-# publish our tgz in a temp webserver
-docker run -d -p 12312:80 --name tmp12312 -v ./data:/usr/share/nginx/html/data nginx
-docker build -t yeak/zimbraimage:${BUILD_RELEASE_NO} \
-	--label name=zimbra \
-	--label version=${BUILD_RELEASE_NO} \
-	--label candidate=${BUILD_CANDIDATE} \
-	--label build=${BUILD_NO} \
-	--label type=${BUILD_TYPE} \
-	--build-arg ZCS=${ZCS} \
-	--add-host=host.docker.internal:host-gateway \
-	--build-arg DOWNLOAD=http://host.docker.internal:12312/data/${ZCS}.tgz \
-	./zimbraimage
-docker rm -f tmp12312
+ls ./data
