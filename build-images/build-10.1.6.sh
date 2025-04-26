@@ -4,9 +4,13 @@
 
 GIT_DEFAULT_TAGS=10.1.6,10.1.5,10.1.4,10.1.3,10.1.2,10.1.1,10.1.0
 <<<<<<< HEAD
+<<<<<<< HEAD
 BUILD_TAG=10.1.6
 =======
 >>>>>>> 49bbdca (New improved start.sh.)
+=======
+BUILD_TAG=10.1.6
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
 BUILD_RELEASE_NO=10.1.6
 BUILD_CANDIDATE=GA
 BUILD_NO=1040000
@@ -23,11 +27,15 @@ cat > ${RUN} <<EOT
 mkdir installer-build
 cd installer-build
 <<<<<<< HEAD
+<<<<<<< HEAD
 git clone --depth 1 --branch ${BUILD_TAG} https://github.com/Zimbra/zm-build.git
 =======
 git clone --depth 1 --branch ${BUILD_RELEASE_NO} https://github.com/Zimbra/zm-build.git
 #git clone --depth 1 https://github.com/Zimbra/zm-build.git
 >>>>>>> 49bbdca (New improved start.sh.)
+=======
+git clone --depth 1 --branch ${BUILD_TAG} https://github.com/Zimbra/zm-build.git
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
 cd zm-build
 ENV_CACHE_CLEAR_FLAG=true ./build.pl \
 	--ant-options \

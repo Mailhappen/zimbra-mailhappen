@@ -43,36 +43,6 @@ function adjust_memory_size() {
   sed -i "s/^innodb_buffer_pool_size.*/innodb_buffer_pool_size = $bufferPoolSize/" /opt/zimbra/conf/my.cnf
 }
 
-function backup_config() {
-  # backup post setup files so that we can restore and start up ourselves
-  mkdir -p /zmsetup/backup
-  # zimbra config files
-  /usr/bin/cp -af /opt/zimbra/conf/localconfig.xml    /zmsetup/backup/localconfig.xml
-  /usr/bin/cp -af /opt/zimbra/conf/dhparam.pem        /zmsetup/backup/dhparam.pem
-  /usr/bin/cp -af /opt/zimbra/jetty_base/etc/keystore /zmsetup/backup/keystore
-  /usr/bin/cp -af /opt/zimbra/conf/my.cnf             /zmsetup/backup/my.cnf
-  /usr/bin/cp -af /opt/zimbra/conf/zimbra.ldif        /zmsetup/backup/zimbra.ldif
-  /usr/bin/cp -af /opt/zimbra/conf/zmssl.cnf          /zmsetup/backup/zmssl.cnf
-  # postinstall files
-  /usr/bin/cp -af /var/spool/cron/zimbra              /zmsetup/backup/cron.zimbra
-  /usr/bin/cp -af /etc/logrotate.d/zimbra             /zmsetup/backup/logrotate.zimbra
-  /usr/bin/cp -af /etc/rsyslog.conf                   /zmsetup/backup/rsyslog.conf
-}
-
-function restore_config() {
-  # restore zimbra config files
-  cp -af /zmsetup/backup/localconfig.xml             /opt/zimbra/conf/localconfig.xml
-  cp -af /zmsetup/backup/dhparam.pem                 /opt/zimbra/conf/dhparam.pem
-  cp -af /zmsetup/backup/keystore                    /opt/zimbra/jetty_base/etc/keystore
-  cp -af /zmsetup/backup/my.cnf                      /opt/zimbra/conf/my.cnf
-  cp -af /zmsetup/backup/zimbra.ldif                 /opt/zimbra/conf/zimbra.ldif
-  cp -af /zmsetup/backup/zmssl.cnf                   /opt/zimbra/conf/zmssl.cnf
-  # postinstall files
-  cp -af /zmsetup/backup/cron.zimbra                 /var/spool/cron/zimbra
-  cp -af /zmsetup/backup/logrotate.zimbra            /etc/logrotate.d/zimbra
-  cp -af /zmsetup/backup/rsyslog.conf                /etc/rsyslog.conf
-}
-
 # Pause for debugging
 if [ "$DEV_MODE" = "y" ]; then
   while true
@@ -87,22 +57,31 @@ fi
 set_timezone
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 dosetup=0
 containerstarted=0
 =======
 dosetup=1
 cleanstart=0
 >>>>>>> 49bbdca (New improved start.sh.)
+=======
+dosetup=0
+containerstarted=0
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
 
 # Container stop and start back up
 if [ -e /var/spool/cron/zimbra ]; then
   su - zimbra -c "zmcontrol start"
+<<<<<<< HEAD
 <<<<<<< HEAD
   containerstarted=1
 =======
   cleanstart=1
   dosetup=0
 >>>>>>> 49bbdca (New improved start.sh.)
+=======
+  containerstarted=1
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
 fi
 
 # New install
@@ -119,9 +98,13 @@ SMTPSOURCE="$my_admin@$my_fqdn"
 CREATEADMINPASS="$my_password"
 EOT
 <<<<<<< HEAD
+<<<<<<< HEAD
   dosetup=1
 =======
 >>>>>>> 49bbdca (New improved start.sh.)
+=======
+  dosetup=1
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
 
 # New image version
 else
@@ -131,6 +114,7 @@ else
   if [ $RS -ne 0 ]; then
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     cat /opt/zimbra/.install_history >> /zmsetup/install_history
+<<<<<<< HEAD
 <<<<<<< HEAD
     /usr/bin/rsync -av -u --exclude localconfig.xml /upgrade/conf/ /opt/zimbra/conf/
     /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
@@ -152,26 +136,34 @@ if [ $dosetup -eq 0 -a $containerstarted -ne 1 ]; then
 =======
   else
     dosetup=0
+=======
+    /usr/bin/rsync -av -u --exclude localconfig.xml /zimbraimage/opt/zimbra/conf/ /opt/zimbra/conf/
+    dosetup=1
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
   fi
 fi 
 
-# Restore config if backup exist
-if [ -e /zmsetup/backup/localconfig.xml -a $cleanstart -ne 1 ]; then
-  restore_config
-  # put back SSL (for LDAP to start)
+# We start it our way
+if [ $dosetup -eq 0 -a $containerstarted -ne 1 ]; then
+  # keep track of .install_history
+  copyln /zmsetup/install_history /opt/zimbra/.install_history
+  # restore OS files (note: changes will not get retain)
+  /usr/bin/cp -af /zmsetup/cron.zimbra /var/spool/cron/zimbra
+  /usr/bin/cp -af /zmsetup/logrotate.zimbra /etc/logrotate.d/zimbra
+  /usr/bin/cp -af /zmsetup/rsyslog.conf /etc/rsyslog.conf 
   su - zimbra -c "zmcertmgr deploycrt self"
-fi
-
-# Adjust and start it our way
-if [ $dosetup -eq 0 -a $cleanstart -ne 1 ]; then
   su - zimbra -c "ldap start"
+<<<<<<< HEAD
   su - zimbra -c "libexec/zmmtainit"
   su - zimbra -c "libexec/zmproxyconfgen"
 >>>>>>> 49bbdca (New improved start.sh.)
+=======
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
   cd /opt/zimbra/common/jetty_home/resources && ln -sf /opt/zimbra/jetty_base/etc/jetty-logging.properties && cd -
   /opt/zimbra/common/sbin/newaliases
   su - zimbra -c "libexec/zmloggerinit"
   su - zimbra -c "zmcontrol restart"
+<<<<<<< HEAD
 <<<<<<< HEAD
 fi
 
@@ -180,12 +172,18 @@ if [ $dosetup -eq 1 ]; then
   # keep track of .install_history
 =======
   copyln /zmsetup/install_history /opt/zimbra/.install_history
+=======
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
 fi
 
-# Do setup for new install or upgraded image
+# Do setup for new install and upgrade
 if [ $dosetup -eq 1 ]; then
+<<<<<<< HEAD
   # save and keep track of .install_history
 >>>>>>> 49bbdca (New improved start.sh.)
+=======
+  # keep track of .install_history
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
   copyln /zmsetup/install_history /opt/zimbra/.install_history
 
   # run zmsetup.pl to complete setup
@@ -196,16 +194,23 @@ if [ $dosetup -eq 1 ]; then
   /usr/bin/cp -af /opt/zimbra/config.* /zmsetup/config.zimbra
   /usr/bin/cp -af /opt/zimbra/log/zmsetup.*.log /zmsetup/
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
  
   # save OS files for quick restore
   /usr/bin/cp -af /var/spool/cron/zimbra /zmsetup/cron.zimbra
   /usr/bin/cp -af /etc/logrotate.d/zimbra /zmsetup/logrotate.zimbra
   /usr/bin/cp -af /etc/rsyslog.conf /zmsetup/rsyslog.conf
+<<<<<<< HEAD
 
 =======
 
   backup_config
 >>>>>>> 49bbdca (New improved start.sh.)
+=======
+
+>>>>>>> 1a81414 (Added upgrade new files from /opt/zimbra/conf)
 fi
 
 # Post Setup
