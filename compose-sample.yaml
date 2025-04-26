@@ -9,6 +9,10 @@ services:
       - zmsetup:/zmsetup
       # all
       - dotssh:/opt/zimbra/.ssh
+      - conf:/opt/zimbra/conf
+      - type: image
+        source: yeak/zimbraimage:10.1.6
+        target: /zimbraimage
       - ssl:/opt/zimbra/ssl
       # all+ldap
       - data:/opt/zimbra/data
@@ -44,6 +48,7 @@ services:
 volumes:
   zmsetup:
   dotssh:
+  conf:
   ssl:
   data:
   dbdata:
