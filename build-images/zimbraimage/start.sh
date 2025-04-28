@@ -88,7 +88,7 @@ else
   if [ $RS -ne 0 ]; then
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     cat /opt/zimbra/.install_history >> /zmsetup/install_history
-    /usr/bin/rsync -av -u --exclude localconfig.xml /zimbraimage/opt/zimbra/conf/ /opt/zimbra/conf/
+    /usr/bin/rsync -av -u --exclude localconfig.xml /opt/zimbra/conf.dist/ /opt/zimbra/conf/
     dosetup=1
   fi
 fi 
