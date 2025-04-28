@@ -13,6 +13,7 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
   && cd ${ZCS} \
   && sed -i '/checkRequired/d' install.sh \
   && ./install.sh -s < /tmp/keystrokes \
+  && cp -a /opt/zimbra/conf /opt/zimbra/conf.dist \
   && cp -a /var/log/zimbra.log /var/log/zimbra-stats.log \
   && mv /tmp/install.log.* /opt/zimbra/log/ \
   && rm -f /tmp/install.log \
@@ -38,6 +39,7 @@ VOLUME /opt/zimbra/index
 VOLUME /opt/zimbra/redolog
 VOLUME /opt/zimbra/backup
 
+<<<<<<< HEAD
 EXPOSE 25
 EXPOSE 80
 EXPOSE 443
@@ -48,3 +50,6 @@ EXPOSE 995
 EXPOSE 7071
 EXPOSE 9071
 >>>>>>> 49bbdca (New improved start.sh.)
+=======
+EXPOSE 25 80 636 443 465 587 993 995 7071 9071
+>>>>>>> e30268b (Make a copy of conf to conf.dist for upgrade)
