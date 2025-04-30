@@ -88,9 +88,15 @@ else
   if [ $RS -ne 0 ]; then
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     cat /opt/zimbra/.install_history >> /zmsetup/install_history
+<<<<<<< HEAD
     /usr/bin/rsync -av -u /upgrade/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
     /usr/bin/rsync -av -u /upgrade/data/ /opt/zimbra/data/
     /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
+=======
+    /usr/bin/rsync -av -u --exclude localconfig.xml /upgrade/conf/ /opt/zimbra/conf/
+    /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
+    /usr/bin/rsync -av -u /upgrade/jettyetc/ /opt/zimbra/jetty_base/etc/
+>>>>>>> 41d753a (Separate out zimbraimage and deployment)
     dosetup=1
   fi
 fi 
@@ -103,7 +109,10 @@ if [ $dosetup -eq 0 -a $containerstarted -ne 1 ]; then
   /usr/bin/cp -af /zmsetup/cron.zimbra /var/spool/cron/zimbra
   /usr/bin/cp -af /zmsetup/logrotate.zimbra /etc/logrotate.d/zimbra
   /usr/bin/cp -af /zmsetup/rsyslog.conf /etc/rsyslog.conf 
+<<<<<<< HEAD
   su - zimbra -c "zmcertmgr addcacert /opt/zimbra/conf/ca/ca.pem"
+=======
+>>>>>>> 41d753a (Separate out zimbraimage and deployment)
   su - zimbra -c "zmcertmgr deploycrt self"
   su - zimbra -c "ldap start"
   cd /opt/zimbra/common/jetty_home/resources && ln -sf /opt/zimbra/jetty_base/etc/jetty-logging.properties && cd -
@@ -135,7 +144,11 @@ fi
 # Post Setup
 
 # tune the container RAM usage to 8GB by default
+<<<<<<< HEAD
 #adjust_memory_size ${MAX_MEMORY_GB:=8}
+=======
+adjust_memory_size ${MAX_MEMORY_GB:=8}
+>>>>>>> 41d753a (Separate out zimbraimage and deployment)
 
 # Apply customizations
 

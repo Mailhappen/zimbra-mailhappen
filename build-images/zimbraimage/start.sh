@@ -117,12 +117,18 @@ else
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     /usr/bin/rsync -av -u --exclude localconfig.xml /upgrade/conf/ /opt/zimbra/conf/
     /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
     /usr/bin/rsync -av -u /upgrade/jettyetc/ /opt/zimbra/jetty_base/etc/
 =======
     /usr/bin/rsync -av -u --exclude localconfig.xml /opt/zimbra/conf.dist/ /opt/zimbra/conf/
 >>>>>>> e30268b (Make a copy of conf to conf.dist for upgrade)
+=======
+    /usr/bin/rsync -av -u --exclude localconfig.xml /upgrade/conf/ /opt/zimbra/conf/
+    /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
+    /usr/bin/rsync -av -u /upgrade/jettyetc/ /opt/zimbra/jetty_base/etc/
+>>>>>>> 41d753a (Separate out zimbraimage and deployment)
     dosetup=1
   fi
 fi 

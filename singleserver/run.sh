@@ -6,6 +6,7 @@
 docker build -t yeak/singleserver .
 
 # Create volume to keep your data
+<<<<<<< HEAD
 
 local_volume="my-optzimbra-local"
 docker volume create $local_volume
@@ -43,6 +44,31 @@ docker run -d \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=index,dst=/opt/zimbra/index \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=redolog,dst=/opt/zimbra/redolog \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=backup,dst=/opt/zimbra/backup \
+=======
+optzimbra="my_optzimbra_data"
+docker volume create $optzimbra
+docker run --rm \
+	--mount src=$optzimbra,dst=/mnt \
+	yeak/singleserver /usr/bin/mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,jettyetc,zimletsdeployed,store,index,redolog,backup}
+
+# Run
+docker run -d \
+	--restart=unless-stopped \
+	--stop-timeout=180 \
+	--mount type=volume,src=$optzimbra,volume-subpath=zmsetup,dst=/zmsetup \
+	--mount type=volume,src=$optzimbra,volume-subpath=dotssh,dst=/opt/zimbra/.ssh \
+	--mount type=volume,src=$optzimbra,volume-subpath=ssl,dst=/opt/zimbra/ssl \
+	--mount type=volume,src=$optzimbra,volume-subpath=conf,dst=/opt/zimbra/conf \
+	--mount type=volume,src=$optzimbra,volume-subpath=data,dst=/opt/zimbra/data \
+	--mount type=volume,src=$optzimbra,volume-subpath=commonconf,dst=/opt/zimbra/common/conf \
+	--mount type=volume,src=$optzimbra,volume-subpath=dbdata,dst=/opt/zimbra/db/data \
+	--mount type=volume,src=$optzimbra,volume-subpath=jettyetc,dst=/opt/zimbra/jetty_base/etc \
+	--mount type=volume,src=$optzimbra,volume-subpath=zimletsdeployed,dst=/opt/zimbra/zimlets-deployed \
+	--mount type=volume,src=$optzimbra,volume-subpath=store,dst=/opt/zimbra/store \
+	--mount type=volume,src=$optzimbra,volume-subpath=index,dst=/opt/zimbra/index \
+	--mount type=volume,src=$optzimbra,volume-subpath=redolog,dst=/opt/zimbra/redolog \
+	--mount type=volume,src=$optzimbra,volume-subpath=backup,dst=/opt/zimbra/backup \
+>>>>>>> 41d753a (Separate out zimbraimage and deployment)
 	-v ./custom:/custom \
 	-h mail.example.com \
 	-e DEFAULT_ADMIN=mailadmin \
@@ -61,4 +87,7 @@ docker run -d \
 	-p 7071:7071 \
 	-p 9071:9071 \
 	yeak/singleserver
+<<<<<<< HEAD
 
+=======
+>>>>>>> 41d753a (Separate out zimbraimage and deployment)

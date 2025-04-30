@@ -13,7 +13,6 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
   && cd ${ZCS} \
   && sed -i '/checkRequired/d' install.sh \
   && ./install.sh -s < /tmp/keystrokes \
-  && cp -a /opt/zimbra/conf /opt/zimbra/conf.dist \
   && cp -a /var/log/zimbra.log /var/log/zimbra-stats.log \
   && mv /tmp/install.log.* /opt/zimbra/log/ \
   && rm -f /tmp/install.log \
@@ -21,6 +20,7 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
   && rm -rf ${ZCS} \
   && rm -f ${ZCS}.tgz \
   && rm -f /tmp/keystrokes
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -53,3 +53,5 @@ EXPOSE 9071
 =======
 EXPOSE 25 80 636 443 465 587 993 995 7071 9071
 >>>>>>> e30268b (Make a copy of conf to conf.dist for upgrade)
+=======
+>>>>>>> 41d753a (Separate out zimbraimage and deployment)

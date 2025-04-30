@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 custom
+=======
+custom/*
+>>>>>>> 41d753a (Separate out zimbraimage and deployment)
 compose.yaml
