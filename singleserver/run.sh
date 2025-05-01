@@ -7,6 +7,7 @@ docker build -t yeak/singleserver .
 
 # Create volume to keep your data
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 local_volume="my-optzimbra-local"
 docker volume create $local_volume
@@ -47,9 +48,13 @@ docker run -d \
 =======
 optzimbra="my_optzimbra_data"
 docker volume create $optzimbra
+=======
+my_volume_name="my_optzimbra_data"
+docker volume create $my_volume_name
+>>>>>>> 570229c (Just clean up and simplify a bit.)
 docker run --rm \
-	--mount src=$optzimbra,dst=/mnt \
-	yeak/singleserver /usr/bin/mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,jettyetc,zimletsdeployed,store,index,redolog,backup}
+	--mount src=$my_volume_name,dst=/mnt \
+	yeak/singleserver /usr/bin/mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup}
 
 # Run
 docker run -d \
@@ -62,7 +67,6 @@ docker run -d \
 	--mount type=volume,src=$optzimbra,volume-subpath=data,dst=/opt/zimbra/data \
 	--mount type=volume,src=$optzimbra,volume-subpath=commonconf,dst=/opt/zimbra/common/conf \
 	--mount type=volume,src=$optzimbra,volume-subpath=dbdata,dst=/opt/zimbra/db/data \
-	--mount type=volume,src=$optzimbra,volume-subpath=jettyetc,dst=/opt/zimbra/jetty_base/etc \
 	--mount type=volume,src=$optzimbra,volume-subpath=zimletsdeployed,dst=/opt/zimbra/zimlets-deployed \
 	--mount type=volume,src=$optzimbra,volume-subpath=store,dst=/opt/zimbra/store \
 	--mount type=volume,src=$optzimbra,volume-subpath=index,dst=/opt/zimbra/index \

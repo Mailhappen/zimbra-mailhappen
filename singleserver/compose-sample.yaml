@@ -48,11 +48,6 @@ services:
           subpath: dbdata
       - type: volume
         source: data
-        target: /opt/zimbra/jetty_base/etc
-        volume:
-          subpath: jettyetc
-      - type: volume
-        source: data
         target: /opt/zimbra/zimlets-deployed
         volume:
           subpath: zimletsdeployed

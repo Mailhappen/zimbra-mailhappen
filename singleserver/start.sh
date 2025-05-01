@@ -89,6 +89,7 @@ else
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     cat /opt/zimbra/.install_history >> /zmsetup/install_history
 <<<<<<< HEAD
+<<<<<<< HEAD
     /usr/bin/rsync -av -u /upgrade/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
     /usr/bin/rsync -av -u /upgrade/data/ /opt/zimbra/data/
     /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
@@ -97,6 +98,11 @@ else
     /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
     /usr/bin/rsync -av -u /upgrade/jettyetc/ /opt/zimbra/jetty_base/etc/
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+    /usr/bin/rsync -av -u /upgrade/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
+    /usr/bin/rsync -av -u /upgrade/data/ /opt/zimbra/data/
+    /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
+>>>>>>> 570229c (Just clean up and simplify a bit.)
     dosetup=1
   fi
 fi 
