@@ -88,9 +88,9 @@ else
   if [ $RS -ne 0 ]; then
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     cat /opt/zimbra/.install_history >> /zmsetup/install_history
-    /usr/bin/rsync -av -u --exclude localconfig.xml /upgrade/conf/ /opt/zimbra/conf/
+    /usr/bin/rsync -av -u /upgrade/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
+    /usr/bin/rsync -av -u /upgrade/data/ /opt/zimbra/data/
     /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
-    /usr/bin/rsync -av -u /upgrade/jettyetc/ /opt/zimbra/jetty_base/etc/
     dosetup=1
   fi
 fi 

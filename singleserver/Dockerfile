@@ -5,9 +5,9 @@ FROM $ZIMBRAIMAGE
 
 # Prepare for upgrade files
 RUN mkdir -p /upgrade \
-  && cp -a /opt/zimbra/conf           /upgrade/conf \
-  && cp -a /opt/zimbra/common/conf    /upgrade/commonconf \
-  && cp -a /opt/zimbra/jetty_base/etc /upgrade/jettyetc
+  && /usr/bin/cp -a /opt/zimbra/conf        /upgrade/conf \
+  && /usr/bin/cp -a /opt/zimbra/data        /upgrade/data \
+  && /usr/bin/cp -a /opt/zimbra/common/conf /upgrade/commonconf
 
 # Our startup scripts
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
@@ -25,7 +25,6 @@ VOLUME /opt/zimbra/data
 VOLUME /opt/zimbra/common/conf
 # mailbox
 VOLUME /opt/zimbra/db/data
-VOLUME /opt/zimbra/jetty_base/etc
 VOLUME /opt/zimbra/zimlets-deployed
 VOLUME /opt/zimbra/store
 VOLUME /opt/zimbra/index
