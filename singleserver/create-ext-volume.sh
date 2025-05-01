@@ -7,5 +7,5 @@ my_volume_name="my_optzimbra"
 docker volume create $my_volume_name
 docker run --rm \
 	--mount src=$my_volume_name,dst=/mnt \
-	yeak/singleserver /usr/bin/mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup}
+	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup}
 
