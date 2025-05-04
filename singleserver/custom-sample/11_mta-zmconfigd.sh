@@ -1,7 +1,6 @@
 #!/bin/bash
-# set -e Exit immediately if any command failed
 # set -x Enable debugging
-set -ex
+set -x
 
 # Must run in the dirname of the script
 cd $(dirname $0)
@@ -13,7 +12,7 @@ cd $(dirname $0)
 # hide all localhost routes
 if [ ! -f /opt/zimbra/conf/custom_header_checks ]; then
   cat <<EOT > /opt/zimbra/conf/custom_header_checks
-/^Subject:/                 WARN
+/^Subject:/                 INFO
 /^Received: .*localhost.*/  IGNORE
 EOT
 fi

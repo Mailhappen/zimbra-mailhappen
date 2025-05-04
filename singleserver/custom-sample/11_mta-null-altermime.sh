@@ -1,7 +1,6 @@
 #!/bin/bash
-# set -e Exit immediately if any command failed
 # set -x Enable debugging
-set -ex
+set -x
 
 # Must run in the dirname of the script
 cd $(dirname $0)
