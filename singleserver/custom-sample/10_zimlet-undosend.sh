@@ -1,5 +1,6 @@
 #!/bin/bash
 <<<<<<< HEAD
+<<<<<<< HEAD
 # set -x Enable debugging
 set -x
 =======
@@ -7,6 +8,10 @@ set -x
 # set -x Enable debugging
 set -ex
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+# set -x Enable debugging
+set -x
+>>>>>>> 6985041 (Notice set -e not good for us)
 
 # Must run in the dirname of the script
 cd $(dirname $0)
