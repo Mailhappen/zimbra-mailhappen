@@ -103,6 +103,7 @@ if [ $dosetup -eq 0 -a $containerstarted -ne 1 ]; then
   /usr/bin/cp -af /zmsetup/cron.zimbra /var/spool/cron/zimbra
   /usr/bin/cp -af /zmsetup/logrotate.zimbra /etc/logrotate.d/zimbra
   /usr/bin/cp -af /zmsetup/rsyslog.conf /etc/rsyslog.conf 
+  su - zimbra -c "zmcertmgr addcacert /opt/zimbra/conf/ca/ca.pem"
   su - zimbra -c "zmcertmgr deploycrt self"
   su - zimbra -c "ldap start"
   cd /opt/zimbra/common/jetty_home/resources && ln -sf /opt/zimbra/jetty_base/etc/jetty-logging.properties && cd -
