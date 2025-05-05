@@ -116,9 +116,13 @@ if [ $dosetup -eq 0 -a $containerstarted -ne 1 ]; then
   /usr/bin/cp -af /zmsetup/logrotate.zimbra /etc/logrotate.d/zimbra
   /usr/bin/cp -af /zmsetup/rsyslog.conf /etc/rsyslog.conf 
 <<<<<<< HEAD
+<<<<<<< HEAD
   su - zimbra -c "zmcertmgr addcacert /opt/zimbra/conf/ca/ca.pem"
 =======
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+  su - zimbra -c "zmcertmgr addcacert /opt/zimbra/conf/ca/ca.pem"
+>>>>>>> 62bd0da (Missing the addcacert)
   su - zimbra -c "zmcertmgr deploycrt self"
   su - zimbra -c "ldap start"
   cd /opt/zimbra/common/jetty_home/resources && ln -sf /opt/zimbra/jetty_base/etc/jetty-logging.properties && cd -
