@@ -24,6 +24,7 @@ cd $(dirname $0)
 EXTRA_MYNETWORKS=""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # restarting container may change to new IP
 echo "Reconfigure mynetworks"
 mynetworks="$(/opt/zimbra/libexec/zmserverips -n | xargs)"
@@ -32,6 +33,11 @@ echo "Configure mynetworks"
 mynetworks="127.0.0.0/8 [::1]/128 $(hostname -i)/32"
 [ -n "$EXTRA_MYNETWORKS" ] && mynetworks="$mynetworks $EXTRA_MYNETWORKS"
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+# restarting container may change to new IP
+echo "Reconfigure mynetworks"
+mynetworks="$(/opt/zimbra/libexec/zmserverips -n | xargs)"
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 
 # check first before making changes
 # NOTE about Bash variable expansion
@@ -40,6 +46,9 @@ mynetworks="127.0.0.0/8 [::1]/128 $(hostname -i)/32"
 
 current=$(su - zimbra -c 'postconf -h mynetworks')
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 [ "$current" == "$mynetworks" ] && exit 0
 
 zmhostname=$(su - zimbra -c zmhostname)
@@ -55,6 +64,7 @@ EOT
 
 su - zimbra -c "bash $cmd"
 rm -f $cmd
+<<<<<<< HEAD
 =======
 if [ "$current" != "$mynetworks" ]; then
   zmhostname=$(su - zimbra -c zmhostname)
@@ -65,4 +75,6 @@ if [ "$current" != "$mynetworks" ]; then
   su - zimbra -c 'zmconfigdctl start'
 fi
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 

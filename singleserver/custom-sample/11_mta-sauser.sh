@@ -19,13 +19,19 @@ cd $(dirname $0)
 # Write your script below
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 # Enable this sausers if you are directly facing Internet.
 #
 # !!! Do not enable if there is already an ESG in front of you.
 #
 
+<<<<<<< HEAD
 =======
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 if [ ! -f /opt/zimbra/data/spamassassin/localrules/sauser.cf ]; then
   cat <<EOT > /opt/zimbra/data/spamassassin/localrules/sauser.cf
 # My sauser.cf rules
@@ -34,6 +40,9 @@ if [ ! -f /opt/zimbra/data/spamassassin/localrules/sauser.cf ]; then
 whitelist_auth *@synacor.com
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 # Internal redirected mail is trusted
 score ALL_TRUSTED              -9.0
 
@@ -41,9 +50,12 @@ score ALL_TRUSTED              -9.0
 score RDNS_NONE                 3.0
 
 # Adjust SPF
+<<<<<<< HEAD
 =======
 # Enforcing SPF - override existing score
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 ifplugin Mail::SpamAssassin::Plugin::SPF
 score SPF_NONE                  3.0
 score SPF_FAIL                  9.0
@@ -54,21 +66,28 @@ score SPF_HELO_SOFTFAIL         9.0
 endif # Mail::SpamAssassin::Plugin::SPF
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 # Adjust DMARC
 ifplugin Mail::SpamAssassin::Plugin::AskDNS
 score DMARC_FAIL_REJECT         9.0
 score DMARC_FAIL_QUAR           6.0
 score DMARC_FAIL_NONE           1.2
 endif
+<<<<<<< HEAD
 =======
 # Enforce RDNS
 score RDNS_NONE                 6.0
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 
 # Misc SA adjustments
 score RCVD_IN_BL_SPAMCOP_NET    6.0
 score FREEMAIL_FORGED_REPLYTO   3.0
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 # Internal redirected mail is trusted
@@ -111,6 +130,8 @@ ifplugin Mail::SpamAssassin::Plugin::AskDNS
 
 endif
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 EOT
 
 fi

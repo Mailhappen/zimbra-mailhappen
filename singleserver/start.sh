@@ -155,10 +155,14 @@ fi
 
 # tune the container RAM usage to 8GB by default
 <<<<<<< HEAD
+<<<<<<< HEAD
 #adjust_memory_size ${MAX_MEMORY_GB:=8}
 =======
 adjust_memory_size ${MAX_MEMORY_GB:=8}
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+#adjust_memory_size ${MAX_MEMORY_GB:=8}
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 
 # Apply customizations
 

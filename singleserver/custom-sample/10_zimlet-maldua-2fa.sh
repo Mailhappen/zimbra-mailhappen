@@ -21,6 +21,7 @@ cd $(dirname $0)
 <<<<<<< HEAD
 <<<<<<< HEAD
 # Deploy zimbra maldua 2fa
+<<<<<<< HEAD
 if [ ! -e /opt/zimbra/lib/ext/twofactorauth/zetatwofactorauth.jar ]; then
   cd /tmp \
   && curl --max-time 30 -LO https://github.com/maldua-suite/zimbra-maldua-2fa/releases/download/v0.9.5/zimbra-maldua-2fa_0.9.5.tar.gz \
@@ -34,12 +35,15 @@ if [ ! -e /opt/zimbra/lib/ext/twofactorauth/zetatwofactorauth.jar ]; then
 # Deploy zimbra maldua 2fa
 >>>>>>> 6985041 (Notice set -e not good for us)
 cd /tmp
+=======
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 if [ ! -e /opt/zimbra/lib/ext/twofactorauth/zetatwofactorauth.jar ]; then
-    curl --max-time 30 -LO https://github.com/maldua-suite/zimbra-maldua-2fa/releases/download/v0.9.4/zimbra-maldua-2fa_0.9.4.tar.gz
-    tar xzf zimbra-maldua-2fa_0.9.4.tar.gz
-cd zimbra-maldua-2fa_0.9.4
-    ./install.sh
-    su - zimbra -c 'zmmailboxdctl restart'
+  cd /tmp \
+  && curl --max-time 30 -LO https://github.com/maldua-suite/zimbra-maldua-2fa/releases/download/v0.9.4/zimbra-maldua-2fa_0.9.4.tar.gz \
+  && tar xzf zimbra-maldua-2fa_0.9.4.tar.gz \
+  && cd zimbra-maldua-2fa_0.9.4 \
+  && ./install.sh \
+  && su - zimbra -c 'zmmailboxdctl restart'
 fi
 <<<<<<< HEAD
 

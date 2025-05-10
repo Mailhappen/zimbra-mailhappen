@@ -20,6 +20,7 @@ cd $(dirname $0)
 
 # Deploy undosend zimlet
 <<<<<<< HEAD
+<<<<<<< HEAD
 if [ ! -d /opt/zimbra/zimlets-deployed/com_zimbra_undosend ]; then
   && curl --max-time 30 -L https://gallery.zetalliance.org/extend/items/download/92 -o /tmp/com_zimbra_undosend.zip \
   && su - zimbra -c 'zmzimletctl deploy /tmp/com_zimbra_undosend.zip'
@@ -29,4 +30,9 @@ if [ ! -d /opt/zimbra/zimlets-deployed/com_zimbra_undosend ]; then
   curl --max-time 30 -L https://gallery.zetalliance.org/extend/items/download/92 -o com_zimbra_undosend.zip
   su - zimbra -c 'zmzimletctl deploy /tmp/com_zimbra_undosend.zip'
 >>>>>>> 41d753a (Separate out zimbraimage and deployment)
+=======
+if [ ! -d /opt/zimbra/zimlets-deployed/com_zimbra_undosend ]; then
+  && curl --max-time 30 -L https://gallery.zetalliance.org/extend/items/download/92 -o /tmp/com_zimbra_undosend.zip \
+  && su - zimbra -c 'zmzimletctl deploy /tmp/com_zimbra_undosend.zip'
+>>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 fi
