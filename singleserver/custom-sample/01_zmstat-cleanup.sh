@@ -18,3 +18,4 @@ cat >> /tmp/cron.zimbra <<EOT
 15 0 * * 7 /opt/zimbra/libexec/zmstat-cleanup -k 30
 EOT
 crontab -u zimbra /tmp/cron.zimbra
+

@@ -12,9 +12,9 @@ cd $(dirname $0)
 
 EXTRA_MYNETWORKS=""
 
-echo "Configure mynetworks"
-mynetworks="127.0.0.0/8 [::1]/128 $(hostname -i)/32"
-[ -n "$EXTRA_MYNETWORKS" ] && mynetworks="$mynetworks $EXTRA_MYNETWORKS"
+# restarting container may change to new IP
+echo "Reconfigure mynetworks"
+mynetworks="$(/opt/zimbra/libexec/zmserverips -n | xargs)"
 
 # check first before making changes
 # NOTE about Bash variable expansion
@@ -22,12 +22,19 @@ mynetworks="127.0.0.0/8 [::1]/128 $(hostname -i)/32"
 # NOK: su - zimbra -c "zmprov gs `zmhostname`"
 
 current=$(su - zimbra -c 'postconf -h mynetworks')
-if [ "$current" != "$mynetworks" ]; then
-  zmhostname=$(su - zimbra -c zmhostname)
-  su - zimbra -c 'zmconfigdctl stop'
-  su - zimbra -c "zmprov ms $zmhostname zimbraMtaMyNetworks \"$mynetworks\""
-  su - zimbra -c 'postfix reload'
-  su - zimbra -c 'zmamavisdctl reload'
-  su - zimbra -c 'zmconfigdctl start'
-fi
+[ "$current" == "$mynetworks" ] && exit 0
+
+zmhostname=$(su - zimbra -c zmhostname)
+cmd=/tmp/cmd.$$
+
+cat <<EOT > $cmd
+zmconfigdctl stop
+zmprov ms $zmhostname zimbraMtaMyNetworks "$mynetworks"
+postfix reload
+zmamavisdctl reload
+zmconfigdctl start
+EOT
+
+su - zimbra -c "bash $cmd"
+rm -f $cmd
 

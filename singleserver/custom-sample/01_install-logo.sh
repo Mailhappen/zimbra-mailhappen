@@ -12,6 +12,9 @@ LOGO=logo.svg
 LOGOURL=https://github.com/Mailhappen/
 LOGODIR=/opt/zimbra/jetty/webapps/zimbra/logos
 
+# If this folder exist we quit
+[ -d $LOGODIR ] && exit 0
+
 # Install logo
 mkdir -p $LOGODIR
 chmod 755 $LOGODIR

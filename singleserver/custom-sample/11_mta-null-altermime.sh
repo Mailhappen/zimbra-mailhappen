@@ -11,3 +11,4 @@ cd $(dirname $0)
 su - zimbra -c 'touch /opt/zimbra/data/altermime/.b64'
 su - zimbra -c 'touch /opt/zimbra/data/altermime/.html'
 su - zimbra -c 'touch /opt/zimbra/data/altermime/.txt'
+

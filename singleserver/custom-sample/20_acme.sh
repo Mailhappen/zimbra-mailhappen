@@ -7,7 +7,10 @@ cd $(dirname $0)
 
 # Write your script below
 
-# quit if already installed
+# This is provided as guide. Please edit to suit
+# your environment.
+#
+# quit if already installed (for container restart case)
 [ -d /root/.acme.sh ] && exit 0
 
 # download acme.sh

@@ -1,0 +1,106 @@
+services:
+  zimbra:
+    build: .
+    image: yeak/singleserver
+    restart: unless-stopped
+    stop_grace_period: 3m
+    hostname: mail.zimbra.lab
+    volumes:
+      # zmsetup
+      - type: volume
+        source: data_local
+        target: /zmsetup
+        volume:
+          subpath: zmsetup
+      # all
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/.ssh
+        volume:
+          subpath: dotssh
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/ssl
+        volume:
+          subpath: ssl
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/conf
+        volume:
+          subpath: conf
+      # ldap
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/data
+        volume:
+          subpath: data
+      # mta
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/common/conf
+        volume:
+          subpath: commonconf
+      # mailbox
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/db/data
+        volume:
+          subpath: dbdata
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/zimlets-deployed
+        volume:
+          subpath: zimletsdeployed
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/store
+        volume:
+          subpath: store
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/index
+        volume:
+          subpath: index
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/redolog
+        volume:
+          subpath: redolog
+      # backup
+      - type: volume
+        source: data_local
+        target: /opt/zimbra/backup
+        volume:
+          subpath: backup
+      # our post startup scripts
+      - ./custom:/custom
+    ports:
+      - "25:25"
+      - "80:80"
+      - "443:443"
+      - "465:465"
+      - "587:587"
+      - "636:636"
+      - "993:993"
+      - "995:995"
+      - "7071:7071"
+      - "9071:9071"
+    networks:
+      - zimbranet
+    environment:
+      DEFAULT_ADMIN: mailadmin
+      DEFAULT_PASSWORD: Zimbra
+      TIMEZONE: Asia/Kuala_Lumpur
+      MAX_MEMORY_GB: 8
+      DEV_MODE: n
+
+volumes:
+  data_local:
+    name: my_optzimbra_local
+    external: true
+
+networks:
+  zimbranet:
+    name: zimbranet
+    #external: true
+

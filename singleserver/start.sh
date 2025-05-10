@@ -135,7 +135,7 @@ fi
 # Post Setup
 
 # tune the container RAM usage to 8GB by default
-adjust_memory_size ${MAX_MEMORY_GB:=8}
+#adjust_memory_size ${MAX_MEMORY_GB:=8}
 
 # Apply customizations
 

@@ -16,6 +16,7 @@ if [ ! -f /opt/zimbra/conf/custom_header_checks ]; then
 /^Received: .*localhost.*/  IGNORE
 EOT
 fi
+su - zimbra -c 'zmprov mcf zimbraMtaBlockedExtensionWarnRecipient FALSE'
 su - zimbra -c 'zmprov ms `zmhostname` zimbraMtaHeaderChecks "pcre:/opt/zimbra/conf/postfix_header_checks pcre:/opt/zimbra/conf/custom_header_checks"'
 
 # Sender Restrictions
@@ -28,7 +29,7 @@ fi
 su - zimbra -c 'zmprov ms `zmhostname` zimbraMtaSmtpdSenderLoginMaps "lmdb:/opt/zimbra/conf/slm-exceptions-db, proxy:ldap:/opt/zimbra/conf/ldap-slm.cf"'
 su - zimbra -c 'zmprov ms `zmhostname` zimbraMtaSmtpdSenderRestrictions "reject_authenticated_sender_login_mismatch check_sender_access lmdb:/opt/zimbra/conf/postfix_reject_sender"'
 
-# Add our postfix transport
+# Add our custom postfix transport
 if [ ! -f /opt/zimbra/conf/postfix_transport ]; then
   su - zimbra -c 'touch /opt/zimbra/conf/postfix_transport'
   su - zimbra -c 'postmap /opt/zimbra/conf/postfix_transport'
@@ -40,3 +41,4 @@ cur=$(su - zimbra -c 'postconf -h lmtp_host_lookup' )
 if [ "$cur" != "native" ]; then
   su - zimbra -c 'zmprov ms `zmhostname` zimbraMtaLmtpHostLookup native'
 fi
+
