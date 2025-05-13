@@ -25,8 +25,12 @@ docker volume create -d juicedata/juicefs \
   -o bucket=<BUCKET_NAME> \
   -o access-key=<ACCESS_KEY> \
   -o secret-key=<SECRET_KEY> \
+<<<<<<< HEAD
   jfsvolume
 >>>>>>> 3e77005 (Update changes include juicefs and cleanups)
+=======
+  $juicefs_volume
+>>>>>>> b8a6971 (Update the docs and minor typo.)
 
 docker run --rm \
 	--mount src=$juicefs_volume,dst=/mnt \
