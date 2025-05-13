@@ -24,7 +24,10 @@ Clone our repository and run it.
 ```
 $ git clone https://github.com/Mailhappen/zimbra-mailhappen.git
 $ cd zimbra-mailhappen
-$ cp compose-sample.yaml compose.yaml
+$ cd singleserver
+$ bash create-local-volume.sh
+$ cp compose-local.yaml compose.yaml
+$ docker compose build .
 $ docker compose up -d
 $ docker compose logs -f
 ```
@@ -39,10 +42,15 @@ The container is running and you can visit the Zimbra Admin Console at https://y
 $ docker compose stop
 $ docker compose start
 ```
+
 ### Upgrade to newer Zimbra release
 
+If the new version to upgrade is `yeak/zimbraimage:10.1.8`,
+
 ```
-$ docker compose pull
+$ docker pull yeak/zimbraimage:10.1.8
+$ docker build --build-arg ZIMBRAIMAGE=yeak/zimbraimage:10.1.8 .
 $ docker compose down
 $ docker compose up -d
 ```
+

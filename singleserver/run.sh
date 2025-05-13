@@ -10,7 +10,7 @@ docker build -t yeak/singleserver .
 local_volume="my_optzimbra_data"
 docker volume create $local_volume
 
-juicefs_volume="my_optzimbra_jfs"
+juicefs_volume="my_optzimbra_juicefs"
 docker volume create -d juicedata/juicefs \
   -o name=<VOLUME_NAME> \
   -o metaurl=<META_URL> \
