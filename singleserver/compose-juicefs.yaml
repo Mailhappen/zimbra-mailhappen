@@ -96,7 +96,7 @@ services:
 
 volumes:
   data_juicefs:
-    name: my_optzimbra_juicefs
+    name: my-optzimbra-juicefs
     external: true
 
 networks:

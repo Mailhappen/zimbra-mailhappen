@@ -96,10 +96,10 @@ services:
 
 volumes:
   data_local:
-    name: my_optzimbra_local
+    name: my-optzimbra-local
     external: true
   data_juicefs:
-    name: my_optzimbra_juicefs
+    name: my-optzimbra-juicefs
     external: true
 
 networks:

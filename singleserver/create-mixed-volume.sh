@@ -3,8 +3,9 @@
 # To ensure data safety, create our own volume and use it externally.
 # Then we store paths in a single volume for easy handling.
 
-local_volume="my_optzimbra_local"
-juicefs_volume="my_optzimbra_juicefs"
+local_volume="my-optzimbra-local"
+juicefs_volume="my-optzimbra-juicefs"
+juicefs_prefix="$juicefs_volume" # only alphabet, number, - and 3 to 63 chars.
 
 # create local volume
 #
@@ -16,9 +17,9 @@ docker run --rm \
 # mailbox keep in juicefs
 #
 docker volume create -d juicedata/juicefs \
-  -o name=<VOLUME_NAME> \
+  -o name=$juicefs_prefix \
   -o metaurl=<META_URL> \
-  -o storage=<STORAGE_TYPE> \
+  -o storage=s3 \
   -o bucket=<BUCKET_NAME> \
   -o access-key=<ACCESS_KEY> \
   -o secret-key=<SECRET_KEY> \
