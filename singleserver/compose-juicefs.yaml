@@ -97,10 +97,14 @@ services:
 volumes:
   data_juicefs:
 <<<<<<< HEAD
+<<<<<<< HEAD
     name: my-optzimbra-juicefs
 =======
     name: my_optzimbra_juicefs
 >>>>>>> 3e77005 (Update changes include juicefs and cleanups)
+=======
+    name: my-optzimbra-juicefs
+>>>>>>> f61fb77 (Corrected _ to - for juicefs prefix)
     external: true
 
 networks:
