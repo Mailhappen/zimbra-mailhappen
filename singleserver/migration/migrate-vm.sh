@@ -13,6 +13,7 @@ if [ ! -f $source_sshkey ]; then
     echo "Please run below to add ssh key to the source server"
     echo "    ssh-copy-id -i $source_sshkey.pub -p $source_sshport $source_sshuser@$source_zimbra"
     echo "Or manually append the $source_sshkey.pub into $source_sshuser@$source_zimbra:.ssh/.authorized_keys"
+    echo "Once it is done, run this script again."
     exit
 fi
 
@@ -34,7 +35,7 @@ function _rsync() {
 echo
 echo -n "## STEP 1: Copy everything except store, index, backup. OK? [y/N] "
 read answer
-if [ -n "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 
 # make a copy of data.mdb to /tmp at the source first
 echo "copy data.mdb to /tmp"
@@ -64,9 +65,9 @@ _rsync /opt/zimbra/redolog/ /juicefs/redolog/ --delete
 fi
 
 echo
-echo -n "## STEP 2: Copy store and index NOW? [Y/n] "
+echo -n "## STEP 2: Copy store and index NOW? [y/N] "
 read answer
-if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 
 # copy to juicefs also
 #
@@ -75,17 +76,17 @@ _rsync /opt/zimbra/index/ /juicefs/index/ --delete
 fi
 
 echo
-echo -n "## STEP 3: Copy backup NOW? [Y/n] "
+echo -n "## STEP 3: Copy backup NOW? [y/N] "
 read answer
-if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 
 _rsync /opt/zimbra/backup/ /juicefs/backup/ --delete
 fi
 
 echo
-echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [Y/n] "
+echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [y/N] "
 read answer
-if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 
 _cmd="docker run --rm \
 --mount type=volume,src=$target_local,volume-subpath=zmsetup,dst=/zmsetup \
