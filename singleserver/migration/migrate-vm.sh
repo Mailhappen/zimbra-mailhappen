@@ -4,7 +4,17 @@
 source_zimbra=172.16.2.10
 source_sshport=22
 source_sshuser=root
-source_sshkey=./ssh.key # (ssh-keygen -t rsa -f ./ssh.key)
+source_sshkey=./ssh.key
+
+# Help to create the ssh key and give instruction.
+if [ ! -f $source_sshkey ]; then
+    echo "Generating new ssh.key for migration use"
+    ssh-keygen -q -t rsa -N '' -f $source_sshkey
+    echo "Please run below to add ssh key to the source server"
+    echo "    ssh-copy-id -i $source_sshkey.pub -p $source_sshport $source_sshuser@$source_zimbra"
+    echo "Or manually append the $source_sshkey.pub into $source_sshuser@$source_zimbra:.ssh/.authorized_keys"
+    exit
+fi
 
 # Container configuration
 target_local=my-optzimbra-local
@@ -22,9 +32,9 @@ function _rsync() {
 }
 
 echo
-echo -n "## STEP 1: Copy everything except store, index, backup. OK? [Y/n] "
+echo -n "## STEP 1: Copy everything except store, index, backup. OK? [y/N] "
 read answer
-if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+if [ -n "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
 
 # make a copy of data.mdb to /tmp at the source first
 echo "copy data.mdb to /tmp"

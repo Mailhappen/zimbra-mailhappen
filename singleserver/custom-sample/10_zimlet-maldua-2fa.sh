@@ -10,9 +10,9 @@ cd $(dirname $0)
 # Deploy zimbra maldua 2fa
 if [ ! -e /opt/zimbra/lib/ext/twofactorauth/zetatwofactorauth.jar ]; then
   cd /tmp \
-  && curl --max-time 30 -LO https://github.com/maldua-suite/zimbra-maldua-2fa/releases/download/v0.9.4/zimbra-maldua-2fa_0.9.4.tar.gz \
-  && tar xzf zimbra-maldua-2fa_0.9.4.tar.gz \
-  && cd zimbra-maldua-2fa_0.9.4 \
+  && curl --max-time 30 -LO https://github.com/maldua-suite/zimbra-maldua-2fa/releases/download/v0.9.5/zimbra-maldua-2fa_0.9.5.tar.gz \
+  && tar xzf zimbra-maldua-2fa_0.9.5.tar.gz \
+  && cd zimbra-maldua-2fa_0.9.5 \
   && ./install.sh \
   && su - zimbra -c 'zmmailboxdctl restart'
 fi

@@ -7,14 +7,14 @@ docker build -t yeak/singleserver .
 
 # Create volume to keep your data
 
-local_volume="my_optzimbra_data"
+local_volume="my-optzimbra-local"
 docker volume create $local_volume
 
-juicefs_volume="my_optzimbra_juicefs"
+juicefs_volume="my-optzimbra-juicefs"
 docker volume create -d juicedata/juicefs \
-  -o name=<VOLUME_NAME> \
+  -o name=$juicefs_volume \
   -o metaurl=<META_URL> \
-  -o storage=<STORAGE_TYPE> \
+  -o storage=s3 \
   -o bucket=<BUCKET_NAME> \
   -o access-key=<ACCESS_KEY> \
   -o secret-key=<SECRET_KEY> \
