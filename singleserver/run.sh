@@ -14,10 +14,14 @@ local_volume="my-optzimbra-local"
 docker volume create $local_volume
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 juicefs_volume="my-optzimbra-juicefs"
 =======
 juicefs_volume="my_optzimbra_juicefs"
 >>>>>>> b8a6971 (Update the docs and minor typo.)
+=======
+juicefs_volume="my-optzimbra-juicefs"
+>>>>>>> 578f0bc (Organize migration scripts location)
 docker volume create -d juicedata/juicefs \
   -o name=$juicefs_volume \
   -o metaurl=<META_URL> \

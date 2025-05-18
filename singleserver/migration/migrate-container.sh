@@ -15,9 +15,15 @@ function _rsync() {
 }
 
 echo
+<<<<<<< HEAD
 echo -n "## STEP 1: Copy everything except store, index, backup. OK? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+=======
+echo -n "## STEP 1: Copy everything except store, index, backup. OK? [Y/n] "
+read answer
+if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> 578f0bc (Organize migration scripts location)
 
 # copy to local
 _rsync /zmsetup/ /local/zmsetup/
@@ -37,9 +43,15 @@ _rsync /opt/zimbra/redolog/ /juicefs/redolog/ --delete
 fi
 
 echo
+<<<<<<< HEAD
 echo -n "## STEP 2: Copy store and index NOW? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+=======
+echo -n "## STEP 2: Copy store and index NOW? [Y/n] "
+read answer
+if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> 578f0bc (Organize migration scripts location)
 
 # copy this to juicefs also
 #
@@ -48,17 +60,29 @@ _rsync /opt/zimbra/index/ /juicefs/index/ --delete
 fi
 
 echo
+<<<<<<< HEAD
 echo -n "## STEP 3: Copy backup NOW? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+=======
+echo -n "## STEP 3: Copy backup NOW? [Y/n] "
+read answer
+if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> 578f0bc (Organize migration scripts location)
 
 _rsync /opt/zimbra/backup/ /juicefs/backup/ --delete
 fi
 
 echo
+<<<<<<< HEAD
 echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+=======
+echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [Y/n] "
+read answer
+if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> 578f0bc (Organize migration scripts location)
 
 _cmd="docker run --rm \
 --mount type=volume,src=$target_local,volume-subpath=zmsetup,dst=/zmsetup \

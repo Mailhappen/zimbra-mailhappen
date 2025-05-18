@@ -13,7 +13,10 @@ if [ ! -f $source_sshkey ]; then
     echo "Please run below to add ssh key to the source server"
     echo "    ssh-copy-id -i $source_sshkey.pub -p $source_sshport $source_sshuser@$source_zimbra"
     echo "Or manually append the $source_sshkey.pub into $source_sshuser@$source_zimbra:.ssh/.authorized_keys"
+<<<<<<< HEAD
     echo "Once it is done, run this script again."
+=======
+>>>>>>> 578f0bc (Organize migration scripts location)
     exit
 fi
 
@@ -35,7 +38,11 @@ function _rsync() {
 echo
 echo -n "## STEP 1: Copy everything except store, index, backup. OK? [y/N] "
 read answer
+<<<<<<< HEAD
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+=======
+if [ -n "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> 578f0bc (Organize migration scripts location)
 
 # make a copy of data.mdb to /tmp at the source first
 echo "copy data.mdb to /tmp"
@@ -65,9 +72,15 @@ _rsync /opt/zimbra/redolog/ /juicefs/redolog/ --delete
 fi
 
 echo
+<<<<<<< HEAD
 echo -n "## STEP 2: Copy store and index NOW? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+=======
+echo -n "## STEP 2: Copy store and index NOW? [Y/n] "
+read answer
+if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> 578f0bc (Organize migration scripts location)
 
 # copy to juicefs also
 #
@@ -76,17 +89,29 @@ _rsync /opt/zimbra/index/ /juicefs/index/ --delete
 fi
 
 echo
+<<<<<<< HEAD
 echo -n "## STEP 3: Copy backup NOW? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+=======
+echo -n "## STEP 3: Copy backup NOW? [Y/n] "
+read answer
+if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> 578f0bc (Organize migration scripts location)
 
 _rsync /opt/zimbra/backup/ /juicefs/backup/ --delete
 fi
 
 echo
+<<<<<<< HEAD
 echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+=======
+echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [Y/n] "
+read answer
+if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> 578f0bc (Organize migration scripts location)
 
 _cmd="docker run --rm \
 --mount type=volume,src=$target_local,volume-subpath=zmsetup,dst=/zmsetup \

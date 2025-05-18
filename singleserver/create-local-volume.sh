@@ -5,6 +5,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 local_volume="my-optzimbra-local"
 docker volume create $local_volume
 =======
@@ -13,6 +14,9 @@ docker volume create $my_volume_name
 >>>>>>> 3e77005 (Update changes include juicefs and cleanups)
 =======
 local_volume="my-optzimbra"
+=======
+local_volume="my-optzimbra-local"
+>>>>>>> 578f0bc (Organize migration scripts location)
 docker volume create $local_volume
 >>>>>>> f61fb77 (Corrected _ to - for juicefs prefix)
 docker run --rm \
