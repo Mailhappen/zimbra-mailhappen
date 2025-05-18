@@ -1,14 +1,16 @@
 #!/bin/bash
-# set -e Exit immediately if any command failed
 # set -x Enable debugging
-set -ex
+set -x
 
 # Must run in the dirname of the script
 cd $(dirname $0)
 
 # Write your script below
 
-# quit if already installed
+# This is provided as guide. Please edit to suit
+# your environment.
+#
+# quit if already installed (for container restart case)
 [ -d /root/.acme.sh ] && exit 0
 
 # download acme.sh

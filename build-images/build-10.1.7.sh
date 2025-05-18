@@ -3,6 +3,10 @@
 # Edit the version to build
 
 GIT_DEFAULT_TAGS=10.1.7,10.1.6,10.1.5,10.1.4,10.1.3,10.1.2,10.1.1,10.1.0
+<<<<<<< HEAD
+=======
+BUILD_TAG=10.1.6
+>>>>>>> ba37a904e3bf5c9327386ae2ef49491276a9abee
 BUILD_RELEASE_NO=10.1.7
 BUILD_CANDIDATE=GA
 BUILD_NO=1040000
@@ -18,8 +22,12 @@ cat > ${RUN} <<EOT
 
 mkdir installer-build
 cd installer-build
+<<<<<<< HEAD
 #git clone --depth 1 --branch ${BUILD_RELEASE_NO} https://github.com/Zimbra/zm-build.git
 git clone --depth 1 https://github.com/Zimbra/zm-build.git
+=======
+git clone --depth 1 --branch ${BUILD_TAG} https://github.com/Zimbra/zm-build.git
+>>>>>>> ba37a904e3bf5c9327386ae2ef49491276a9abee
 cd zm-build
 ENV_CACHE_CLEAR_FLAG=true ./build.pl \
 	--ant-options \
@@ -53,6 +61,7 @@ else
 		/data/run-${BUILD_RELEASE_NO}.sh
 fi
 
+<<<<<<< HEAD
 # 3. Make the yeak/baseimage for deployment
 docker build -t yeak/baseimage ./baseimage
 
@@ -70,3 +79,6 @@ docker build -t yeak/zimbraimage:${BUILD_RELEASE_NO} \
 	--build-arg DOWNLOAD=http://host.docker.internal:12312/data/${ZCS}.tgz \
 	./zimbraimage
 docker rm -f tmp12312
+=======
+ls ./data
+>>>>>>> ba37a904e3bf5c9327386ae2ef49491276a9abee

@@ -1,7 +1,6 @@
 #!/bin/bash
-# set -e Exit immediately if any command failed
 # set -x Enable debugging
-set -ex
+set -x
 
 # Must run in the dirname of the script
 cd $(dirname $0)
@@ -12,6 +11,9 @@ cd $(dirname $0)
 LOGO=logo.svg
 LOGOURL=https://github.com/Mailhappen/
 LOGODIR=/opt/zimbra/jetty/webapps/zimbra/logos
+
+# If this folder exist we quit
+[ -d $LOGODIR ] && exit 0
 
 # Install logo
 mkdir -p $LOGODIR

@@ -1,7 +1,6 @@
 #!/bin/bash
-# set -e Exit immediately if any command failed
 # set -x Enable debugging
-set -ex
+set -x
 
 # Must run in the dirname of the script
 cd $(dirname $0)
@@ -19,3 +18,4 @@ cat >> /tmp/cron.zimbra <<EOT
 15 0 * * 7 /opt/zimbra/libexec/zmstat-cleanup -k 30
 EOT
 crontab -u zimbra /tmp/cron.zimbra
+

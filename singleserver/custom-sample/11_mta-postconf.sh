@@ -1,7 +1,6 @@
 #!/bin/bash
-# set -e Exit immediately if any command failed
 # set -x Enable debugging
-set -ex
+set -x
 
 # Must run in the dirname of the script
 cd $(dirname $0)
@@ -16,7 +15,7 @@ su - zimbra -c "postconf -e tls_medium_cipherlist=$(/opt/zimbra/common/bin/opens
 su - zimbra -c "postconf -e tls_preempt_cipherlist=no"
 
 # Disable DSN on delivered mail
-su - zimbra -c 'postconf -e smtpd_discard_ehlo_keywords=silent-discard,dsn'
+#su - zimbra -c 'postconf -e smtpd_discard_ehlo_keywords=silent-discard,dsn'
 
 # Configure catchall-domains
 if [ ! -f /opt/zimbra/conf/catchall-domains ]; then
