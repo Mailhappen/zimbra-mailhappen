@@ -33,5 +33,6 @@ COPY --chmod=644 default.ini /etc/supervisord.d/default.ini
 COPY --chmod=755 supervisor/ /supervisor/
 COPY --chmod=644 sysstat.cron /etc/cron.d/sysstat
 COPY --chmod=755 logrotate /etc/cron.daily/logrotate
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
 
-ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+ENTRYPOINT ["/entrypoint.sh"]

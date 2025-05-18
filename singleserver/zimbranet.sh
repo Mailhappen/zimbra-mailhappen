@@ -25,5 +25,5 @@ sudo docker network create -d bridge \
   zimbranet
 
 # allow passthru in iptables
-sudo iptables -C DOCKER-USER -i $ext_if -o zimbra0 -j ACCEPT >/dev/null 2>&1 || \
+sudo iptables -C DOCKER-USER -i $ext_if -o zimbra0 -j ACCEPT >/dev/null 2>&1 ||
 sudo iptables -I DOCKER-USER -i $ext_if -o zimbra0 -j ACCEPT >/dev/null 2>&1

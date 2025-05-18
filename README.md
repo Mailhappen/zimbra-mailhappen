@@ -20,32 +20,48 @@ The `build-images` contains scripts to make your own Zimbra FOSS.
 - `baseimage` is the RockyLinux9 OS image for running Zimbra
 - `zimbraimage` is the Zimbra FOSS image designed to run as container.
 
-You are encouraged to build your own zcs tgz file. Please refer to `build-images/build-10.*.sh` for details.
+You are welcomed to build your own zcs tgz file. Please refer to `build-images/build-10.*.sh` for details.
 
-Example to build Zimbra FOSS 10.1.5,
+Example to build Zimbra FOSS 10.1.7,
 
 ```
 $ cd build-images
-$ bash build-10.1.5.sh
+$ bash build-10.1.7.sh
+$ bash make-zimbraimage
 ```
 
-This will take a while to complete. You will get a docker image called `yeak/zimbraimage:10.1.5` in your images list.
+This will take a while to complete. You will get a tgz in ./data directory. This is the usual zcs installer you used to install Zimbra FOSS. You will also get a docker image named `yeak/zimbraimage:10.1.7` for container deployment.
 
-You can skip the building steps and use the images we have made and published in Docker Hub. Refer to [QUICKSTART](QUICKSTART.md) for guide.
+NOTE: You can skip the building steps and use the images we have made and published in Docker Hub. Refer to [QUICKSTART](QUICKSTART.md) for guide.
 
 ## Test run Zimbra
 
-Create a `compose.yaml` file from the sample given.
+When deploying Zimbra, decide if you want to run *singleserver* or *multiserver*. Note, at this moment only singleserver is ready to try.
+
+### Singleserver
+
+Go into `singleserver` directory and build the docker image that run as singleserver.
 
 ```
-$ cp compose-sample.yaml compose.yaml
+$ cd singleserver
+$ vi Dockerfile
+$ docker build .
+```
+
+Check and update the ZIMBRAIMAGE version to the version you wanted. The build command will create `yeak/singleserver` using the version you specified.
+
+Now you can run it.
+
+```
+$ bash create-local-volume.sh
+$ cp compose-local.yaml compose.yaml
 $ vi compose.yaml
 $ docker compose up -d
 ```
 
-- Edit `image:` section to specify the zcs version you want to deploy. We currently have 10.1.5 only
-- Edit `container-name:` section for your `hostname` and `environment`
-- Leave the `volumes:` section as is. You can enhance it later with external volumes.
+- Edit `hostname:` to suit your need.
+- Edit other environment variable to set the default password.
+- Leave the `volumes:` section as is.
 
 For day-to-day operation, if you need to stop Zimbra, simply do this:
 
@@ -54,15 +70,16 @@ $ docker compose stop
 $ docker compose start
 ```
 
-When there is new image available, you simply do this:
+When there is new Zimbra version released, there will be new build script available and you just recreate the new zimbraimage. Then update Dockerfile to use the new version to build your `yeak/singleserver` again.
+
+One example is to use what we built and published at Docker Hub.
 
 ```
-$ docker compose pull
+$ docker pull yeak/zimbraimage:10.1.8
+$ docker build --build-arg ZIMBRAIMAGE=yeak/zimbraimage:10.1.8 .
 $ docker compose down
 $ docker compose up -d
 ```
-
-Everytime when you down and up the container, it will take a while to start up because it needs to reconfigure itself.
 
 To view any progress when container is starting, type:
 

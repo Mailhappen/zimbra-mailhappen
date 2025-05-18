@@ -1,0 +1,32 @@
+#!/bin/bash
+#set -x
+
+ZCS=$1
+BUILD_NO=$2
+
+[ -z "$ZCS" ] && ZCS=$(basename `ls data/zcs-*.tgz | tail -1`)
+[ -z "$BUILD_NO" ] && BUILD_NO=1040000
+
+ZCS=$(basename $ZCS)
+ZCS=${ZCS%.tgz}
+
+v=$(echo $ZCS | sed -e 's/zcs-\(.*\..*\..*\)_GA_.*/\1/')
+
+echo "File:    $ZCS"
+echo "Version: $v"
+
+# 3. Make the yeak/baseimage for deployment
+docker build -t yeak/baseimage ./baseimage
+
+# 4. Make the yeak/zimbraimage for deployment
+# publish our tgz in a temp webserver
+docker run -d -p 12312:80 --name tmp12312 -v ./data:/usr/share/nginx/html/data nginx
+docker build -t yeak/zimbraimage:$v \
+	--label name=zimbra \
+	--label version=$v \
+	--label build_no=$BUILD_NO \
+	--build-arg ZCS=$ZCS \
+	--add-host=host.docker.internal:host-gateway \
+	--build-arg DOWNLOAD=http://host.docker.internal:12312/data/$ZCS.tgz \
+	./zimbraimage
+docker rm -f tmp12312

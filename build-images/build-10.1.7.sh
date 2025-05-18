@@ -2,10 +2,11 @@
 
 # Edit the version to build
 
-GIT_DEFAULT_TAGS=10.1.0
-BUILD_RELEASE_NO=10.1.0
+GIT_DEFAULT_TAGS=10.1.7,10.1.6,10.1.5,10.1.4,10.1.3,10.1.2,10.1.1,10.1.0
+BUILD_TAG=10.1.6
+BUILD_RELEASE_NO=10.1.7
 BUILD_CANDIDATE=GA
-BUILD_NO=1000
+BUILD_NO=1040000
 BUILD_TS=`date +'%Y%m%d%H%M%S'`
 BUILD_TYPE=FOSS
 
@@ -18,7 +19,7 @@ cat > ${RUN} <<EOT
 
 mkdir installer-build
 cd installer-build
-git clone --depth 1 --branch ${BUILD_RELEASE_NO} https://github.com/Zimbra/zm-build.git
+git clone --depth 1 --branch ${BUILD_TAG} https://github.com/Zimbra/zm-build.git
 cd zm-build
 ENV_CACHE_CLEAR_FLAG=true ./build.pl \
 	--ant-options \
@@ -52,17 +53,4 @@ else
 		/data/run-${BUILD_RELEASE_NO}.sh
 fi
 
-# 3. Make the yeak/baseimage for deployment
-docker build -t yeak/baseimage ./baseimage
-
-# 4. Make the yeak/zimbraimage for deployment
-cp -f ./data/${ZCS}.tgz ./zimbraimage
-docker build -t yeak/zimbraimage:${BUILD_RELEASE_NO} \
-	--label name=zimbra \
-	--label version=${BUILD_RELEASE_NO} \
-	--label candidate=${BUILD_CANDIDATE} \
-	--label build=${BUILD_NO} \
-	--label type=${BUILD_TYPE} \
-	--build-arg ZCS=${ZCS} \
-	./zimbraimage
-rm -f ./zimbraimage/${ZCS}.tgz
+ls ./data
