@@ -96,24 +96,10 @@ services:
 
 volumes:
   data_local:
-<<<<<<< HEAD
-<<<<<<< HEAD
     name: my-optzimbra-local
     external: true
   data_juicefs:
     name: my-optzimbra-juicefs
-=======
-    name: my_optzimbra_local
-    external: true
-  data_juicefs:
-    name: my_optzimbra_juicefs
->>>>>>> 3e77005 (Update changes include juicefs and cleanups)
-=======
-    name: my-optzimbra-local
-    external: true
-  data_juicefs:
-    name: my-optzimbra-juicefs
->>>>>>> f61fb77 (Corrected _ to - for juicefs prefix)
     external: true
 
 networks:
