@@ -16,6 +16,7 @@ function _rsync() {
 
 echo
 <<<<<<< HEAD
+<<<<<<< HEAD
 echo -n "## STEP 1: Copy everything except store, index, backup. OK? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
@@ -24,6 +25,11 @@ echo -n "## STEP 1: Copy everything except store, index, backup. OK? [Y/n] "
 read answer
 if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
 >>>>>>> 578f0bc (Organize migration scripts location)
+=======
+echo -n "## STEP 1: Copy everything except store, index, backup. OK? [y/N] "
+read answer
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> b1b558d (Change to N by default)
 
 # copy to local
 _rsync /zmsetup/ /local/zmsetup/
@@ -44,6 +50,7 @@ fi
 
 echo
 <<<<<<< HEAD
+<<<<<<< HEAD
 echo -n "## STEP 2: Copy store and index NOW? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
@@ -52,6 +59,11 @@ echo -n "## STEP 2: Copy store and index NOW? [Y/n] "
 read answer
 if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
 >>>>>>> 578f0bc (Organize migration scripts location)
+=======
+echo -n "## STEP 2: Copy store and index NOW? [y/N] "
+read answer
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> b1b558d (Change to N by default)
 
 # copy this to juicefs also
 #
@@ -61,6 +73,7 @@ fi
 
 echo
 <<<<<<< HEAD
+<<<<<<< HEAD
 echo -n "## STEP 3: Copy backup NOW? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
@@ -69,11 +82,17 @@ echo -n "## STEP 3: Copy backup NOW? [Y/n] "
 read answer
 if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
 >>>>>>> 578f0bc (Organize migration scripts location)
+=======
+echo -n "## STEP 3: Copy backup NOW? [y/N] "
+read answer
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> b1b558d (Change to N by default)
 
 _rsync /opt/zimbra/backup/ /juicefs/backup/ --delete
 fi
 
 echo
+<<<<<<< HEAD
 <<<<<<< HEAD
 echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [y/N] "
 read answer
@@ -83,6 +102,11 @@ echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [Y/n] "
 read answer
 if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
 >>>>>>> 578f0bc (Organize migration scripts location)
+=======
+echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [y/N] "
+read answer
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> b1b558d (Change to N by default)
 
 _cmd="docker run --rm \
 --mount type=volume,src=$target_local,volume-subpath=zmsetup,dst=/zmsetup \

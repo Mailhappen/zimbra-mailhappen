@@ -14,9 +14,13 @@ if [ ! -f $source_sshkey ]; then
     echo "    ssh-copy-id -i $source_sshkey.pub -p $source_sshport $source_sshuser@$source_zimbra"
     echo "Or manually append the $source_sshkey.pub into $source_sshuser@$source_zimbra:.ssh/.authorized_keys"
 <<<<<<< HEAD
+<<<<<<< HEAD
     echo "Once it is done, run this script again."
 =======
 >>>>>>> 578f0bc (Organize migration scripts location)
+=======
+    echo "Once it is done, run this script again."
+>>>>>>> b1b558d (Change to N by default)
     exit
 fi
 
@@ -39,10 +43,14 @@ echo
 echo -n "## STEP 1: Copy everything except store, index, backup. OK? [y/N] "
 read answer
 <<<<<<< HEAD
+<<<<<<< HEAD
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 =======
 if [ -n "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
 >>>>>>> 578f0bc (Organize migration scripts location)
+=======
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> b1b558d (Change to N by default)
 
 # make a copy of data.mdb to /tmp at the source first
 echo "copy data.mdb to /tmp"
@@ -73,6 +81,7 @@ fi
 
 echo
 <<<<<<< HEAD
+<<<<<<< HEAD
 echo -n "## STEP 2: Copy store and index NOW? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
@@ -81,6 +90,11 @@ echo -n "## STEP 2: Copy store and index NOW? [Y/n] "
 read answer
 if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
 >>>>>>> 578f0bc (Organize migration scripts location)
+=======
+echo -n "## STEP 2: Copy store and index NOW? [y/N] "
+read answer
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> b1b558d (Change to N by default)
 
 # copy to juicefs also
 #
@@ -90,6 +104,7 @@ fi
 
 echo
 <<<<<<< HEAD
+<<<<<<< HEAD
 echo -n "## STEP 3: Copy backup NOW? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
@@ -98,11 +113,17 @@ echo -n "## STEP 3: Copy backup NOW? [Y/n] "
 read answer
 if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
 >>>>>>> 578f0bc (Organize migration scripts location)
+=======
+echo -n "## STEP 3: Copy backup NOW? [y/N] "
+read answer
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> b1b558d (Change to N by default)
 
 _rsync /opt/zimbra/backup/ /juicefs/backup/ --delete
 fi
 
 echo
+<<<<<<< HEAD
 <<<<<<< HEAD
 echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [y/N] "
 read answer
@@ -112,6 +133,11 @@ echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [Y/n] "
 read answer
 if [ -z "$answer" -o "$answer" == "Y" -o "$answer" == "y" ]; then
 >>>>>>> 578f0bc (Organize migration scripts location)
+=======
+echo -n "## STEP 4: Will attempts to setup/upgrade. OK? [y/N] "
+read answer
+if [ "$answer" == "Y" -o "$answer" == "y" ]; then
+>>>>>>> b1b558d (Change to N by default)
 
 _cmd="docker run --rm \
 --mount type=volume,src=$target_local,volume-subpath=zmsetup,dst=/zmsetup \
