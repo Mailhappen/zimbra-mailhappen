@@ -32,5 +32,9 @@ VOLUME /opt/zimbra/index
 VOLUME /opt/zimbra/redolog
 # backup
 VOLUME /opt/zimbra/backup
+# license
+VOLUME /opt/zimbra/license
+# onlyoffice App_Data
+VOLUME /opt/zimbra/onlyoffice/documentserver/App_Data
 
-EXPOSE 25 80 443 465 587 636 993 995 7071 9071
+EXPOSE 25 80 443 587 636 993 995 7071 9071

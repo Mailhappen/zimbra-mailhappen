@@ -75,8 +75,8 @@ else
     cat /opt/zimbra/.install_history >> /zmsetup/install_history
     /usr/bin/rsync -av -u /upgrade/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
     /usr/bin/rsync -av -u /upgrade/data/ /opt/zimbra/data/
-    /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
-    /usr/bin/rsync -av -u /upgrade/license/ /opt/zimbra/license/
+    [ -d /opt/zimbra/common/conf ] && /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
+    [ -d /opt/zimbra/license ] && /usr/bin/rsync -av -u /upgrade/license/ /opt/zimbra/license/
     dosetup=1
   fi
 fi 
@@ -92,7 +92,8 @@ if [ $dosetup -eq 0 -a $containerstarted -ne 1 ]; then
   su - zimbra -c "zmcertmgr addcacert /opt/zimbra/conf/ca/ca.pem"
   su - zimbra -c "zmcertmgr deploycrt self"
   su - zimbra -c "ldap start"
-  su - zimbra -c "libexec/zmloggerinit"
+  LOGHOST=$(su - zimbra -c 'zmprov -m -l gcf zimbraLogHostname' | awk '{print $2}');
+  [ "$LOGHOST" == "$HOSTNAME" ] && su - zimbra -c "libexec/zmloggerinit"
   [ -d /opt/zimbra/common/jetty_home/resources ] && \
     cd /opt/zimbra/common/jetty_home/resources && \
     ln -sf /opt/zimbra/jetty_base/etc/jetty-logging.properties && \
@@ -115,6 +116,9 @@ if [ $dosetup -eq 1 ]; then
   # set public service hostname
   su - zimbra -c "zmprov mcf zimbraPublicServiceProtocol https zimbraPublicServiceHostname $PUBLIC_SERVICE_HOSTNAME zimbraPublicServicePort 443"
 
+  # onlyoffice App_Data
+  [ -d /opt/zimbra/onlyoffice/documentserver/App_Data ] && install -o zimbra -g zimbra -m 750 -d /opt/zimbra/onlyoffice/documentserver/App_Data
+
   # keep results after configure
   /usr/bin/cp -af /opt/zimbra/config.* /zmsetup/
   /usr/bin/cp -af /opt/zimbra/config.* /zmsetup/config.zimbra
@@ -130,7 +134,7 @@ fi
 # Post Setup
 
 # tune the container RAM usage to 8GB by default
-#adjust_memory_size ${MAX_MEMORY_GB:=8}
+adjust_memory_size ${MAX_MEMORY_GB:=8}
 
 # Apply customizations
 
@@ -167,6 +171,6 @@ trap stop_zimbra SIGINT SIGTERM
 
 while true
 do
-  sleep 60
+  sleep 3600
 done
 

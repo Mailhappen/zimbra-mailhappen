@@ -7,5 +7,5 @@ local_volume="my-optzimbra-local"
 docker volume create $local_volume
 docker run --rm \
 	--mount src=$local_volume,dst=/mnt \
-	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup,license}
+	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup,license,oodata}
 

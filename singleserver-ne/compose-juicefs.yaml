@@ -101,6 +101,12 @@ services:
         target: /opt/zimbra/license
         volume:
           subpath: license
+      # onlyoffice App_Data
+      - type: volume
+        source: data_juicefs
+        target: /opt/zimbra/onlyoffice/documentserver/App_Data
+        volume:
+          subpath: oodata
       # our post startup scripts
       - ./custom:/custom
 

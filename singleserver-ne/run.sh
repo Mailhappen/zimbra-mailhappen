@@ -24,7 +24,7 @@ docker volume create -d juicedata/juicefs \
 for v in $local_volume $juicefs_volume; do
 docker run --rm \
 	--mount src=$v,dst=/mnt \
-	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup,license}
+	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup,license,oodata}
 done
 
 # Run it
@@ -44,6 +44,7 @@ docker run -d \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=redolog,dst=/opt/zimbra/redolog \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=backup,dst=/opt/zimbra/backup \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=license,dst=/opt/zimbra/license \
+	--mount type=volume,src=$juicefs_volume,volume-subpath=oodata,dst=/opt/zimbra/onlyoffice/documentserver/App_Data \
         --mount type=bind,src=./config.defaults,dst=/config.defaults \
         --mount type=bind,src=./config.secrets,dst=/run/secrets/config.secrets \
 	-v ./custom:/custom \
@@ -56,7 +57,6 @@ docker run -d \
 	-p 25:25 \
 	-p 80:80 \
 	-p 443:443 \
-	-p 465:465 \
 	-p 587:587 \
 	-p 636:636 \
 	-p 993:993 \

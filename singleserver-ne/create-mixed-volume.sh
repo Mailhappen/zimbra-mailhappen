@@ -12,7 +12,7 @@ juicefs_prefix="$juicefs_volume" # only alphabet, number, - and 3 to 63 chars.
 docker volume create $local_volume
 docker run --rm \
 	--mount src=$local_volume,dst=/mnt \
-	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup,license}
+	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup,license,oodata}
 
 # mailbox keep in juicefs
 #
@@ -27,5 +27,5 @@ docker volume create -d juicedata/juicefs \
 
 docker run --rm \
 	--mount src=$juicefs_volume,dst=/mnt \
-	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup,license}
+	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup,license,oodata}
 
