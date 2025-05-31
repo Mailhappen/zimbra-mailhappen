@@ -25,9 +25,9 @@ You are welcomed to build your own zcs tgz file. Please refer to `build-images/b
 Example to build Zimbra FOSS 10.1.7,
 
 ```
-$ cd build-images
-$ bash build-10.1.7.sh
-$ bash make-zimbraimage
+cd build-images
+bash build-10.1.7.sh
+bash make-zimbraimage
 ```
 
 This will take a while to complete. You will get a tgz in ./data directory. This is the usual zcs installer you used to install Zimbra FOSS. You will also get a docker image named `yeak/zimbraimage:10.1.7` for container deployment.
@@ -43,9 +43,9 @@ When deploying Zimbra, decide if you want to run *singleserver* or *multiserver*
 Go into `singleserver` directory and build the docker image that run as singleserver.
 
 ```
-$ cd singleserver
-$ vi Dockerfile
-$ docker build .
+cd singleserver
+vi Dockerfile
+docker build .
 ```
 
 Check and update the ZIMBRAIMAGE version to the version you wanted. The build command will create `yeak/singleserver` using the version you specified.
@@ -53,21 +53,23 @@ Check and update the ZIMBRAIMAGE version to the version you wanted. The build co
 Now you can run it.
 
 ```
-$ bash create-local-volume.sh
-$ cp compose-local.yaml compose.yaml
-$ vi compose.yaml
-$ docker compose up -d
+bash create-local-volume.sh
+cp compose-local.yaml compose.yaml
+cp config.secrets.sample config.secrets
+vi compose.yaml
+docker compose up -d
 ```
 
 - Edit `hostname:` to suit your need.
-- Edit other environment variable to set the default password.
+- Edit other environment variable to set the default admin
+- Edit config.secrets to set default admin password
 - Leave the `volumes:` section as is.
 
 For day-to-day operation, if you need to stop Zimbra, simply do this:
 
 ```
-$ docker compose stop
-$ docker compose start
+docker compose stop
+docker compose start
 ```
 
 When there is new Zimbra version released, there will be new build script available and you just recreate the new zimbraimage. Then update Dockerfile to use the new version to build your `yeak/singleserver` again.
@@ -75,16 +77,16 @@ When there is new Zimbra version released, there will be new build script availa
 One example is to use what we built and published at Docker Hub.
 
 ```
-$ docker pull yeak/zimbraimage:10.1.8
-$ docker build --build-arg ZIMBRAIMAGE=yeak/zimbraimage:10.1.8 .
-$ docker compose down
-$ docker compose up -d
+docker pull yeak/zimbraimage:10.1.8
+docker build --build-arg ZIMBRAIMAGE=yeak/zimbraimage:10.1.8 .
+docker compose down
+docker compose up -d
 ```
 
 To view any progress when container is starting, type:
 
 ```
-$ docker compose logs -f
+docker compose logs -f
 ```
 
 ## Support

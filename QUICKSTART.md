@@ -22,15 +22,20 @@ Refer to [INSTALL DOCKER](INSTALL-DOCKER.md) for info.
 Clone our repository and run it.
 
 ```
-$ git clone https://github.com/Mailhappen/zimbra-mailhappen.git
-$ cd zimbra-mailhappen
-$ cd singleserver
-$ bash create-local-volume.sh
-$ cp compose-local.yaml compose.yaml
-$ docker compose build .
-$ docker compose up -d
-$ docker compose logs -f
+git clone https://github.com/Mailhappen/zimbra-mailhappen.git
+cd zimbra-mailhappen
+cd singleserver
+bash create-local-volume.sh
+cp compose-local.yaml compose.yaml
+cp config.secrets.sample config.secrets
+docker compose build .
+docker compose up -d
+docker compose logs -f
 ```
+
+You may edit `compose.yaml` and `config.secrets` to set your preferences.
+
+The default admin will be `mailadmin` and password is `Zimbra`.
 
 The container is running and you can visit the Zimbra Admin Console at https://your-vm:7071/.
 
@@ -39,8 +44,8 @@ The container is running and you can visit the Zimbra Admin Console at https://y
 ### Stop and start container
 
 ```
-$ docker compose stop
-$ docker compose start
+docker compose stop
+docker compose start
 ```
 
 ### Upgrade to newer Zimbra release
@@ -48,9 +53,9 @@ $ docker compose start
 If the new version to upgrade is `yeak/zimbraimage:10.1.8`,
 
 ```
-$ docker pull yeak/zimbraimage:10.1.8
-$ docker build --build-arg ZIMBRAIMAGE=yeak/zimbraimage:10.1.8 .
-$ docker compose down
-$ docker compose up -d
+docker pull yeak/zimbraimage:10.1.8
+docker build --build-arg ZIMBRAIMAGE=yeak/zimbraimage:10.1.8 .
+docker compose down
+docker compose up -d
 ```
 
