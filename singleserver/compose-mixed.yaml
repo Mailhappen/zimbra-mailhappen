@@ -5,26 +5,49 @@ services:
     restart: unless-stopped
     stop_grace_period: 3m
     hostname: mail.zimbra.lab
+    environment:
+      PUBLIC_SERVICE_HOSTNAME: mail.zimbra.lab
+      ADMIN_USERNAME: mailadmin
+      TIMEZONE: Asia/Kuala_Lumpur
+      MAX_MEMORY_GB: 8
+      DEV_MODE: n
+    configs:
+      - config.defaults
+    secrets:
+      - config.secrets
+    networks:
+      - zimbranet
+    ports:
+      - "25:25"
+      - "80:80"
+      - "443:443"
+      - "465:465"
+      - "587:587"
+      - "636:636"
+      - "993:993"
+      - "995:995"
+      - "7071:7071"
+      - "9071:9071"
     volumes:
       # zmsetup
       - type: volume
-        source: data_local
+        source: data_juicefs
         target: /zmsetup
         volume:
           subpath: zmsetup
       # all
       - type: volume
-        source: data_local
+        source: data_juicefs
         target: /opt/zimbra/.ssh
         volume:
           subpath: dotssh
       - type: volume
-        source: data_local
+        source: data_juicefs
         target: /opt/zimbra/ssl
         volume:
           subpath: ssl
       - type: volume
-        source: data_local
+        source: data_juicefs
         target: /opt/zimbra/conf
         volume:
           subpath: conf
@@ -36,7 +59,7 @@ services:
           subpath: data
       # mta
       - type: volume
-        source: data_local
+        source: data_juicefs
         target: /opt/zimbra/common/conf
         volume:
           subpath: commonconf
@@ -74,25 +97,14 @@ services:
           subpath: backup
       # our post startup scripts
       - ./custom:/custom
-    ports:
-      - "25:25"
-      - "80:80"
-      - "443:443"
-      - "465:465"
-      - "587:587"
-      - "636:636"
-      - "993:993"
-      - "995:995"
-      - "7071:7071"
-      - "9071:9071"
-    networks:
-      - zimbranet
-    environment:
-      DEFAULT_ADMIN: mailadmin
-      DEFAULT_PASSWORD: Zimbra
-      TIMEZONE: Asia/Kuala_Lumpur
-      MAX_MEMORY_GB: 8
-      DEV_MODE: n
+
+configs:
+  config.defaults:
+    file: ./config.defaults
+
+secrets:
+  config.secrets:
+    file: ./config.secrets
 
 volumes:
   data_local:

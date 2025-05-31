@@ -17,5 +17,5 @@ docker volume create -d juicedata/juicefs \
 
 docker run --rm \
 	--mount src=$juicefs_volume,dst=/mnt \
-	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup}
+	alpine mkdir -p /mnt/{zmsetup,dotssh,ssl,conf,data,commonconf,dbdata,zimletsdeployed,store,index,redolog,backup,license,oodata}
 

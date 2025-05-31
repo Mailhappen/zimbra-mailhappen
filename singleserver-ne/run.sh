@@ -3,7 +3,7 @@
 # Alternative way to run docker using command.
 
 # Build
-docker build -t yeak/singleserver .
+docker build -t yeak/singleserver-ne .
 
 # Create volume to keep your data
 
@@ -45,8 +45,8 @@ docker run -d \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=backup,dst=/opt/zimbra/backup \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=license,dst=/opt/zimbra/license \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=oodata,dst=/opt/zimbra/onlyoffice/documentserver/App_Data \
-        --mount type=bind,src=./config.defaults,dst=/config.defaults \
-        --mount type=bind,src=./config.secrets,dst=/run/secrets/config.secrets \
+	--mount type=bind,src=./config.defaults,dst=/config.defaults \
+	--mount type=bind,src=./config.secrets,dst=/run/secrets/config.secrets \
 	-v ./custom:/custom \
 	-h mail.example.com \
 	-e PUBLIC_SERVICE_HOSTNAME=mail.example.com \

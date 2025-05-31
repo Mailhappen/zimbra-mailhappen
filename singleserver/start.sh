@@ -1,20 +1,12 @@
 #!/bin/bash
 set -x
 
-my_hostname="$(hostname -s)"
-my_domain="$(hostname -d)"
-[ -z "$my_domain" ] && my_domain="zimbra.lab"
-my_fqdn="$my_hostname.$my_domain"
-my_admin="${DEFAULT_ADMIN:=sysadmin}"
-my_password="${DEFAULT_PASSWORD:=zimbra}"
-my_timezone="${TIMEZONE:=Asia/Kuala_Lumpur}"
-
-function set_timezone() {
-  if [ -f /usr/share/zoneinfo/$my_timezone ]; then
-    ln -sf /usr/share/zoneinfo/$my_timezone /etc/localtime
-    echo $my_timezone > /etc/timezone
-  fi
-}
+# Set OS timezone
+timezone="${TIMEZONE:=Asia/Kuala_Lumpur}"
+if [ -f /usr/share/zoneinfo/$timezone ]; then
+  ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
+  echo $timezone > /etc/timezone
+fi
 
 function copyln() {
   # we copy what we don't have
@@ -45,39 +37,32 @@ function adjust_memory_size() {
 
 # Pause for debugging
 if [ "$DEV_MODE" = "y" ]; then
-  while true
-  do
-    echo "Dev Mode."
-    sleep 30
-  done
+  echo "Dev Mode"
+  while true; do sleep 60; done
   exit 0
 fi
 
-# Set system timezone
-set_timezone
+#
+# Main
+#
 
 dosetup=0
 containerstarted=0
 
 # Container stop and start back up
 if [ -e /var/spool/cron/zimbra ]; then
-  su - zimbra -c "zmcontrol start"
+  /etc/init.d/zimbra start
   containerstarted=1
 fi
 
 # New install
 if [ ! -e /zmsetup/install_history ]; then
-  cat <<EOT > /zmsetup/config.zimbra
-HOSTNAME="$my_fqdn"
-LDAPHOST="$my_fqdn"
-AVDOMAIN="$my_fqdn"
-CREATEDOMAIN="$my_fqdn"
-AVUSER="$my_admin@$my_fqdn"
-CREATEADMIN="$my_admin@$my_fqdn"
-SMTPDEST="$my_admin@$my_fqdn"
-SMTPSOURCE="$my_admin@$my_fqdn"
-CREATEADMINPASS="$my_password"
-EOT
+  source /run/secrets/config.secrets
+  echo 'cat <<EOT'     >  /tmp/temp.sh
+  cat /config.defaults >> /tmp/temp.sh
+  echo 'EOT'           >> /tmp/temp.sh
+  bash /tmp/temp.sh > /zmsetup/config.zimbra
+  rm -f /tmp/temp.sh
   dosetup=1
 
 # New image version
@@ -90,7 +75,8 @@ else
     cat /opt/zimbra/.install_history >> /zmsetup/install_history
     /usr/bin/rsync -av -u /upgrade/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
     /usr/bin/rsync -av -u /upgrade/data/ /opt/zimbra/data/
-    /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
+    [ -d /opt/zimbra/common/conf ] && /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
+    [ -d /opt/zimbra/license ] && /usr/bin/rsync -av -u /upgrade/license/ /opt/zimbra/license/
     dosetup=1
   fi
 fi 
@@ -106,10 +92,17 @@ if [ $dosetup -eq 0 -a $containerstarted -ne 1 ]; then
   su - zimbra -c "zmcertmgr addcacert /opt/zimbra/conf/ca/ca.pem"
   su - zimbra -c "zmcertmgr deploycrt self"
   su - zimbra -c "ldap start"
-  cd /opt/zimbra/common/jetty_home/resources && ln -sf /opt/zimbra/jetty_base/etc/jetty-logging.properties && cd -
-  /opt/zimbra/common/sbin/newaliases
-  su - zimbra -c "libexec/zmloggerinit"
-  su - zimbra -c "zmcontrol restart"
+  LOGHOST=$(su - zimbra -c 'zmprov -m -l gcf zimbraLogHostname' | awk '{print $2}');
+  [ "$LOGHOST" == "$HOSTNAME" ] && su - zimbra -c "libexec/zmloggerinit"
+  [ -d /opt/zimbra/common/jetty_home/resources ] && \
+    cd /opt/zimbra/common/jetty_home/resources && \
+    ln -sf /opt/zimbra/jetty_base/etc/jetty-logging.properties && \
+    cd -
+  [ -x /opt/zimbra/common/sbin/newaliases ] && \
+    /opt/zimbra/common/sbin/newaliases
+  [ -x /opt/zimbra/onlyoffice/bin/zmonlyofficeconfig ] && \
+    /opt/zimbra/onlyoffice/bin/zmonlyofficeconfig
+  /etc/init.d/zimbra restart
 fi
 
 # Do setup for new install and upgrade
@@ -119,6 +112,12 @@ if [ $dosetup -eq 1 ]; then
 
   # run zmsetup.pl to complete setup
   /opt/zimbra/libexec/zmsetup.pl -c /zmsetup/config.zimbra
+
+  # set public service hostname
+  su - zimbra -c "zmprov mcf zimbraPublicServiceProtocol https zimbraPublicServiceHostname $PUBLIC_SERVICE_HOSTNAME zimbraPublicServicePort 443"
+
+  # onlyoffice App_Data
+  [ -d /opt/zimbra/onlyoffice/documentserver/App_Data ] && install -o zimbra -g zimbra -m 750 -d /opt/zimbra/onlyoffice/documentserver/App_Data
 
   # keep results after configure
   /usr/bin/cp -af /opt/zimbra/config.* /zmsetup/
@@ -135,7 +134,7 @@ fi
 # Post Setup
 
 # tune the container RAM usage to 8GB by default
-#adjust_memory_size ${MAX_MEMORY_GB:=8}
+adjust_memory_size ${MAX_MEMORY_GB:=8}
 
 # Apply customizations
 
@@ -164,7 +163,7 @@ supervisorctl restart rsyslog
 
 # Trap signal to stop zimbra
 stop_zimbra () {
-  su - zimbra -c "zmcontrol stop"
+  /etc/init.d/zimbra stop
   exit 0
 }
 
@@ -172,6 +171,6 @@ trap stop_zimbra SIGINT SIGTERM
 
 while true
 do
-  sleep 60
+  sleep 3600
 done
 
