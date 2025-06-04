@@ -46,16 +46,16 @@ fi
 # Main
 #
 
-dosetup=0
+runzmsetup=0
 containerstarted=0
 
-# Container stop and start back up
+# Existing container stop and start back up
 if [ -e /var/spool/cron/zimbra ]; then
   /etc/init.d/zimbra start
   containerstarted=1
 fi
 
-# New install
+# New container with new data - New Install
 if [ ! -e /zmsetup/install_history ]; then
   source /run/secrets/config.secrets
   echo 'cat <<EOT'     >  /tmp/temp.sh
@@ -63,26 +63,27 @@ if [ ! -e /zmsetup/install_history ]; then
   echo 'EOT'           >> /tmp/temp.sh
   bash /tmp/temp.sh > /zmsetup/config.zimbra
   rm -f /tmp/temp.sh
-  dosetup=1
+  runzmsetup=1
 
-# New image version
+# New container with existing data
 else
+  # Check if the same or different image version is used
   v=$(sed -nE 's/.*zimbra-core-([0-9.]+_.*)\.rpm$/\1/p' /opt/zimbra/.install_history | tail -1)
   grep -q "zimbra-core-$v" /zmsetup/install_history
   RS=$?
-  if [ $RS -ne 0 ]; then
+  if [ $RS -ne 0 ]; then # different image version is used - assume Upgrade
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     cat /opt/zimbra/.install_history >> /zmsetup/install_history
     /usr/bin/rsync -av -u /upgrade/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
     /usr/bin/rsync -av -u /upgrade/data/ /opt/zimbra/data/
     [ -d /opt/zimbra/common/conf ] && /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
     [ -d /opt/zimbra/license ] && /usr/bin/rsync -av -u /upgrade/license/ /opt/zimbra/license/
-    dosetup=1
+    runzmsetup=1
   fi
 fi 
 
-# We start it our way
-if [ $dosetup -eq 0 -a $containerstarted -ne 1 ]; then
+# We start it our way for same image and existing data (quicker to start)
+if [ $runzmsetup -eq 0 -a $containerstarted -ne 1 ]; then
   # keep track of .install_history
   copyln /zmsetup/install_history /opt/zimbra/.install_history
   # restore OS files (note: changes will not get retain)
@@ -105,8 +106,8 @@ if [ $dosetup -eq 0 -a $containerstarted -ne 1 ]; then
   /etc/init.d/zimbra restart
 fi
 
-# Do setup for new install and upgrade
-if [ $dosetup -eq 1 ]; then
+# Run zmsetup for New Install and Upgrade
+if [ $runzmsetup -eq 1 ]; then
   # keep track of .install_history
   copyln /zmsetup/install_history /opt/zimbra/.install_history
 
