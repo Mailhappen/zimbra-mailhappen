@@ -15,6 +15,10 @@ v=$(echo $ZCS | sed -e 's/zcs-\(.*\..*\..*\)_GA_.*/\1/')
 echo "File:    $ZCS"
 echo "Version: $v"
 
+echo
+echo "Wait 5 sec before continuing..."
+sleep 5
+
 # 3. Make the yeak/baseimage for deployment
 docker build -t yeak/baseimage ./baseimage
 
