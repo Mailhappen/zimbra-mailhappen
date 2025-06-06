@@ -18,7 +18,7 @@ The `build-images` contains scripts to make your own Zimbra FOSS.
 
 - `zm-base-os` prepares the RockyLinux9 build environment for compiling Zimbra FOSS
 - `baseimage` is the RockyLinux9 OS image for running Zimbra
-- `zimbraimage` is the Zimbra FOSS image designed to run as container.
+- `zimbraimage` is the Zimbra image designed to run as container.
 
 You are welcomed to build your own zcs tgz file. Please refer to `build-images/build-10.*.sh` for details.
 
