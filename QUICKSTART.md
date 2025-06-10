@@ -50,11 +50,11 @@ docker compose start
 
 ### Upgrade to newer Zimbra release
 
-If the new version to upgrade is `yeak/zimbraimage:10.1.8`,
+If the new version such as `yeak/zimbraimage:10.1.8` become available, you can simply edit Dockerfile to change to the new image version. Then rebuild.
 
 ```
-docker pull yeak/zimbraimage:10.1.8
-docker build --build-arg ZIMBRAIMAGE=yeak/zimbraimage:10.1.8 .
+vi Docker
+docker compose build
 docker compose down
 docker compose up -d
 ```
