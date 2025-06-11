@@ -8,25 +8,28 @@ cd $(dirname $0)
 # Write your script below
 
 # Edit as needed
-LOGO=logo.svg
-LOGOURL=https://github.com/Mailhappen/
-LOGODIR=/opt/zimbra/jetty/webapps/zimbra/logos
+LOGO_LOGIN=logo.svg
+LOGO_APP=logo.svg
+LOGO_URL=https://github.com/Mailhappen/
+LOGO_DIR=/opt/zimbra/jetty/webapps/zimbra/logos
 
 # If this folder exist we quit
-[ -d $LOGODIR ] && exit 0
+[ -d $LOGO_DIR ] && exit 0
 
 # Install logo
-mkdir -p $LOGODIR
-chmod 755 $LOGODIR
+mkdir -p $LOGO_DIR
+chmod 755 $LOGO_DIR
 
-/usr/bin/cp -f $LOGO $LOGODIR/$LOGO
-chmod 644 $LOGODIR/$LOGO
+/usr/bin/cp -f $LOGO_LOGIN $LOGO_DIR/$LOGO_LOGIN
+/usr/bin/cp -f $LOGO_APP $LOGO_DIR/$LOGO_APP
+chmod 644 $LOGO_DIR/$LOGO_LOGIN
+chmod 644 $LOGO_DIR/$LOGO_APP
 
 tmp="/tmp/logo.$$"
 cat > $tmp <<EOT
-mcf zimbraSkinLogoLoginBanner /logos/$LOGO
-mcf zimbraSkinLogoAppBanner /logos/$LOGO
-mcf zimbraSkinLogoURL $LOGOURL
+mcf zimbraSkinLogoLoginBanner /logos/$LOGO_LOGIN
+mcf zimbraSkinLogoAppBanner /logos/$LOGO_APP
+mcf zimbraSkinLogoURL $LOGO_URL
 fc skin
 EOT
 su - zimbra -c "zmprov -f $tmp"
