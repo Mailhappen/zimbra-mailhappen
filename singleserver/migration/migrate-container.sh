@@ -61,12 +61,12 @@ read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 
 _cmd="docker run --rm \
---mount type=volume,src=$target_local,volume-subpath=zmsetup,dst=/zmsetup \
---mount type=volume,src=$target_local,volume-subpath=dotssh,dst=/opt/zimbra/.ssh \
---mount type=volume,src=$target_local,volume-subpath=ssl,dst=/opt/zimbra/ssl \
---mount type=volume,src=$target_local,volume-subpath=conf,dst=/opt/zimbra/conf \
+--mount type=volume,src=$target_juicefs,volume-subpath=zmsetup,dst=/zmsetup \
+--mount type=volume,src=$target_juicefs,volume-subpath=dotssh,dst=/opt/zimbra/.ssh \
+--mount type=volume,src=$target_juicefs,volume-subpath=ssl,dst=/opt/zimbra/ssl \
+--mount type=volume,src=$target_juicefs,volume-subpath=conf,dst=/opt/zimbra/conf \
 --mount type=volume,src=$target_local,volume-subpath=data,dst=/opt/zimbra/data \
---mount type=volume,src=$target_local,volume-subpath=commonconf,dst=/opt/zimbra/common/conf \
+--mount type=volume,src=$target_juicefs,volume-subpath=commonconf,dst=/opt/zimbra/common/conf \
 --mount type=volume,src=$target_juicefs,volume-subpath=dbdata,dst=/opt/zimbra/db/data \
 --mount type=volume,src=$target_juicefs,volume-subpath=zimletsdeployed,dst=/opt/zimbra/zimlets-deployed \
 --mount type=volume,src=$target_juicefs,volume-subpath=store,dst=/opt/zimbra/store \

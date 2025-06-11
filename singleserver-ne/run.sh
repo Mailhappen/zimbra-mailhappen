@@ -31,12 +31,12 @@ done
 docker run -d \
 	--restart=unless-stopped \
 	--stop-timeout=180 \
-	--mount type=volume,src=$juiefs_volume,volume-subpath=zmsetup,dst=/zmsetup \
-	--mount type=volume,src=$juiefs_volume,volume-subpath=dotssh,dst=/opt/zimbra/.ssh \
-	--mount type=volume,src=$juiefs_volume,volume-subpath=ssl,dst=/opt/zimbra/ssl \
-	--mount type=volume,src=$juiefs_volume,volume-subpath=conf,dst=/opt/zimbra/conf \
+	--mount type=volume,src=$juicefs_volume,volume-subpath=zmsetup,dst=/zmsetup \
+	--mount type=volume,src=$juicefs_volume,volume-subpath=dotssh,dst=/opt/zimbra/.ssh \
+	--mount type=volume,src=$juicefs_volume,volume-subpath=ssl,dst=/opt/zimbra/ssl \
+	--mount type=volume,src=$juicefs_volume,volume-subpath=conf,dst=/opt/zimbra/conf \
 	--mount type=volume,src=$local_volume,volume-subpath=data,dst=/opt/zimbra/data \
-	--mount type=volume,src=$juiefs_volume,volume-subpath=commonconf,dst=/opt/zimbra/common/conf \
+	--mount type=volume,src=$juicefs_volume,volume-subpath=commonconf,dst=/opt/zimbra/common/conf \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=dbdata,dst=/opt/zimbra/db/data \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=zimletsdeployed,dst=/opt/zimbra/zimlets-deployed \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=store,dst=/opt/zimbra/store \
