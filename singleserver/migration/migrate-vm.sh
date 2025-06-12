@@ -48,20 +48,28 @@ config=`$_cmd $_ssh $source_sshuser@$source_zimbra "ls -1t /opt/zimbra/config.* 
 $_cmd $_ssh $source_sshuser@$source_zimbra \
   "/usr/bin/cp -f $config /tmp/config.zimbra"
 
-# copy to local
-_rsync /tmp/config.zimbra /local/zmsetup/
-_rsync /opt/zimbra/.install_history /local/zmsetup/install_history
-_rsync /opt/zimbra/.ssh/ /local/dotssh/
-_rsync /opt/zimbra/ssl/ /local/ssl/ --delete
-_rsync /opt/zimbra/conf/ /local/conf/
-_rsync /opt/zimbra/data/ /local/data/ --exclude data.mdb --exclude mailboxd/imap-* --exclude amavisd/tmp/ --delete
-_rsync /tmp/data.mdb /local/data/ldap/mdb/db/data.mdb
-_rsync /opt/zimbra/common/conf/ /local/commonconf/
-
 # copy to juicefs
-_rsync /opt/zimbra/db/data/ /juicefs/dbdata/
+_rsync /tmp/config.zimbra /juicefs/zmsetup/
+_rsync /opt/zimbra/.install_history /juicefs/zmsetup/install_history
+_rsync /opt/zimbra/.ssh/ /juicefs/dotssh/
+_rsync /opt/zimbra/ssl/ /juicefs/ssl/ --delete
+_rsync /opt/zimbra/conf/ /juicefs/conf/
+_rsync /opt/zimbra/common/conf/ /juicefs/commonconf/
 _rsync /opt/zimbra/zimlets-deployed/ /juicefs/zimletdeployed/ --delete
 _rsync /opt/zimbra/redolog/ /juicefs/redolog/ --delete
+
+echo
+echo -n "### Going to copy DB data. Press Enter to continue. "
+read ignore
+_rsync /opt/zimbra/db/data/ /juicefs/dbdata/
+
+echo
+echo -n "### Done DB copying. You may release the DB lock..."
+sleep 5
+
+# copy to local
+_rsync /opt/zimbra/data/ /local/data/ --exclude data.mdb --exclude mailboxd/imap-* --exclude amavisd/tmp/ --delete
+_rsync /tmp/data.mdb /local/data/ldap/mdb/db/data.mdb
 fi
 
 echo

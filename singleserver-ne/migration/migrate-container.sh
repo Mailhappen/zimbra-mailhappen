@@ -19,21 +19,28 @@ echo -n "## STEP 1: Copy everything except store, index, backup. OK? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 
-# copy to local
-_rsync /zmsetup/ /local/zmsetup/
-_rsync /opt/zimbra/.ssh/ /local/dotssh/
-_rsync /opt/zimbra/ssl/ /local/ssl/ --delete
-_rsync /opt/zimbra/conf/ /local/conf/
-_rsync /opt/zimbra/data/ /local/data/ --exclude data.mdb --exclude mailboxd/imap-* --exclude amavisd/tmp/ --delete
-_rsync /opt/zimbra/common/conf/ /local/commonconf/
-
-# special handling for ldap
-$_cmd su - zimbra -c 'rm -f /local/data/ldap/mdb/db/data.mdb; mdb_copy data/ldap/mdb/db /local/data/ldap/mdb/db'
-
 # copy to juicefs
-_rsync /opt/zimbra/db/data/ /juicefs/dbdata/
+_rsync /zmsetup/ /juicefs/zmsetup/
+_rsync /opt/zimbra/.ssh/ /juicefs/dotssh/
+_rsync /opt/zimbra/ssl/ /juicefs/ssl/ --delete
+_rsync /opt/zimbra/conf/ /juicefs/conf/
+_rsync /opt/zimbra/common/conf/ /juicefs/commonconf/
 _rsync /opt/zimbra/zimlets-deployed/ /juicefs/zimletdeployed/ --delete
 _rsync /opt/zimbra/redolog/ /juicefs/redolog/ --delete
+
+echo
+echo -n "### Going to copy DB data. Press Enter to continue. "
+read ignore
+_rsync /opt/zimbra/db/data/ /juicefs/dbdata/
+
+echo
+echo -n "### Done DB copying. You may release the DB lock..."
+sleep 5
+
+# copy to local
+_rsync /opt/zimbra/data/ /local/data/ --exclude data.mdb --exclude mailboxd/imap-* --exclude amavisd/tmp/ --delete
+$_cmd su - zimbra -c '/usr/bin/rm -f /local/data/ldap/mdb/db/data.mdb; mdb_copy data/ldap/mdb/db /local/data/ldap/mdb/db'
+
 fi
 
 echo
@@ -41,7 +48,7 @@ echo -n "## STEP 2: Copy store and index NOW? [y/N] "
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 
-# copy this to juicefs also
+# copy to juicefs also
 #
 _rsync /opt/zimbra/store/ /juicefs/store/ --delete
 _rsync /opt/zimbra/index/ /juicefs/index/ --delete
