@@ -90,8 +90,10 @@ if [ $runzmsetup -eq 0 -a $containerstarted -ne 1 ]; then
   /usr/bin/cp -af /zmsetup/cron.zimbra /var/spool/cron/zimbra
   /usr/bin/cp -af /zmsetup/logrotate.zimbra /etc/logrotate.d/zimbra
   /usr/bin/cp -af /zmsetup/rsyslog.conf /etc/rsyslog.conf 
-  su - zimbra -c "zmcertmgr addcacert /opt/zimbra/conf/ca/ca.pem"
-  su - zimbra -c "zmcertmgr deploycrt self"
+  # restore mailboxd certs
+  copyln /zmsetup/cacerts /opt/zimbra/common/etc/java/cacerts
+  copyln /zmsetup/keystore /opt/zimbra/mailboxd/etc/keystore
+
   su - zimbra -c "ldap start"
   LOGHOST=$(su - zimbra -c 'zmprov -m -l gcf zimbraLogHostname' | awk '{print $2}');
   [ "$LOGHOST" == "$HOSTNAME" ] && su - zimbra -c "libexec/zmloggerinit"
@@ -119,6 +121,10 @@ if [ $runzmsetup -eq 1 ]; then
 
   # onlyoffice App_Data
   [ -d /opt/zimbra/onlyoffice/documentserver/App_Data ] && install -o zimbra -g zimbra -m 750 -d /opt/zimbra/onlyoffice/documentserver/App_Data
+
+  # keep track of mailboxd certs
+  [ -f /opt/zimbra/common/etc/java/cacerts ] && copyln /zmsetup/cacerts /opt/zimbra/common/etc/java/cacerts
+  [ -f /opt/zimbra/mailboxd/etc/keystore ] && copyln /zmsetup/keystore /opt/zimbra/mailboxd/etc/keystore
 
   # keep results after configure
   /usr/bin/cp -af /opt/zimbra/config.* /zmsetup/
