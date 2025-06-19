@@ -74,8 +74,8 @@ if [ $runzmsetup -eq 0 -a $containerstarted -ne 1 ]; then
   /usr/bin/cp -af /zmsetup/logrotate.zimbra /etc/logrotate.d/zimbra
   /usr/bin/cp -af /zmsetup/rsyslog.conf /etc/rsyslog.conf 
   # restore mailboxd certs
-  copyln /zmsetup/cacerts /opt/zimbra/common/etc/java/cacerts
-  copyln /zmsetup/keystore /opt/zimbra/mailboxd/etc/keystore
+  [ -f /zmsetup/cacerts ] && copyln /zmsetup/cacerts /opt/zimbra/common/etc/java/cacerts
+  [ -f /zmsetup/keystore ] && copyln /zmsetup/keystore /opt/zimbra/mailboxd/etc/keystore
 
   su - zimbra -c "ldap start"
   LOGHOST=$(su - zimbra -c 'zmprov -m -l gcf zimbraLogHostname' | awk '{print $2}');
@@ -98,9 +98,6 @@ if [ $runzmsetup -eq 1 ]; then
 
   # run zmsetup.pl to complete setup
   /opt/zimbra/libexec/zmsetup.pl -c /zmsetup/config.zimbra
-
-  # set public service hostname
-  su - zimbra -c "zmprov mcf zimbraPublicServiceProtocol https zimbraPublicServiceHostname $PUBLIC_SERVICE_HOSTNAME zimbraPublicServicePort 443"
 
   # onlyoffice App_Data
   [ -d /opt/zimbra/onlyoffice/documentserver/App_Data ] && install -o zimbra -g zimbra -m 750 -d /opt/zimbra/onlyoffice/documentserver/App_Data
@@ -158,3 +155,4 @@ while true
 do
   sleep 10
 done
+
