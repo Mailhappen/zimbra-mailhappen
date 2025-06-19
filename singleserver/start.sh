@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+#set -x
 
 # Set OS timezone
 timezone="${TIMEZONE:=Asia/Kuala_Lumpur}"
@@ -152,10 +152,9 @@ stop_zimbra () {
   exit 0
 }
 
-trap stop_zimbra SIGINT SIGTERM
+trap stop_zimbra SIGTERM
 
 while true
 do
-  sleep 3600
+  sleep 10
 done
-
