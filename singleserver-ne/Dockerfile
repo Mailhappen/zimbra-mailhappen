@@ -13,6 +13,7 @@ RUN mkdir -p /upgrade \
 # Our startup scripts
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
 COPY --chmod=755 start.sh /supervisor/
+COPY --chmod=644 zmsetup.in /root/
 
 # zmsetup
 VOLUME /zmsetup

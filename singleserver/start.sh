@@ -18,23 +18,6 @@ function copyln() {
   rm -rf $target && ln -s $source $target
 }
 
-function adjust_memory_size() {
-  # size must be 4 and above. Default 8
-  size=$1
-  [ -z $size ] && size=8
-  [ $size -lt 4 ] && size=4
-  if [ $size -ge 16 ]; then
-    memory=$(($size*1024/5))
-  else
-    memory=$(($size*1024/4))
-  fi
-  su - zimbra -c "zmlocalconfig -e mailboxd_java_heap_size=$memory"
-  # mysql always use 30 percent
-  memKB=$(($size * 1024 * 1024))
-  ((bufferPoolSize=memKB * 1024 * 30 / 100))
-  sed -i "s/^innodb_buffer_pool_size.*/innodb_buffer_pool_size = $bufferPoolSize/" /opt/zimbra/conf/my.cnf
-}
-
 # Pause for debugging
 if [ "$DEV_MODE" = "y" ]; then
   echo "Dev Mode"
@@ -57,10 +40,10 @@ fi
 
 # New container with new data - New Install
 if [ ! -e /zmsetup/install_history ]; then
-  source /run/secrets/config.secrets
-  echo 'cat <<EOT'     >  /tmp/temp.sh
-  cat /config.defaults >> /tmp/temp.sh
-  echo 'EOT'           >> /tmp/temp.sh
+  cat /run/secrets/config > /tmp/temp.sh
+  echo 'cat <<EOT' >> /tmp/temp.sh
+  cat /root/zmsetup.in >> /tmp/temp.sh
+  echo 'EOT' >> /tmp/temp.sh
   bash /tmp/temp.sh > /zmsetup/config.zimbra
   rm -f /tmp/temp.sh
   runzmsetup=1
@@ -139,11 +122,6 @@ if [ $runzmsetup -eq 1 ]; then
 fi
 
 # Post Setup
-
-# tune the container RAM usage to 8GB by default
-adjust_memory_size ${MAX_MEMORY_GB:=8}
-
-# Apply customizations
 
 # If this dir exist mean we got scripts to run (inspired by run-parts)
 if [ -d /custom ]; then

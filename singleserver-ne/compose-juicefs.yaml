@@ -6,22 +6,15 @@ services:
     stop_grace_period: 3m
     hostname: mail.zimbra.lab
     environment:
-      PUBLIC_SERVICE_HOSTNAME: mail.zimbra.lab
-      ADMIN_USERNAME: mailadmin
-      TIMEZONE: Asia/Kuala_Lumpur
-      MAX_MEMORY_GB: 8
       DEV_MODE: n
-    configs:
-      - config.defaults
     secrets:
-      - config.secrets
+      - config
     networks:
       - zimbranet
     ports:
       - "25:25"
       - "80:80"
       - "443:443"
-      - "465:465"
       - "587:587"
       - "636:636"
       - "993:993"
@@ -110,13 +103,9 @@ services:
       # our post startup scripts
       - ./custom:/custom
 
-configs:
-  config.defaults:
-    file: ./config.defaults
-
 secrets:
-  config.secrets:
-    file: ./config.secrets
+  config:
+    file: ./config
 
 volumes:
   data_juicefs:

@@ -45,14 +45,9 @@ docker run -d \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=backup,dst=/opt/zimbra/backup \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=license,dst=/opt/zimbra/license \
 	--mount type=volume,src=$juicefs_volume,volume-subpath=oodata,dst=/opt/zimbra/onlyoffice/documentserver/App_Data \
-	--mount type=bind,src=./config.defaults,dst=/config.defaults \
-	--mount type=bind,src=./config.secrets,dst=/run/secrets/config.secrets \
+	--mount type=bind,src=./config,dst=/run/secrets/config\
 	-v ./custom:/custom \
 	-h mail.example.com \
-	-e PUBLIC_SERVICE_HOSTNAME=mail.example.com \
-	-e ADMIN_USERNAME=mailadmin \
-	-e TIMEZONE=Asia/Kuala_Lumpur \
-	-e MAX_MEMORY_GB=8 \
 	-e DEV_MODE=n \
 	-p 25:25 \
 	-p 80:80 \

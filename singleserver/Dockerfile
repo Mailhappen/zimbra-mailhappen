@@ -12,6 +12,7 @@ RUN mkdir -p /upgrade \
 # Our startup scripts
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
 COPY --chmod=755 start.sh /supervisor/
+COPY --chmod=644 zmsetup.in /root/
 
 # zmsetup
 VOLUME /zmsetup
@@ -32,4 +33,4 @@ VOLUME /opt/zimbra/redolog
 # backup
 VOLUME /opt/zimbra/backup
 
-EXPOSE 25 80 443 465 587 636 993 995 7071 9071
+EXPOSE 25 80 443 587 636 993 995 7071 9071
