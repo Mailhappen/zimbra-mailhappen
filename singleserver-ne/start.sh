@@ -30,7 +30,7 @@ stop_zimbra() {
 trap stop_zimbra SIGTERM
 
 
-# STARTWORK
+# START WORK
 
 # Set timezone
 timezone="${TIMEZONE:=Asia/Kuala_Lumpur}"
@@ -92,20 +92,25 @@ else
     [ -d /opt/zimbra/license ] && /usr/bin/rsync -av -u /upgrade/license/ /opt/zimbra/license/
     runzmsetup=1
   fi
+  # fix permission if required
+  [ "$(id -nu zimbra)" != "zimbra" -o "$(id -ng zimbra)" != "zimbra" ] && /opt/zimbra/libexec/zmfixperms -e -v
 fi 
 
 # We start it our way for same image and existing data (quicker to start)
 if [ $runzmsetup -eq 0 -a $containerstarted -ne 1 ]; then
   # keep track of .install_history
   copyln /zmsetup/install_history /opt/zimbra/.install_history
-  # restore OS files (note: changes will not get retain)
+  # restore OS files
   /usr/bin/cp -af /zmsetup/cron.zimbra /var/spool/cron/zimbra
   /usr/bin/cp -af /zmsetup/logrotate.zimbra /etc/logrotate.d/zimbra
   /usr/bin/cp -af /zmsetup/rsyslog.conf /etc/rsyslog.conf 
+  /usr/bin/supervisorctl restart rsyslog
   # restore mailboxd certs
   [ -f /zmsetup/cacerts ] && copyln /zmsetup/cacerts /opt/zimbra/common/etc/java/cacerts
   [ -f /zmsetup/keystore ] && copyln /zmsetup/keystore /opt/zimbra/mailboxd/etc/keystore
-
+  # fix permission if required
+  [ "$(id -nu zimbra)" != "zimbra" -o "$(id -ng zimbra)" != "zimbra" ] && /opt/zimbra/libexec/zmfixperms -e -v
+  # zimbra start up
   su - zimbra -c "ldap start"
   LOGHOST=$(su - zimbra -c 'zmprov -m -l gcf zimbraLogHostname' | awk '{print $2}');
   [ "$LOGHOST" == "$HOSTNAME" ] && su - zimbra -c "libexec/zmloggerinit"
@@ -165,9 +170,6 @@ if [ -d /custom ]; then
     fi
   done
 fi
-
-# Restart rsyslog
-supervisorctl restart rsyslog
 
 # Stay up like daemon
 tail -f /dev/null &
