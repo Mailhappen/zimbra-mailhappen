@@ -112,7 +112,7 @@ if [ $runzmsetup -eq 0 -a $containerstarted -ne 1 ]; then
   # fix permission if required
   [ "$(id -nu zimbra)" != "zimbra" -o "$(id -ng zimbra)" != "zimbra" ] && /opt/zimbra/libexec/zmfixperms -e -v
   # zimbra start up
-  su - zimbra -c "ldap start"
+  [ "$(su - zimbra -c 'zmlocalconfig -m nokey ldap_is_master')" == "true" ] && su - zimbra -c "ldap start"
   LOGHOST=$(su - zimbra -c 'zmprov -m -l gcf zimbraLogHostname' | awk '{print $2}');
   [ "$LOGHOST" == "$HOSTNAME" ] && su - zimbra -c "libexec/zmloggerinit"
   [ -d /opt/zimbra/common/jetty_home/resources ] && \
@@ -123,7 +123,7 @@ if [ $runzmsetup -eq 0 -a $containerstarted -ne 1 ]; then
     /opt/zimbra/common/sbin/newaliases
   [ -x /opt/zimbra/onlyoffice/bin/zmonlyofficeconfig ] && \
     /opt/zimbra/onlyoffice/bin/zmonlyofficeconfig
-  su - zimbra -c "ldap stop"
+  [ "$(su - zimbra -c 'zmlocalconfig -m nokey ldap_is_master')" == "true" ] && su - zimbra -c "ldap stop"
   /etc/init.d/zimbra start
 fi
 
