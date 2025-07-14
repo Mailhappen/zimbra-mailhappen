@@ -1,6 +1,6 @@
 # All-In-One
 
-ARG ZIMBRAIMAGE=yeak/zimbraimage-ne:10.1.8
+ARG ZIMBRAIMAGE=yeak/zimbraimage-ne:10.1.9
 FROM $ZIMBRAIMAGE
 
 # Prepare for upgrade files

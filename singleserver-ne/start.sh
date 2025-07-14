@@ -1,14 +1,10 @@
 #!/bin/bash
-#set -x
+set -x
 
-# Set OS timezone
-timezone="${TIMEZONE:=Asia/Kuala_Lumpur}"
-if [ -f /usr/share/zoneinfo/$timezone ]; then
-  ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
-  echo $timezone > /etc/timezone
-fi
+# FUNCTIONS
 
-function copyln() {
+# Copy and link
+copyln() {
   # we copy what we don't have
   # and always override what we have to the target
   source=$1
@@ -18,15 +14,45 @@ function copyln() {
   rm -rf $target && ln -s $source $target
 }
 
+# Save postinstall OS files
+save_postinstall_os_files() {
+  /usr/bin/cp -af /var/spool/cron/zimbra /zmsetup/cron.zimbra
+  /usr/bin/cp -af /etc/logrotate.d/zimbra /zmsetup/logrotate.zimbra
+  /usr/bin/cp -af /etc/rsyslog.conf /zmsetup/rsyslog.conf
+}
+
+# Trap signal for stop or down 
+stop_zimbra() {
+  save_postinstall_os_files
+  /etc/init.d/zimbra stop
+  exit 0
+}
+trap stop_zimbra SIGTERM
+
+
+# STARTWORK
+
+# Set timezone
+timezone="${TIMEZONE:=Asia/Kuala_Lumpur}"
+if [ -f /usr/share/zoneinfo/$timezone ]; then
+  ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
+  echo $timezone > /etc/timezone
+fi
+
 # Pause for debugging
 if [ "$DEV_MODE" = "y" ]; then
   echo "Dev Mode"
-  while true; do sleep 60; done
+  tail -f /dev/null &
+  wait "$!"
   exit 0
 fi
 
 #
 # Main
+# 1. new install (up)
+# 2. new container same version (down & up)
+# 3. new container new version (pull; down & up; upgrade)
+# 4. existing container (stop & start)
 #
 
 runzmsetup=0
@@ -34,12 +60,14 @@ containerstarted=0
 
 # Existing container stop and start back up
 if [ -e /var/spool/cron/zimbra ]; then
+  echo "### EXISTING CONTAINER STARTUP ###"
   /etc/init.d/zimbra start
   containerstarted=1
 fi
 
 # New container with new data - New Install
 if [ ! -e /zmsetup/install_history ]; then
+  echo "### NEW INSTALL ###"
   cat /run/secrets/config > /tmp/temp.sh
   echo 'cat <<EOT' >> /tmp/temp.sh
   cat /root/zmsetup.in >> /tmp/temp.sh
@@ -55,6 +83,7 @@ else
   grep -q "zimbra-core-$v" /zmsetup/install_history
   RS=$?
   if [ $RS -ne 0 ]; then # different image version is used - assume Upgrade
+    echo "### UPGRADE ###"
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     cat /opt/zimbra/.install_history >> /zmsetup/install_history
     /usr/bin/rsync -av -u /upgrade/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
@@ -110,11 +139,8 @@ if [ $runzmsetup -eq 1 ]; then
   /usr/bin/cp -af /opt/zimbra/config.* /zmsetup/
   /usr/bin/cp -af /opt/zimbra/config.* /zmsetup/config.zimbra
   /usr/bin/cp -af /opt/zimbra/log/zmsetup.*.log /zmsetup/
- 
-  # save OS files for quick restore
-  /usr/bin/cp -af /var/spool/cron/zimbra /zmsetup/cron.zimbra
-  /usr/bin/cp -af /etc/logrotate.d/zimbra /zmsetup/logrotate.zimbra
-  /usr/bin/cp -af /etc/rsyslog.conf /zmsetup/rsyslog.conf
+
+  save_postinstall_os_files
 
 fi
 
@@ -143,16 +169,6 @@ fi
 # Restart rsyslog
 supervisorctl restart rsyslog
 
-# Trap signal to stop zimbra
-stop_zimbra () {
-  /etc/init.d/zimbra stop
-  exit 0
-}
-
-trap stop_zimbra SIGTERM
-
-while true
-do
-  sleep 10
-done
-
+# Stay up like daemon
+tail -f /dev/null &
+wait "$!"

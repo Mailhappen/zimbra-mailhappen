@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x
+set -x
 
 # Set OS timezone
 timezone="${TIMEZONE:=Asia/Kuala_Lumpur}"
@@ -148,11 +148,8 @@ stop_zimbra () {
   /etc/init.d/zimbra stop
   exit 0
 }
-
 trap stop_zimbra SIGTERM
 
-while true
-do
-  sleep 10
-done
-
+# Stay up like daemon
+tail -f /dev/null &
+wait "$!"
