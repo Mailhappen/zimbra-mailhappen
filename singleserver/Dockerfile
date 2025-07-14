@@ -1,6 +1,6 @@
 # All-In-One
 
-ARG ZIMBRAIMAGE=yeak/zimbraimage:10.1.7
+ARG ZIMBRAIMAGE=yeak/zimbraimage:10.1.8
 FROM $ZIMBRAIMAGE
 
 # Prepare for upgrade files
@@ -13,6 +13,9 @@ RUN mkdir -p /upgrade \
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
 COPY --chmod=755 start.sh /supervisor/
 COPY --chmod=644 zmsetup.in /root/
+
+# Adjust container for our use
+RUN sed -i 's/systemctl restart rsyslog.service/supervisorctl restart rsyslog/' /opt/zimbra/libexec/zmsyslogsetup
 
 # zmsetup
 VOLUME /zmsetup
