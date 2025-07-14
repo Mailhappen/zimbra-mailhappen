@@ -61,6 +61,7 @@ containerstarted=0
 # Existing container stop and start back up
 if [ -e /var/spool/cron/zimbra ]; then
   echo "### EXISTING CONTAINER STARTUP ###"
+  /usr/bin/supervisorctl restart rsyslog
   /etc/init.d/zimbra start
   containerstarted=1
 fi
@@ -122,7 +123,8 @@ if [ $runzmsetup -eq 0 -a $containerstarted -ne 1 ]; then
     /opt/zimbra/common/sbin/newaliases
   [ -x /opt/zimbra/onlyoffice/bin/zmonlyofficeconfig ] && \
     /opt/zimbra/onlyoffice/bin/zmonlyofficeconfig
-  /etc/init.d/zimbra restart
+  su - zimbra -c "ldap stop"
+  /etc/init.d/zimbra start
 fi
 
 # Run zmsetup for New Install and Upgrade
