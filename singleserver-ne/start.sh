@@ -135,6 +135,9 @@ if [ $runzmsetup -eq 1 ]; then
   # run zmsetup.pl to complete setup
   /opt/zimbra/libexec/zmsetup.pl -c /zmsetup/config.zimbra
 
+  # run postconfig
+  [ -x /root/postconfig.sh ] && /root/postconfig.sh
+
   # onlyoffice App_Data
   [ -d /opt/zimbra/onlyoffice/documentserver/App_Data ] && install -o zimbra -g zimbra -m 750 -d /opt/zimbra/onlyoffice/documentserver/App_Data
 
