@@ -27,9 +27,9 @@ curl https://get.acme.sh | sh -s email=postmaster@${HOSTNAME}
 /usr/bin/cp -f /root/.acme.sh/${HOSTNAME}/${HOSTNAME}.key /tmp/commercial.key
 /usr/bin/cp -f /root/.acme.sh/${HOSTNAME}/${HOSTNAME}.cer /tmp/commercial.crt
 /usr/bin/cp -f /root/.acme.sh/${HOSTNAME}/ca.cer /tmp/commercial_ca.crt
-chown zimbra:zimbra /tmp/commercial.{key,crt} /tmp/commercial_ca.crt
 # Append selfsign CA (Zimbra needs it)
 curl -sL https://letsencrypt.org/certs/isrgrootx1.pem >> /tmp/commercial_ca.crt
+chown zimbra:zimbra /tmp/commercial.{key,crt} /tmp/commercial_ca.crt
 
 # deploy
 su - zimbra -c '/usr/bin/cp -f /tmp/commercial.key ssl/zimbra/commercial/'

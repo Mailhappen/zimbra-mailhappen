@@ -24,7 +24,7 @@ RUN  yum -y groupinstall "Minimal Install" --allowerasing \
   && rm -f /var/log/README \
   && yum -y install epel-release \
   && yum -y install supervisor p7zip-plugins \
-  && yum -y install chkconfig libaio libicu libnsl2 libtirpc perl-Socket6 net-tools nmap-ncat dnsutils perl sysstat sqlite tmux rsync socat \
+  && yum -y install chkconfig libaio libicu libnsl2 libtirpc perl-Socket6 net-tools nmap-ncat dnsutils perl sysstat sqlite tmux rsync socat xxhash-libs \
   && yum -y update \
   && yum clean all
 
