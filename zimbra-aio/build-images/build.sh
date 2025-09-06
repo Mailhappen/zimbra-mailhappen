@@ -4,7 +4,7 @@
 ZCS=$1
 BUILD_NO=$2
 
-[ -z "$ZCS" ] && ZCS=$(basename `ls -v ../build-zcs/data/zcs-*.tgz | tail -1`)
+[ -z "$ZCS" ] && ZCS=$(basename `ls -v ../../build-zcs/data/zcs-*.tgz | tail -1`)
 [ -z "$BUILD_NO" ] && BUILD_NO=1040000
 
 ZCS=$(basename $ZCS)
@@ -21,7 +21,7 @@ sleep 5
 
 # Make the yeak/zimbra-aio for deployment
 # publish our tgz in a temp webserver
-docker run -d -p 12312:80 --name tmp12312 -v ../build-zcs/data:/usr/share/nginx/html/data nginx
+docker run -d -p 12312:80 --name tmp12312 -v ../../build-zcs/data:/usr/share/nginx/html/data nginx
 docker build -t yeak/zimbra-aio:$v \
 	--label name=zimbra \
 	--label version=$v \
@@ -29,5 +29,5 @@ docker build -t yeak/zimbra-aio:$v \
 	--build-arg ZCS=$ZCS \
 	--add-host=host.docker.internal:host-gateway \
 	--build-arg DOWNLOAD=http://host.docker.internal:12312/data/$ZCS.tgz \
-	./zimbra-aio
+	./all-in-one
 docker rm -f tmp12312
