@@ -19,18 +19,15 @@ echo
 echo "Wait 5 sec before continuing..."
 sleep 5
 
-# 3. Make the OS image for deployment
-docker build -t rl-image ./rl-image
-
-# 4. Make the yeak/zimbraimage for deployment
+# Make the yeak/zimbra-aio for deployment
 # publish our tgz in a temp webserver
 docker run -d -p 12312:80 --name tmp12312 -v ../build-zcs/data:/usr/share/nginx/html/data nginx
-docker build -t yeak/zimbraimage:$v \
+docker build -t yeak/zimbra-aio:$v \
 	--label name=zimbra \
 	--label version=$v \
 	--label build_no=$BUILD_NO \
 	--build-arg ZCS=$ZCS \
 	--add-host=host.docker.internal:host-gateway \
 	--build-arg DOWNLOAD=http://host.docker.internal:12312/data/$ZCS.tgz \
-	./zimbraimage
+	./zimbra-aio
 docker rm -f tmp12312
