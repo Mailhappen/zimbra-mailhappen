@@ -38,8 +38,8 @@ cp -vf ../BUILDS/*/*.tgz /data
 EOT
 chmod 777 ${RUN}
 
-# 1. Make our zm-base-os for building use
-docker build -t zm-base-os ./zm-base-os
+# 1. Make our zm-build-os for building use
+docker build -t zm-build-os ./zm-build-os
 
 # 2. Make the zcs installer if required. Result in ./data
 if [ -f ./data/zcs-${BUILD_RELEASE_NO}* -a x"$1" != "xremake-installer" ]; then
@@ -49,7 +49,7 @@ else
 	ZCS=zcs-${BUILD_RELEASE_NO}_${BUILD_CANDIDATE}_${BUILD_NO}.RHEL9_64.${BUILD_TS}
 	docker run -it --rm \
 		-v ./data:/data \
-		zm-base-os \
+		zm-build-os \
 		/data/run-${BUILD_RELEASE_NO}.sh
 fi
 

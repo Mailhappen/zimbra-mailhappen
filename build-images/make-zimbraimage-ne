@@ -12,8 +12,8 @@ echo
 echo "Wait 5 sec before continuing..."
 sleep 5
 
-# 3. Make the yeak/baseimage for deployment
-docker build -t yeak/baseimage ./baseimage
+# 3. Make the rl-image for deployment
+docker build -t rl-image ./rl-image
 
 # 4. Make the yeak/zimbraimage for deployment
 # publish our tgz in a temp webserver

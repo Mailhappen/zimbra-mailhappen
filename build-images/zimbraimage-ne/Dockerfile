@@ -1,4 +1,4 @@
-FROM yeak/baseimage
+FROM rl-image
 
 ARG DOWNLOAD=$URL
 ARG ZCS=$ZCS

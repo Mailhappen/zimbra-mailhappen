@@ -2,9 +2,9 @@
 
 # Edit the version to build
 
-GIT_DEFAULT_TAGS=10.1.10,10.1.9,10.1.8,10.1.7,10.1.6,10.1.5,10.1.4,10.1.3,10.1.2,10.1.1,10.1.0
-BUILD_TAG=10.1.10
-BUILD_RELEASE_NO=10.1.10
+GIT_DEFAULT_TAGS=10.1.6,10.1.5,10.1.4,10.1.3,10.1.2,10.1.1,10.1.0
+BUILD_TAG=10.1.6
+BUILD_RELEASE_NO=10.1.6
 BUILD_CANDIDATE=GA
 BUILD_NO=1040000
 BUILD_TS=`date +'%Y%m%d%H%M%S'`
@@ -38,8 +38,8 @@ cp -vf ../BUILDS/*/*.tgz /data
 EOT
 chmod 777 ${RUN}
 
-# 1. Make our zm-base-os for building use
-docker build -t zm-base-os ./zm-base-os
+# 1. Make our zm-build-os for building use
+docker build -t zm-build-os ./zm-build-os
 
 # 2. Make the zcs installer if required. Result in ./data
 if [ -f ./data/zcs-${BUILD_RELEASE_NO}* -a x"$1" != "xremake-installer" ]; then
@@ -49,9 +49,8 @@ else
 	ZCS=zcs-${BUILD_RELEASE_NO}_${BUILD_CANDIDATE}_${BUILD_NO}.RHEL9_64.${BUILD_TS}
 	docker run -it --rm \
 		-v ./data:/data \
-		zm-base-os \
+		zm-build-os \
 		/data/run-${BUILD_RELEASE_NO}.sh
 fi
 
 ls ./data
-

@@ -12,7 +12,7 @@ FROM rockylinux/rockylinux:9
 #RUN yum -y install epel-release
 #RUN yum -y install supervisor p7zip-plugins
 ## These are from OS
-#RUN yum -y install chkconfig libaio libicu libnsl2 libtirpc perl-Socket6 net-tools nmap-ncat dnsutils perl sysstat sqlite tmux rsync socat
+#RUN yum -y install chkconfig libaio libicu libnsl2 libtirpc perl-Socket6 net-tools nmap-ncat dnsutils perl sysstat sqlite tmux rsync socat xxhash-libs
 ## Update to the latest
 #RUN yum -y update
 ## Clean up
