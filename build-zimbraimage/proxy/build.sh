@@ -13,9 +13,10 @@ ZCS=$(basename $ZCS_TGZ)
 ZCS=${ZCS%.tgz}
 ver=$(echo $ZCS | sed -e 's/zcs-\(.*\..*\..*\)_GA_.*/\1/')
 
-echo "TGZ:    $ZCS_TGZ"
-echo "Name:   $ZCS"
+echo "TGZ:     $ZCS_TGZ"
+echo "ZCS:     $ZCS"
 echo "Version: $ver"
+echo "Name:    $NAME"
 
 echo
 echo "Wait 5 sec before continuing..."
