@@ -1,5 +1,5 @@
 # Define site configs
-# Used by zmsetup.in to generate /zmsetup/config.zimbra to do initial setup
+# zmsetup.in in container uses this to generate config.zimbra for newinstall
 
 # Administrative domain for internal use such as spam, ham, etc
 ADMIN_DOMAIN="mail.zimbra.lab"
@@ -16,9 +16,7 @@ LDAP_ADMIN_PASS="REzySS8s732M4k"
 TIME_ZONE="Asia/Kuala_Lumpur"
 
 # First server (LDAP Master)
-# for singleserver, use $HOSTNAME
-LDAP_HOSTNAME="mail.zimbra.lab"
+LDAP_HOST="$LDAP_HOST"
 
 # MTA host, used by mailbox servers
-# for singleserver, use $HOSTNAME
-SMTP_HOSTNAME="mail.zimbra.lab"
+SMTP_HOST="$SMTP_HOST"

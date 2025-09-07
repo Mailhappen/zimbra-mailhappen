@@ -1,14 +1,11 @@
 services:
   zimbra:
-    build: .
-    image: yeak/singleserver
-    restart: unless-stopped
-    stop_grace_period: 3m
-    hostname: mail.zimbra.lab
     environment:
+      LDAP_HOST: ${AIO}
+      SMTP_HOST: ${AIO}
       DEV_MODE: n
-    secrets:
-      - config
+    hostname: ${AIO}
+    image: yeak/zimbra-aio:10.1.10
     networks:
       - zimbranet
     ports:
@@ -21,6 +18,10 @@ services:
       - "995:995"
       - "7071:7071"
       - "9071:9071"
+    restart: unless-stopped
+    secrets:
+      - config
+    stop_grace_period: 3m
     volumes:
       # zmsetup
       - type: volume
@@ -91,17 +92,17 @@ services:
       # our post startup scripts
       - ./custom:/custom
 
-secrets:
-  config:
-    file: ./config
-
-volumes:
-  data_local:
-    name: my-optzimbra-local
-    external: true
-
 networks:
   zimbranet:
     name: zimbranet
     #external: true
+
+volumes:
+  data_local:
+    name: ${AIO_VOL}
+    external: true
+
+secrets:
+  config:
+    file: ./config
 
