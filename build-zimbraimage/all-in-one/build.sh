@@ -23,7 +23,8 @@ echo "Wait 5 sec before continuing..."
 sleep 5
 
 # publish our tgz in a temp webserver
-docker run -d -p 12312:80 --name tmp12312 -v $ZCS_TGZ:/usr/share/nginx/html/$ZCS.tgz nginx
+cid="/tmp/build.$$"
+docker run -d -p 12312:80 --rm --cidfile $cid -v $ZCS_TGZ:/usr/share/nginx/html/$ZCS.tgz nginx
 docker build -t yeak/$NAME:$ver \
 	--label name=$NAME \
 	--label version=$ver \
@@ -32,4 +33,5 @@ docker build -t yeak/$NAME:$ver \
 	--add-host=host.docker.internal:host-gateway \
 	--build-arg DOWNLOAD=http://host.docker.internal:12312/$ZCS.tgz \
 	.
-docker rm -f tmp12312
+docker rm -f `cat $cid`
+rm -f $cid
