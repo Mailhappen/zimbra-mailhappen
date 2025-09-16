@@ -1,19 +1,17 @@
 # All-In-One
 
-ARG ZIMBRAIMAGE=yeak/zimbraimage-ne:10.1.9
+ARG ZIMBRAIMAGE=yeak/zimbra-aio:10.1.10
 FROM $ZIMBRAIMAGE
 
 # Prepare for upgrade files
 RUN mkdir -p /upgrade \
   && /usr/bin/cp -a /opt/zimbra/conf        /upgrade/conf \
   && /usr/bin/cp -a /opt/zimbra/data        /upgrade/data \
-  && /usr/bin/cp -a /opt/zimbra/common/conf /upgrade/commonconf \
-  && /usr/bin/cp -a /opt/zimbra/license     /upgrade/license
+  && /usr/bin/cp -a /opt/zimbra/common/conf /upgrade/commonconf
 
 # Our startup scripts
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
 COPY --chmod=755 start.sh /supervisor/
-COPY --chmod=644 zmsetup.in /root/
 
 # Adjust container for our use
 RUN sed -i 's/systemctl restart rsyslog.service/supervisorctl restart rsyslog/' /opt/zimbra/libexec/zmsyslogsetup
@@ -36,9 +34,5 @@ VOLUME /opt/zimbra/index
 VOLUME /opt/zimbra/redolog
 # backup
 VOLUME /opt/zimbra/backup
-# license
-VOLUME /opt/zimbra/license
-# onlyoffice App_Data
-VOLUME /opt/zimbra/onlyoffice/documentserver/App_Data
 
 EXPOSE 25 80 443 587 636 993 995 7071 9071
