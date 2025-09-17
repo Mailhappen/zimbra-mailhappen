@@ -29,4 +29,4 @@ ldap_host="${AIO}"
 smtp_host="${AIO}"
 
 # DEVELOPMENT USE
-dev_mode="y"
+dev_mode="n"
