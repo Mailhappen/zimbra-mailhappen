@@ -68,12 +68,14 @@ fi
 # New container with new data - New Install
 if [ ! -e /zmsetup/install_history ]; then
   echo "### NEW INSTALL ###"
-  echo 'cat <<EOT' > /tmp/temp.sh
-  cat /run/secrets/zmsetup.in >> /tmp/temp.sh
-  echo 'EOT' >> /tmp/temp.sh
-  export admin_password="$(<$admin_password_file)"
-  export ldap_admin_pass="$(<$ldap_admin_pass_file)"
-  export ldap_root_pass="$(<$ldap_root_pass_file)"
+  cat <<EOF > /tmp/temp.sh
+export admin_password="$(<$admin_password_file)"
+export ldap_admin_pass="$(<$ldap_admin_pass_file)"
+export ldap_root_pass="$(<$ldap_root_pass_file)"
+cat <<EOT
+$(</run/secrets/zmsetup.in)
+EOT
+EOF
   bash /tmp/temp.sh > /zmsetup/config.zimbra
   rm -f /tmp/temp.sh
   runzmsetup=1
