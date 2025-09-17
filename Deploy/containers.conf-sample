@@ -1,11 +1,8 @@
 #
-# This is used by the running containers, i.e. your system.
+# This is used by the running containers
 # For sensitive values, they are inside the secrets folder.
 # Use lowercase for all variables.
 #
-# Your Site Domain
-domain="${DEFAULT_DOMAIN}"
-
 # Administrative domain for internal use such as spam, ham, etc
 # We recommend the administrative domain uses FQDN so that it is isolated.
 admin_domain="mail.${DEFAULT_DOMAIN}"

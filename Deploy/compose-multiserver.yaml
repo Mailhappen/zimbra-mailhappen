@@ -1,28 +1,22 @@
 services:
-  zimbra-aio:
+  ldap1:
     build:
       context: ./zimbra
-      dockerfile: all-in-one.Dockerfile
+      dockerfile: ldap1.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-aio:${VERSION}
-    env_file: ./system.env
-    hostname: ${AIO}
-    image: ${AIO}
+    env_file: ./containers.conf
+    environment:
+      ldap_replication_type: master
+      ldap_server_id: 1
+    hostname: ${LDAP1}
+    image: ${LDAP1}
     networks:
       - mynetwork
     ports:
-      - "25:25"
-      - "80:80"
-      - "443:443"
-      - "587:587"
       - "636:636"
-      - "993:993"
-      - "995:995"
-      - "7071:7071"
-      - "9071:9071"
     restart: unless-stopped
     secrets:
-      - admin_password
       - ldap_admin_pass
       - ldap_root_pass
       - zmsetup.in
@@ -50,7 +44,6 @@ services:
         target: /opt/zimbra/conf
         volume:
           subpath: conf
-      # The /opt/zimbra/data should NOT use external volume
       # ldap
       - type: volume
         source: data
