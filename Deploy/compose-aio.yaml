@@ -5,7 +5,7 @@ services:
       dockerfile: all-in-one.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-aio:${VERSION}
-    env_file: ./containers.conf
+    env_file: ./container.conf
     healthcheck:
       test: su - zimbra -c 'zmcontrol status' || exit 1
       interval: 5m

@@ -5,7 +5,7 @@ services:
       dockerfile: ldap.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-ldap:${VERSION}
-    env_file: ./containers.conf
+    env_file: ./container.conf
     environment:
       ldap_replication_type: mmr
       ldap_server_id: 1
@@ -68,7 +68,7 @@ services:
     depends_on:
       ldap1:
         condition: service_healthy
-    env_file: ./containers.conf
+    env_file: ./container.conf
     environment:
       ldap_replication_type: mmr
       ldap_server_id: 2
@@ -133,7 +133,7 @@ services:
     depends_on:
       ldap1:
         condition: service_healthy
-    env_file: ./containers.conf
+    env_file: ./container.conf
     healthcheck:
       test: su - zimbra -c 'zmmtactl status' || exit 1
       interval: 5m
@@ -202,7 +202,7 @@ services:
     depends_on:
       ldap1:
         condition: service_healthy
-    env_file: ./containers.conf
+    env_file: ./container.conf
     healthcheck:
       test: su - zimbra -c 'zmproxyctl status' || exit 1
       interval: 5m
@@ -268,7 +268,7 @@ services:
     depends_on:
       ldap1:
         condition: service_healthy
-    env_file: ./containers.conf
+    env_file: ./container.conf
     healthcheck:
       test: su - zimbra -c 'zmmailboxdctl status' || exit 1
       interval: 5m
@@ -356,7 +356,7 @@ services:
     depends_on:
       ldap1:
         condition: service_healthy
-    env_file: ./containers.conf
+    env_file: ./container.conf
     healthcheck:
       test: su - zimbra -c 'zmmailboxdctl status' || exit 1
       interval: 5m

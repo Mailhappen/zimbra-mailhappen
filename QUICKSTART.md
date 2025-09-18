@@ -24,11 +24,12 @@ Clone our repository and run it.
 ```
 git clone https://github.com/Mailhappen/zimbra-mailhappen.git
 cd zimbra-mailhappen
-cd singleserver
-bash create-local-volume.sh
-cp compose-local.yaml compose.yaml
-cp config.secrets.sample config.secrets
-docker compose build .
+cd Deploy
+cp compose-aio.yaml compose.yaml
+cp container-aio.conf container.conf
+cp env-sample .env
+bash scripts/create-volume.sh my-aio-vol
+docker compose build
 docker compose up -d
 docker compose logs -f
 ```
