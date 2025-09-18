@@ -22,7 +22,6 @@ VOLUME /zmsetup
 VOLUME /opt/zimbra/.ssh
 VOLUME /opt/zimbra/ssl
 VOLUME /opt/zimbra/conf
-# ldap
 VOLUME /opt/zimbra/data
 # mta
 VOLUME /opt/zimbra/common/conf

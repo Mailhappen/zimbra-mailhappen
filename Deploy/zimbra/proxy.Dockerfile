@@ -1,6 +1,6 @@
 # All-In-One
 
-ARG ZIMBRAIMAGE=yeak/zimbra-ldap:10.1.10
+ARG ZIMBRAIMAGE=yeak/zimbra-proxy:10.1.10
 FROM $ZIMBRAIMAGE
 
 # Prepare for upgrade files
@@ -25,4 +25,4 @@ VOLUME /opt/zimbra/data
 # backup
 VOLUME /opt/zimbra/backup
 
-EXPOSE 636
+EXPOSE 80 443 993 995 9071

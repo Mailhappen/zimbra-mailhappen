@@ -1,12 +1,13 @@
 # All-In-One
 
-ARG ZIMBRAIMAGE=yeak/zimbra-ldap:10.1.10
+ARG ZIMBRAIMAGE=yeak/zimbra-mta:10.1.10
 FROM $ZIMBRAIMAGE
 
 # Prepare for upgrade files
 RUN mkdir -p /upgrade \
   && /usr/bin/cp -a /opt/zimbra/conf        /upgrade/conf \
-  && /usr/bin/cp -a /opt/zimbra/data        /upgrade/data
+  && /usr/bin/cp -a /opt/zimbra/data        /upgrade/data \
+  && /usr/bin/cp -a /opt/zimbra/common/conf /upgrade/commonconf
 
 # Our startup scripts
 COPY --chmod=644 zimbra.ini /etc/supervisord.d/
@@ -22,7 +23,9 @@ VOLUME /opt/zimbra/.ssh
 VOLUME /opt/zimbra/ssl
 VOLUME /opt/zimbra/conf
 VOLUME /opt/zimbra/data
+# mta
+VOLUME /opt/zimbra/common/conf
 # backup
 VOLUME /opt/zimbra/backup
 
-EXPOSE 636
+EXPOSE 25 587

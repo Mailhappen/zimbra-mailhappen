@@ -1,6 +1,6 @@
 # All-In-One
 
-ARG ZIMBRAIMAGE=yeak/zimbra-ldap:10.1.10
+ARG ZIMBRAIMAGE=yeak/zimbra-aio:10.1.10
 FROM $ZIMBRAIMAGE
 
 # Prepare for upgrade files
@@ -22,7 +22,13 @@ VOLUME /opt/zimbra/.ssh
 VOLUME /opt/zimbra/ssl
 VOLUME /opt/zimbra/conf
 VOLUME /opt/zimbra/data
+# mailbox
+VOLUME /opt/zimbra/db/data
+VOLUME /opt/zimbra/zimlets-deployed
+VOLUME /opt/zimbra/store
+VOLUME /opt/zimbra/index
+VOLUME /opt/zimbra/redolog
 # backup
 VOLUME /opt/zimbra/backup
 
-EXPOSE 636
+EXPOSE 7071

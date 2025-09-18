@@ -9,7 +9,6 @@ services:
     environment:
       ldap_replication_type: mmr
       ldap_server_id: 1
-      ldap_alternate_master: ${LDAP2}
     hostname: ${LDAP1}
     image: ${LDAP1}
     networks:
@@ -47,7 +46,6 @@ services:
         volume:
           subpath: conf
       # The /opt/zimbra/data should NOT use external volume
-      # ldap
       - type: volume
         source: data_ldap1
         target: /opt/zimbra/data
@@ -104,7 +102,6 @@ services:
         volume:
           subpath: conf
       # The /opt/zimbra/data should NOT use external volume
-      # ldap
       - type: volume
         source: data_ldap2
         target: /opt/zimbra/data
@@ -113,6 +110,397 @@ services:
       # backup
       - type: volume
         source: data_ldap2
+        target: /opt/zimbra/backup
+        volume:
+          subpath: backup
+  mta1:
+    build:
+      context: ./zimbra
+      dockerfile: mta.Dockerfile
+      args:
+        ZIMBRAIMAGE: yeak/zimbra-mta:${VERSION}
+    env_file: ./containers.conf
+    hostname: ${MTA1}
+    image: ${MTA1}
+    networks:
+      - mynetwork
+    ports:
+      - "25:25"
+      - "587:587"
+    restart: unless-stopped
+    secrets:
+      - admin_password
+      - ldap_admin_pass
+      - ldap_root_pass
+      - zmsetup.in
+    stop_grace_period: 3m
+    volumes:
+      # zmsetup
+      - type: volume
+        source: data_mta1
+        target: /zmsetup
+        volume:
+          subpath: zmsetup
+      # all
+      - type: volume
+        source: data_mta1
+        target: /opt/zimbra/.ssh
+        volume:
+          subpath: dotssh
+      - type: volume
+        source: data_mta1
+        target: /opt/zimbra/ssl
+        volume:
+          subpath: ssl
+      - type: volume
+        source: data_mta1
+        target: /opt/zimbra/conf
+        volume:
+          subpath: conf
+      # The /opt/zimbra/data should NOT use external volume
+      - type: volume
+        source: data_mta1
+        target: /opt/zimbra/data
+        volume:
+          subpath: data
+      # mta
+      - type: volume
+        source: data_mta1
+        target: /opt/zimbra/common/conf
+        volume:
+          subpath: commonconf
+      # backup
+      - type: volume
+        source: data_mta1
+        target: /opt/zimbra/backup
+        volume:
+          subpath: backup
+  mta2:
+    build:
+      context: ./zimbra
+      dockerfile: mta.Dockerfile
+      args:
+        ZIMBRAIMAGE: yeak/zimbra-mta:${VERSION}
+    env_file: ./containers.conf
+    hostname: ${MTA2}
+    image: ${MTA2}
+    networks:
+      - mynetwork
+    restart: unless-stopped
+    secrets:
+      - admin_password
+      - ldap_admin_pass
+      - ldap_root_pass
+      - zmsetup.in
+    stop_grace_period: 3m
+    volumes:
+      # zmsetup
+      - type: volume
+        source: data_mta2
+        target: /zmsetup
+        volume:
+          subpath: zmsetup
+      # all
+      - type: volume
+        source: data_mta2
+        target: /opt/zimbra/.ssh
+        volume:
+          subpath: dotssh
+      - type: volume
+        source: data_mta2
+        target: /opt/zimbra/ssl
+        volume:
+          subpath: ssl
+      - type: volume
+        source: data_mta2
+        target: /opt/zimbra/conf
+        volume:
+          subpath: conf
+      # The /opt/zimbra/data should NOT use external volume
+      - type: volume
+        source: data_mta2
+        target: /opt/zimbra/data
+        volume:
+          subpath: data
+      # mta
+      - type: volume
+        source: data_mta2
+        target: /opt/zimbra/common/conf
+        volume:
+          subpath: commonconf
+      # backup
+      - type: volume
+        source: data_mta2
+        target: /opt/zimbra/backup
+        volume:
+          subpath: backup
+  proxy1:
+    build:
+      context: ./zimbra
+      dockerfile: proxy.Dockerfile
+      args:
+        ZIMBRAIMAGE: yeak/zimbra-proxy:${VERSION}
+    env_file: ./containers.conf
+    hostname: ${PROXY1}
+    image: ${PROXY1}
+    networks:
+      - mynetwork
+    ports:
+      - "80:80"
+      - "443:443"
+      - "993:993"
+      - "995:995"
+      - "9071:9071"
+    restart: unless-stopped
+    secrets:
+      - admin_password
+      - ldap_admin_pass
+      - ldap_root_pass
+      - zmsetup.in
+    stop_grace_period: 3m
+    volumes:
+      # zmsetup
+      - type: volume
+        source: data_proxy1
+        target: /zmsetup
+        volume:
+          subpath: zmsetup
+      # all
+      - type: volume
+        source: data_proxy1
+        target: /opt/zimbra/.ssh
+        volume:
+          subpath: dotssh
+      - type: volume
+        source: data_proxy1
+        target: /opt/zimbra/ssl
+        volume:
+          subpath: ssl
+      - type: volume
+        source: data_proxy1
+        target: /opt/zimbra/conf
+        volume:
+          subpath: conf
+      # The /opt/zimbra/data should NOT use external volume
+      - type: volume
+        source: data_proxy1
+        target: /opt/zimbra/data
+        volume:
+          subpath: data
+      # backup
+      - type: volume
+        source: data_proxy1
+        target: /opt/zimbra/backup
+        volume:
+          subpath: backup
+  proxy2:
+    build:
+      context: ./zimbra
+      dockerfile: proxy.Dockerfile
+      args:
+        ZIMBRAIMAGE: yeak/zimbra-proxy:${VERSION}
+    env_file: ./containers.conf
+    hostname: ${PROXY2}
+    image: ${PROXY2}
+    networks:
+      - mynetwork
+    restart: unless-stopped
+    secrets:
+      - admin_password
+      - ldap_admin_pass
+      - ldap_root_pass
+      - zmsetup.in
+    stop_grace_period: 3m
+    volumes:
+      # zmsetup
+      - type: volume
+        source: data_proxy2
+        target: /zmsetup
+        volume:
+          subpath: zmsetup
+      # all
+      - type: volume
+        source: data_proxy2
+        target: /opt/zimbra/.ssh
+        volume:
+          subpath: dotssh
+      - type: volume
+        source: data_proxy2
+        target: /opt/zimbra/ssl
+        volume:
+          subpath: ssl
+      - type: volume
+        source: data_proxy2
+        target: /opt/zimbra/conf
+        volume:
+          subpath: conf
+      # The /opt/zimbra/data should NOT use external volume
+      - type: volume
+        source: data_proxy2
+        target: /opt/zimbra/data
+        volume:
+          subpath: data
+      # backup
+      - type: volume
+        source: data_proxy2
+        target: /opt/zimbra/backup
+        volume:
+          subpath: backup
+  logger:
+    build:
+      context: ./zimbra
+      dockerfile: logger.Dockerfile
+      args:
+        ZIMBRAIMAGE: yeak/zimbra-logger:${VERSION}
+    env_file: ./containers.conf
+    hostname: ${LOGGER}
+    image: ${LOGGER}
+    networks:
+      - mynetwork
+    restart: unless-stopped
+    secrets:
+      - admin_password
+      - ldap_admin_pass
+      - ldap_root_pass
+      - zmsetup.in
+    stop_grace_period: 3m
+    volumes:
+      # zmsetup
+      - type: volume
+        source: data_logger
+        target: /zmsetup
+        volume:
+          subpath: zmsetup
+      # all
+      - type: volume
+        source: data_logger
+        target: /opt/zimbra/.ssh
+        volume:
+          subpath: dotssh
+      - type: volume
+        source: data_logger
+        target: /opt/zimbra/ssl
+        volume:
+          subpath: ssl
+      - type: volume
+        source: data_logger
+        target: /opt/zimbra/conf
+        volume:
+          subpath: conf
+      # The /opt/zimbra/data should NOT use external volume
+      - type: volume
+        source: data_logger
+        target: /opt/zimbra/data
+        volume:
+          subpath: data
+      # mailbox
+      - type: volume
+        source: data_logger
+        target: /opt/zimbra/db/data
+        volume:
+          subpath: dbdata
+      - type: volume
+        source: data_logger
+        target: /opt/zimbra/zimlets-deployed
+        volume:
+          subpath: zimletsdeployed
+      - type: volume
+        source: data_logger
+        target: /opt/zimbra/store
+        volume:
+          subpath: store
+      - type: volume
+        source: data_logger
+        target: /opt/zimbra/index
+        volume:
+          subpath: index
+      - type: volume
+        source: data_logger
+        target: /opt/zimbra/redolog
+        volume:
+          subpath: redolog
+      # backup
+      - type: volume
+        source: data_logger
+        target: /opt/zimbra/backup
+        volume:
+          subpath: backup
+  mbx1:
+    build:
+      context: ./zimbra
+      dockerfile: mailbox.Dockerfile
+      args:
+        ZIMBRAIMAGE: yeak/zimbra-mailbox:${VERSION}
+    env_file: ./containers.conf
+    hostname: ${MBX1}
+    image: ${MBX1}
+    networks:
+      - mynetwork
+    restart: unless-stopped
+    secrets:
+      - admin_password
+      - ldap_admin_pass
+      - ldap_root_pass
+      - zmsetup.in
+    stop_grace_period: 3m
+    volumes:
+      # zmsetup
+      - type: volume
+        source: data_mbx1
+        target: /zmsetup
+        volume:
+          subpath: zmsetup
+      # all
+      - type: volume
+        source: data_mbx1
+        target: /opt/zimbra/.ssh
+        volume:
+          subpath: dotssh
+      - type: volume
+        source: data_mbx1
+        target: /opt/zimbra/ssl
+        volume:
+          subpath: ssl
+      - type: volume
+        source: data_mbx1
+        target: /opt/zimbra/conf
+        volume:
+          subpath: conf
+      # The /opt/zimbra/data should NOT use external volume
+      - type: volume
+        source: data_mbx1
+        target: /opt/zimbra/data
+        volume:
+          subpath: data
+      # mailbox
+      - type: volume
+        source: data_mbx1
+        target: /opt/zimbra/db/data
+        volume:
+          subpath: dbdata
+      - type: volume
+        source: data_mbx1
+        target: /opt/zimbra/zimlets-deployed
+        volume:
+          subpath: zimletsdeployed
+      - type: volume
+        source: data_mbx1
+        target: /opt/zimbra/store
+        volume:
+          subpath: store
+      - type: volume
+        source: data_mbx1
+        target: /opt/zimbra/index
+        volume:
+          subpath: index
+      - type: volume
+        source: data_mbx1
+        target: /opt/zimbra/redolog
+        volume:
+          subpath: redolog
+      # backup
+      - type: volume
+        source: data_mbx1
         target: /opt/zimbra/backup
         volume:
           subpath: backup
@@ -129,6 +517,24 @@ volumes:
     external: true
   data_ldap2:
     name: ${LDAP2_VOL}
+    external: true
+  data_logger:
+    name: ${LOGGER_VOL}
+    external: true
+  data_mbx1:
+    name: ${MBX1_VOL}
+    external: true
+  data_mta1:
+    name: ${MTA1_VOL}
+    external: true
+  data_mta2:
+    name: ${MTA2_VOL}
+    external: true
+  data_proxy1:
+    name: ${PROXY1_VOL}
+    external: true
+  data_proxy2:
+    name: ${PROXY2_VOL}
     external: true
 secrets:
   admin_password:

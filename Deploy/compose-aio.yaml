@@ -51,7 +51,6 @@ services:
         volume:
           subpath: conf
       # The /opt/zimbra/data should NOT use external volume
-      # ldap
       - type: volume
         source: data
         target: /opt/zimbra/data
