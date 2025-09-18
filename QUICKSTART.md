@@ -1,6 +1,6 @@
 # Quickstart
 
-This guide show you how to quickly run your own Zimbra 10.1.x in container, with style...
+This guide show you how to quickly run Zimbra 10.1.x in docker.
 
 ## Prepare a Virtual Machine
 
@@ -10,12 +10,12 @@ For minimum setup, consider this:
 
 - CPU Core: 4
 - Memory: 8GB
-- Hard Disk: 50GB for /, 100GB for /var/lib/docker. Or everything in / also work.
+- Hard Disk: 50GB for /, 100GB for /var/lib/docker. Or just one disk with 100GB for /.
 - Operating System: We prefer Debian, RockyLinux and Ubuntu (not in particular order)
 
-## Install Docker Engine if not yet done
+## Install Docker Engine
 
-Refer to [INSTALL DOCKER](INSTALL-DOCKER.md) for info.
+Refer to [INSTALL DOCKER](INSTALL-DOCKER.md).
 
 ## Run Zimbra Docker
 
