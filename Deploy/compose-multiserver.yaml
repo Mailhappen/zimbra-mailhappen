@@ -2,13 +2,14 @@ services:
   ldap1:
     build:
       context: ./zimbra
-      dockerfile: ldap1.Dockerfile
+      dockerfile: ldap.Dockerfile
       args:
-        ZIMBRAIMAGE: yeak/zimbra-aio:${VERSION}
+        ZIMBRAIMAGE: yeak/zimbra-ldap:${VERSION}
     env_file: ./containers.conf
     environment:
-      ldap_replication_type: master
+      ldap_replication_type: mmr
       ldap_server_id: 1
+      ldap_alternate_master: ${LDAP2}
     hostname: ${LDAP1}
     image: ${LDAP1}
     networks:
@@ -17,6 +18,7 @@ services:
       - "636:636"
     restart: unless-stopped
     secrets:
+      - admin_password
       - ldap_admin_pass
       - ldap_root_pass
       - zmsetup.in
@@ -24,72 +26,96 @@ services:
     volumes:
       # zmsetup
       - type: volume
-        source: data
+        source: data_ldap1
         target: /zmsetup
         volume:
           subpath: zmsetup
       # all
       - type: volume
-        source: data
+        source: data_ldap1
         target: /opt/zimbra/.ssh
         volume:
           subpath: dotssh
       - type: volume
-        source: data
+        source: data_ldap1
         target: /opt/zimbra/ssl
         volume:
           subpath: ssl
       - type: volume
-        source: data
+        source: data_ldap1
         target: /opt/zimbra/conf
         volume:
           subpath: conf
+      # The /opt/zimbra/data should NOT use external volume
       # ldap
       - type: volume
-        source: data
+        source: data_ldap1
         target: /opt/zimbra/data
         volume:
           subpath: data
-      # mta
-      - type: volume
-        source: data
-        target: /opt/zimbra/common/conf
-        volume:
-          subpath: commonconf
-      # mailbox
-      - type: volume
-        source: data
-        target: /opt/zimbra/db/data
-        volume:
-          subpath: dbdata
-      - type: volume
-        source: data
-        target: /opt/zimbra/zimlets-deployed
-        volume:
-          subpath: zimletsdeployed
-      - type: volume
-        source: data
-        target: /opt/zimbra/store
-        volume:
-          subpath: store
-      - type: volume
-        source: data
-        target: /opt/zimbra/index
-        volume:
-          subpath: index
-      - type: volume
-        source: data
-        target: /opt/zimbra/redolog
-        volume:
-          subpath: redolog
       # backup
       - type: volume
-        source: data
+        source: data_ldap1
         target: /opt/zimbra/backup
         volume:
           subpath: backup
-      # our post startup scripts
-      - ./custom:/custom
+  ldap2:
+    build:
+      context: ./zimbra
+      dockerfile: ldap.Dockerfile
+      args:
+        ZIMBRAIMAGE: yeak/zimbra-ldap:${VERSION}
+    env_file: ./containers.conf
+    environment:
+      ldap_replication_type: mmr
+      ldap_server_id: 2
+    hostname: ${LDAP2}
+    image: ${LDAP2}
+    networks:
+      - mynetwork
+    restart: unless-stopped
+    secrets:
+      - admin_password
+      - ldap_admin_pass
+      - ldap_root_pass
+      - zmsetup.in
+    stop_grace_period: 3m
+    volumes:
+      # zmsetup
+      - type: volume
+        source: data_ldap2
+        target: /zmsetup
+        volume:
+          subpath: zmsetup
+      # all
+      - type: volume
+        source: data_ldap2
+        target: /opt/zimbra/.ssh
+        volume:
+          subpath: dotssh
+      - type: volume
+        source: data_ldap2
+        target: /opt/zimbra/ssl
+        volume:
+          subpath: ssl
+      - type: volume
+        source: data_ldap2
+        target: /opt/zimbra/conf
+        volume:
+          subpath: conf
+      # The /opt/zimbra/data should NOT use external volume
+      # ldap
+      - type: volume
+        source: data_ldap2
+        target: /opt/zimbra/data
+        volume:
+          subpath: data
+      # backup
+      - type: volume
+        source: data_ldap2
+        target: /opt/zimbra/backup
+        volume:
+          subpath: backup
 networks:
   mynetwork:
     ipam:
@@ -98,8 +124,11 @@ networks:
         - subnet: ${SUBNET}
           gateway: ${GATEWAY}
 volumes:
-  data:
-    name: my-aio-vol
+  data_ldap1:
+    name: ${LDAP1_VOL}
+    external: true
+  data_ldap2:
+    name: ${LDAP2_VOL}
     external: true
 secrets:
   admin_password:

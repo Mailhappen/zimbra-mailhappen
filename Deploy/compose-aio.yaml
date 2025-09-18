@@ -106,7 +106,7 @@ networks:
           gateway: ${GATEWAY}
 volumes:
   data:
-    name: my-aio-vol
+    name: ${AIO_VOL}
     external: true
 secrets:
   admin_password:

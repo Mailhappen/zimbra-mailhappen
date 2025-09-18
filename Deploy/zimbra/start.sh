@@ -54,6 +54,7 @@ fi
 # 4. existing container (stop & start)
 #
 
+newinstall=0
 runzmsetup=0
 containerstarted=0
 
@@ -79,6 +80,7 @@ EOF
   bash /tmp/temp.sh > /zmsetup/config.zimbra
   rm -f /tmp/temp.sh
   runzmsetup=1
+  newinstall=1
 
 # New container with existing data
 else
@@ -118,19 +120,19 @@ if [ $runzmsetup -eq 0 -a $containerstarted -ne 1 ]; then
   [ "$(su - zimbra -c 'zmlocalconfig -m nokey ldap_is_master')" == "true" ] && su - zimbra -c "ldap start"
   LOGHOST=$(su - zimbra -c 'zmprov -m -l gcf zimbraLogHostname' | awk '{print $2}');
   [ "$LOGHOST" == "$HOSTNAME" ] && su - zimbra -c "libexec/zmloggerinit"
-  [ -d /opt/zimbra/common/jetty_home/resources ] && \
-    cd /opt/zimbra/common/jetty_home/resources && \
-    ln -sf /opt/zimbra/jetty_base/etc/jetty-logging.properties && \
+  [ -d /opt/zimbra/common/jetty_home/resources ] &&
+    cd /opt/zimbra/common/jetty_home/resources &&
+    ln -sf /opt/zimbra/jetty_base/etc/jetty-logging.properties &&
     cd -
-  [ -x /opt/zimbra/common/sbin/newaliases ] && \
+  [ -x /opt/zimbra/common/sbin/newaliases ] &&
     /opt/zimbra/common/sbin/newaliases
-  [ -x /opt/zimbra/onlyoffice/bin/zmonlyofficeconfig ] && \
+  [ -x /opt/zimbra/onlyoffice/bin/zmonlyofficeconfig ] &&
     /opt/zimbra/onlyoffice/bin/zmonlyofficeconfig
   [ "$(su - zimbra -c 'zmlocalconfig -m nokey ldap_is_master')" == "true" ] && su - zimbra -c "ldap stop"
   /etc/init.d/zimbra start
 fi
 
-# Run zmsetup for New Install and Upgrade
+# Run zmsetup for New Install or Upgrade
 if [ $runzmsetup -eq 1 ]; then
   # keep track of .install_history
   copyln /zmsetup/install_history /opt/zimbra/.install_history
@@ -138,8 +140,15 @@ if [ $runzmsetup -eq 1 ]; then
   # run zmsetup.pl to complete setup
   /opt/zimbra/libexec/zmsetup.pl -c /zmsetup/config.zimbra
 
-  # run postconfig
-  [ -x /root/postconfig.sh ] && /root/postconfig.sh
+  if [ $newinstall -eq 1 ]; then
+    # special handling for the first ldap with mmr type
+    # we use "mmr" keyword to trigger zmldapenable-mmr setup
+    [ "$ldap_replication_type" == "mmr" ] &&
+    [ "$ldap_host" == "$HOSTNAME" ] &&
+    [ -n "$ldap_server_id" ] &&
+    [ -n "$ldap_alternate_master" ] &&
+      $(su - zimbra -c "libexec/zmldapenable-mmr -r 100 -s $ldap_server_id -m ldaps://$ldap_alternate_master:636/")
+  fi
 
   # onlyoffice App_Data
   [ -d /opt/zimbra/onlyoffice/documentserver/App_Data ] && install -o zimbra -g zimbra -m 750 -d /opt/zimbra/onlyoffice/documentserver/App_Data
