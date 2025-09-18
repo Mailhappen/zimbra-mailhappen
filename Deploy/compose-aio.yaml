@@ -6,6 +6,10 @@ services:
       args:
         ZIMBRAIMAGE: yeak/zimbra-aio:${VERSION}
     env_file: ./containers.conf
+    healthcheck:
+      test: su - zimbra -c 'zmcontrol status' || exit 1
+      interval: 5m
+      timeout: 30s
     hostname: ${AIO}
     image: ${AIO}
     networks:

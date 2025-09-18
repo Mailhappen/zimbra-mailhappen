@@ -32,3 +32,6 @@ VOLUME /opt/zimbra/redolog
 VOLUME /opt/zimbra/backup
 
 EXPOSE 7071
+
+HEALTHCHECK --interval=5m --timeout=30s \
+  CMD su - zimbra -c 'zmmailboxdctl status' || exit 1

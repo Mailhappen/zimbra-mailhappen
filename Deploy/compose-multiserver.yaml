@@ -9,12 +9,14 @@ services:
     environment:
       ldap_replication_type: mmr
       ldap_server_id: 1
+    healthcheck:
+      test: su - zimbra -c 'ldap status' || exit 1
+      interval: 1m
+      timeout: 30s
     hostname: ${LDAP1}
     image: ${LDAP1}
     networks:
       - mynetwork
-    ports:
-      - "636:636"
     restart: unless-stopped
     secrets:
       - admin_password
@@ -63,14 +65,23 @@ services:
       dockerfile: ldap.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-ldap:${VERSION}
+    depends_on:
+      ldap1:
+        condition: service_healthy
     env_file: ./containers.conf
     environment:
       ldap_replication_type: mmr
       ldap_server_id: 2
+    healthcheck:
+      test: su - zimbra -c 'ldap status' || exit 1
+      interval: 1m
+      timeout: 30s
     hostname: ${LDAP2}
     image: ${LDAP2}
     networks:
       - mynetwork
+    ports:
+      - "636:636"
     restart: unless-stopped
     secrets:
       - admin_password
@@ -119,7 +130,14 @@ services:
       dockerfile: mta.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-mta:${VERSION}
+    depends_on:
+      ldap1:
+        condition: service_healthy
     env_file: ./containers.conf
+    healthcheck:
+      test: su - zimbra -c 'zmmtactl status' || exit 1
+      interval: 5m
+      timeout: 30s
     hostname: ${MTA1}
     image: ${MTA1}
     networks:
@@ -175,72 +193,20 @@ services:
         target: /opt/zimbra/backup
         volume:
           subpath: backup
-  mta2:
-    build:
-      context: ./zimbra
-      dockerfile: mta.Dockerfile
-      args:
-        ZIMBRAIMAGE: yeak/zimbra-mta:${VERSION}
-    env_file: ./containers.conf
-    hostname: ${MTA2}
-    image: ${MTA2}
-    networks:
-      - mynetwork
-    restart: unless-stopped
-    secrets:
-      - admin_password
-      - ldap_admin_pass
-      - ldap_root_pass
-      - zmsetup.in
-    stop_grace_period: 3m
-    volumes:
-      # zmsetup
-      - type: volume
-        source: data_mta2
-        target: /zmsetup
-        volume:
-          subpath: zmsetup
-      # all
-      - type: volume
-        source: data_mta2
-        target: /opt/zimbra/.ssh
-        volume:
-          subpath: dotssh
-      - type: volume
-        source: data_mta2
-        target: /opt/zimbra/ssl
-        volume:
-          subpath: ssl
-      - type: volume
-        source: data_mta2
-        target: /opt/zimbra/conf
-        volume:
-          subpath: conf
-      # The /opt/zimbra/data should NOT use external volume
-      - type: volume
-        source: data_mta2
-        target: /opt/zimbra/data
-        volume:
-          subpath: data
-      # mta
-      - type: volume
-        source: data_mta2
-        target: /opt/zimbra/common/conf
-        volume:
-          subpath: commonconf
-      # backup
-      - type: volume
-        source: data_mta2
-        target: /opt/zimbra/backup
-        volume:
-          subpath: backup
   proxy1:
     build:
       context: ./zimbra
       dockerfile: proxy.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-proxy:${VERSION}
+    depends_on:
+      ldap1:
+        condition: service_healthy
     env_file: ./containers.conf
+    healthcheck:
+      test: su - zimbra -c 'zmproxyctl status' || exit 1
+      interval: 5m
+      timeout: 30s
     hostname: ${PROXY1}
     image: ${PROXY1}
     networks:
@@ -293,70 +259,26 @@ services:
         target: /opt/zimbra/backup
         volume:
           subpath: backup
-  proxy2:
-    build:
-      context: ./zimbra
-      dockerfile: proxy.Dockerfile
-      args:
-        ZIMBRAIMAGE: yeak/zimbra-proxy:${VERSION}
-    env_file: ./containers.conf
-    hostname: ${PROXY2}
-    image: ${PROXY2}
-    networks:
-      - mynetwork
-    restart: unless-stopped
-    secrets:
-      - admin_password
-      - ldap_admin_pass
-      - ldap_root_pass
-      - zmsetup.in
-    stop_grace_period: 3m
-    volumes:
-      # zmsetup
-      - type: volume
-        source: data_proxy2
-        target: /zmsetup
-        volume:
-          subpath: zmsetup
-      # all
-      - type: volume
-        source: data_proxy2
-        target: /opt/zimbra/.ssh
-        volume:
-          subpath: dotssh
-      - type: volume
-        source: data_proxy2
-        target: /opt/zimbra/ssl
-        volume:
-          subpath: ssl
-      - type: volume
-        source: data_proxy2
-        target: /opt/zimbra/conf
-        volume:
-          subpath: conf
-      # The /opt/zimbra/data should NOT use external volume
-      - type: volume
-        source: data_proxy2
-        target: /opt/zimbra/data
-        volume:
-          subpath: data
-      # backup
-      - type: volume
-        source: data_proxy2
-        target: /opt/zimbra/backup
-        volume:
-          subpath: backup
   logger:
     build:
       context: ./zimbra
       dockerfile: logger.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-logger:${VERSION}
+    depends_on:
+      ldap1:
+        condition: service_healthy
     env_file: ./containers.conf
+    healthcheck:
+      test: su - zimbra -c 'zmmailboxdctl status' || exit 1
+      interval: 5m
+      timeout: 30s
     hostname: ${LOGGER}
     image: ${LOGGER}
     networks:
       - mynetwork
+    ports:
+      - "7071:7071"
     restart: unless-stopped
     secrets:
       - admin_password
@@ -431,7 +353,14 @@ services:
       dockerfile: mailbox.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-mailbox:${VERSION}
+    depends_on:
+      ldap1:
+        condition: service_healthy
     env_file: ./containers.conf
+    healthcheck:
+      test: su - zimbra -c 'zmmailboxdctl status' || exit 1
+      interval: 5m
+      timeout: 30s
     hostname: ${MBX1}
     image: ${MBX1}
     networks:
@@ -527,14 +456,8 @@ volumes:
   data_mta1:
     name: ${MTA1_VOL}
     external: true
-  data_mta2:
-    name: ${MTA2_VOL}
-    external: true
   data_proxy1:
     name: ${PROXY1_VOL}
-    external: true
-  data_proxy2:
-    name: ${PROXY2_VOL}
     external: true
 secrets:
   admin_password:
