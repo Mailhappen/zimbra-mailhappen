@@ -8,7 +8,7 @@ services:
     env_file: ./container.conf
     healthcheck:
       test: su - zimbra -c 'zmcontrol status' || exit 1
-      interval: 5m
+      interval: 1m
       timeout: 30s
     hostname: ${AIO}
     image: ${AIO}
@@ -98,8 +98,6 @@ services:
         target: /opt/zimbra/backup
         volume:
           subpath: backup
-      # our post startup scripts
-      - ./custom:/custom
 networks:
   mynetwork:
     ipam:
