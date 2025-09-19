@@ -26,7 +26,7 @@ Clone our repository and run it.
 ```
 git clone https://github.com/Mailhappen/zimbra-mailhappen.git
 cd zimbra-mailhappen
-cd Deploy
+cd deploy
 cp compose-aio.yaml compose.yaml
 cp container-aio.conf container.conf
 cp env-sample .env

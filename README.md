@@ -15,7 +15,7 @@ This project covers:
 
 ## Build your own Zimbra FOSS installer and images
 
-The `Build` folder contains scripts used to build your own Zimbra FOSS until the Docker images.
+The `build` folder contains scripts used to build your own Zimbra FOSS until the Docker images.
 
 - `zcs` - create the zcs-10.1.x...tgz from the source
 - `osimage` - create the Rocky Linux 9 OS image for running Zimbra
