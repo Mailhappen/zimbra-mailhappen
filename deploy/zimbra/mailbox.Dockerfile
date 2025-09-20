@@ -1,6 +1,6 @@
 # All-In-One
 
-ARG ZIMBRAIMAGE=yeak/zimbra-aio:10.1.10
+ARG ZIMBRAIMAGE=yeak/zimbra-mailbox:10.1.10
 FROM $ZIMBRAIMAGE
 
 # Prepare for upgrade files

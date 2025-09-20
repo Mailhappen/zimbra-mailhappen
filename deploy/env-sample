@@ -27,11 +27,9 @@ MTA1="mta1.${DEFAULT_DOMAIN}"
 MTA2="mta2.${DEFAULT_DOMAIN}"
 PROXY1="proxy1.${DEFAULT_DOMAIN}"
 PROXY2="proxy2.${DEFAULT_DOMAIN}"
-LDS="lds.${DEFAULT_DOMAIN}"
 MBX1="mbx1.${DEFAULT_DOMAIN}"
 MBX2="mbx2.${DEFAULT_DOMAIN}"
 LOGGER="logger.${DEFAULT_DOMAIN}"
-ARCHIVE="archive.${DEFAULT_DOMAIN}"
 
 # Container Volume (do not use "_" in name)
 
@@ -45,9 +43,6 @@ MTA1_VOL="mta1-vol"
 MTA2_VOL="mta2-vol"
 PROXY1_VOL="proxy1-vol"
 PROXY2_VOL="proxy2-vol"
-LDS_VOL="lds-vol"
 MBX1_VOL="mbx1-vol"
 MBX2_VOL="mbx2-vol"
 LOGGER_VOL="logger-vol"
-ARCHIVE_VOL="archive-vol"
-

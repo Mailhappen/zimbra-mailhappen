@@ -92,10 +92,10 @@ else
     echo "### UPGRADE ###"
     sed -i 's/INSTALLED/UPGRADED/' /opt/zimbra/.install_history
     cat /opt/zimbra/.install_history >> /zmsetup/install_history
-    /usr/bin/rsync -av -u /upgrade/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
-    /usr/bin/rsync -av -u /upgrade/data/ /opt/zimbra/data/
-    [ -d /opt/zimbra/common/conf ] && /usr/bin/rsync -av -u /upgrade/commonconf/ /opt/zimbra/common/conf/
-    [ -d /opt/zimbra/license ] && /usr/bin/rsync -av -u /upgrade/license/ /opt/zimbra/license/
+    /usr/bin/rsync -av -u /upgrade/opt/zimbra/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
+    /usr/bin/rsync -av -u /upgrade/opt/zimbra/data/ /opt/zimbra/data/
+    [ -d /opt/zimbra/common/conf ] && /usr/bin/rsync -av -u /upgrade/opt/zimbra/common/conf/ /opt/zimbra/common/conf/
+    [ -d /opt/zimbra/license ] && /usr/bin/rsync -av -u /upgrade/opt/zimbra/license/ /opt/zimbra/license/
     runzmsetup=1
   fi
   # fix permission if required
