@@ -1,0 +1,23 @@
+# All-In-One
+
+ARG ZIMBRAIMAGE=yeak/zimbra-ldap-ne:10.1.11
+FROM $ZIMBRAIMAGE
+
+# Our startup scripts
+COPY --chmod=644 zimbra.ini /etc/supervisord.d/
+COPY --chmod=755 start.sh /supervisor/
+
+# Adjust container for our use
+RUN sed -i 's/systemctl restart rsyslog.service/supervisorctl restart rsyslog/' /opt/zimbra/libexec/zmsyslogsetup
+
+# zmsetup
+VOLUME /zmsetup
+# all
+VOLUME /opt/zimbra/.ssh
+VOLUME /opt/zimbra/ssl
+VOLUME /opt/zimbra/conf
+VOLUME /opt/zimbra/data
+# backup
+VOLUME /opt/zimbra/backup
+
+EXPOSE 636

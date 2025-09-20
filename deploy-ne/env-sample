@@ -1,0 +1,52 @@
+#
+# Edit this to suit your site
+#
+# This is used by compose.yaml to fill up the variables when running services
+# Format: use UPPERCASE for variable name
+#
+
+# Zimbra Version to run
+VERSION=10.1.11
+
+# Site Domain
+DEFAULT_DOMAIN="zimbra.lab"
+
+# Set a custom network range to run containers so that MTA mynetworks is static
+SUBNET="172.28.0.0/24"
+GATEWAY="172.28.0.1"
+
+# Container Hostname
+
+# For singleserver. This is the server name you see in admin console.
+AIO="mail.${DEFAULT_DOMAIN}"
+
+# For multiserver. Specify here to name of the created servers.
+LDAP1="ldap1.${DEFAULT_DOMAIN}"
+LDAP2="ldap2.${DEFAULT_DOMAIN}"
+MTA1="mta1.${DEFAULT_DOMAIN}"
+MTA2="mta2.${DEFAULT_DOMAIN}"
+PROXY1="proxy1.${DEFAULT_DOMAIN}"
+PROXY2="proxy2.${DEFAULT_DOMAIN}"
+MBX1="mbx1.${DEFAULT_DOMAIN}"
+MBX2="mbx2.${DEFAULT_DOMAIN}"
+LOGGER="logger.${DEFAULT_DOMAIN}"
+ARCHIVE="archive.${DEFAULT_DOMAIN}"
+ONLYOFFICE="onlyoffice.${DEFAULT_DOMAIN}"
+
+# Container Volume (do not use "_" in name)
+
+# For single server
+AIO_VOL="ne-aio-vol"
+
+# For multiserver
+LDAP1_VOL="ne-ldap1-vol"
+LDAP2_VOL="ne-ldap2-vol"
+MTA1_VOL="ne-mta1-vol"
+MTA2_VOL="ne-mta2-vol"
+PROXY1_VOL="ne-proxy1-vol"
+PROXY2_VOL="ne-proxy2-vol"
+MBX1_VOL="ne-mbx1-vol"
+MBX2_VOL="ne-mbx2-vol"
+LOGGER_VOL="ne-logger-vol"
+ARCHIVE_VOL="ne-archive-vol"
+ONLYOFFICE_VOL="ne-onlyoffice-vol"
