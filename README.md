@@ -29,6 +29,10 @@ When deploying Zimbra, decide if you want to run *singleserver* (AIO) or *multis
 
 Refer to [QUICKSTART](QUICKSTART.md) for deployment.
 
+## Network Edition
+
+The `zimbraimage-ne` and `deploy-ne` are using Zimbra Network Edition 10.1. You will need to obtain [Zimbra Trial License](https://www.zimbra.com/connect/forms/?form=trial-license) to activate it.
+
 ## Support
 Use the Github issue to open case.
 
