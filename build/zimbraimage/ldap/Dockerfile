@@ -20,3 +20,5 @@ RUN cat keystrokes | cut -d' ' -f1 > /tmp/keystrokes \
   && rm -rf ${ZCS} \
   && rm -f ${ZCS}.tgz \
   && rm -f /tmp/keystrokes
+
+RUN sed -i 's/@@BUILD_PLATFORM@@/RHEL9_64/' /opt/zimbra/.platform
