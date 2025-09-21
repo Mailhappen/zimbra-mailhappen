@@ -2,7 +2,7 @@ services:
   ldap1:
     build:
       context: ./zimbra
-      dockerfile: ldap.Dockerfile
+      dockerfile: ldap-ne.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-ldap-ne:${VERSION}
     env_file: ./container.conf
@@ -62,7 +62,7 @@ services:
   ldap2:
     build:
       context: ./zimbra
-      dockerfile: ldap.Dockerfile
+      dockerfile: ldap-ne.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-ldap-ne:${VERSION}
     depends_on:
@@ -127,7 +127,7 @@ services:
   mta1:
     build:
       context: ./zimbra
-      dockerfile: mta.Dockerfile
+      dockerfile: mta-ne.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-mta-ne:${VERSION}
     depends_on:
@@ -196,7 +196,7 @@ services:
   proxy1:
     build:
       context: ./zimbra
-      dockerfile: proxy.Dockerfile
+      dockerfile: proxy-ne.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-proxy-ne:${VERSION}
     depends_on:
@@ -262,7 +262,7 @@ services:
   logger:
     build:
       context: ./zimbra
-      dockerfile: logger.Dockerfile
+      dockerfile: logger-ne.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-logger-ne:${VERSION}
     depends_on:
@@ -350,7 +350,7 @@ services:
   mbx1:
     build:
       context: ./zimbra
-      dockerfile: mailbox.Dockerfile
+      dockerfile: mailbox-ne.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-mailbox-ne:${VERSION}
     depends_on:
@@ -436,7 +436,7 @@ services:
   onlyoffice:
     build:
       context: ./zimbra
-      dockerfile: onlyoffice.Dockerfile
+      dockerfile: onlyoffice-ne.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-onlyoffice-ne:${VERSION}
     depends_on:

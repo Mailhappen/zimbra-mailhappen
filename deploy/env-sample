@@ -7,6 +7,7 @@
 
 # Zimbra Version to run
 VERSION=10.1.10
+VERSION=10.1.11
 
 # Site Domain
 DEFAULT_DOMAIN="zimbra.lab"
@@ -30,6 +31,8 @@ PROXY2="proxy2.${DEFAULT_DOMAIN}"
 MBX1="mbx1.${DEFAULT_DOMAIN}"
 MBX2="mbx2.${DEFAULT_DOMAIN}"
 LOGGER="logger.${DEFAULT_DOMAIN}"
+ARCHIVE="archive.${DEFAULT_DOMAIN}"
+ONLYOFFICE="onlyoffice.${DEFAULT_DOMAIN}"
 
 # Container Volume (do not use "_" in name)
 
@@ -46,3 +49,5 @@ PROXY2_VOL="proxy2-vol"
 MBX1_VOL="mbx1-vol"
 MBX2_VOL="mbx2-vol"
 LOGGER_VOL="logger-vol"
+ARCHIVE_VOL="archive-vol"
+ONLYOFFICE_VOL="onlyoffice-vol"
