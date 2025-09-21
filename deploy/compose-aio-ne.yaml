@@ -2,7 +2,7 @@ services:
   zimbra-aio-ne:
     build:
       context: ./zimbra
-      dockerfile: all-in-one.Dockerfile
+      dockerfile: all-in-one-ne.Dockerfile
       args:
         ZIMBRAIMAGE: yeak/zimbra-aio-ne:${VERSION}
     env_file: ./container.conf

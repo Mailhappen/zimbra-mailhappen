@@ -25,6 +25,10 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
+      # for upgrade use
+      - type: image
+        source: ${AIO}
+        target: /upgrade
       # zmsetup
       - type: volume
         source: data_ldap1
@@ -90,6 +94,10 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
+      # for upgrade use
+      - type: image
+        source: ${AIO}
+        target: /upgrade
       # zmsetup
       - type: volume
         source: data_ldap2
@@ -153,6 +161,10 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
+      # for upgrade use
+      - type: image
+        source: ${AIO}
+        target: /upgrade
       # zmsetup
       - type: volume
         source: data_mta1
@@ -225,6 +237,10 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
+      # for upgrade use
+      - type: image
+        source: ${AIO}
+        target: /upgrade
       # zmsetup
       - type: volume
         source: data_proxy1
@@ -287,6 +303,10 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
+      # for upgrade use
+      - type: image
+        source: ${AIO}
+        target: /upgrade
       # zmsetup
       - type: volume
         source: data_logger
@@ -373,6 +393,10 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
+      # for upgrade use
+      - type: image
+        source: ${AIO}
+        target: /upgrade
       # zmsetup
       - type: volume
         source: data_mbx1
@@ -459,6 +483,10 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
+      # for upgrade use
+      - type: image
+        source: ${AIO}
+        target: /upgrade
       # zmsetup
       - type: volume
         source: data_onlyoffice
@@ -498,6 +526,21 @@ services:
         target: /opt/zimbra/zimlets-deployed
         volume:
           subpath: zimletsdeployed
+      - type: volume
+        source: data_onlyoffice
+        target: /opt/zimbra/store
+        volume:
+          subpath: store
+      - type: volume
+        source: data_onlyoffice
+        target: /opt/zimbra/index
+        volume:
+          subpath: index
+      - type: volume
+        source: data_onlyoffice
+        target: /opt/zimbra/redolog
+        volume:
+          subpath: redolog
       # backup
       - type: volume
         source: data_onlyoffice
@@ -527,11 +570,11 @@ volumes:
   data_mta1:
     name: ${MTA1_VOL}
     external: true
-  data_onlyoffice:
-    name: ${ONLYOFFICE_VOL}
-    external: true
   data_proxy1:
     name: ${PROXY1_VOL}
+    external: true
+  data_onlyoffice:
+    name: ${ONLYOFFICE_VOL}
     external: true
 secrets:
   admin_password:
