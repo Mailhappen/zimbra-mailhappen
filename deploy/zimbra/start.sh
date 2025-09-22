@@ -145,14 +145,17 @@ if [ $runzmsetup -eq 1 ]; then
     if [ "$ldap_replication_type" == "mmr" ]; then
       if [ "$ldap_host" == "$HOSTNAME" ]; then # first ldap
         su - zimbra -c "libexec/zmldapenable-mmr -r 100 -s $ldap_server_id -m ldaps://$ldap_alternate_master:636/"
-        su - zimbra -c "zmlocalconfig -e ldap_master_url='ldaps://$ldap_host:636 ldaps://$ldap_alternate_master:636'"
-        su - zimbra -c "zmlocalconfig -e ldap_url='ldaps://$ldap_host:636 ldaps://$ldap_alternate_master:636'"
+	# no need to change ldap_url
+        #su - zimbra -c "zmlocalconfig -e ldap_master_url='ldaps://$ldap_host:636 ldaps://$ldap_alternate_master:636'"
+        #su - zimbra -c "zmlocalconfig -e ldap_url='ldaps://$ldap_host:636 ldaps://$ldap_alternate_master:636'"
       else # for other mmr
 	# enable mmr aleady done by zmsetup.pl
-        su - zimbra -c "zmlocalconfig -e ldap_master_url='ldaps://$ldap_alternate_master:636 ldaps://$ldap_host:636'"
-        su - zimbra -c "zmlocalconfig -e ldap_url='ldaps://$ldap_alternate_master:636 ldaps://$ldap_host:636'"
+	# no need to change ldap_url
+	:
+        #su - zimbra -c "zmlocalconfig -e ldap_master_url='ldaps://$ldap_alternate_master:636 ldaps://$ldap_host:636'"
+        #su - zimbra -c "zmlocalconfig -e ldap_url='ldaps://$ldap_alternate_master:636 ldaps://$ldap_host:636'"
       fi
-    elif [ -n "$ldap_alternate_master" ]; then # for multiserver only
+    elif [ -n "$ldap_alternate_master" ]; then # all multiserver need to update this
       su - zimbra -c "zmlocalconfig -e ldap_master_url='ldaps://$ldap_host:636 ldaps://$ldap_alternate_master:636'"
       su - zimbra -c "zmlocalconfig -e ldap_url='ldaps://$ldap_host:636 ldaps://$ldap_alternate_master:636'"
     fi
