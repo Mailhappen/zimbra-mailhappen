@@ -33,22 +33,28 @@ NOTE: Multiserver is for advanced deployment. We are still improving it.
 
 ## Network Edition
 
-The images with `-ne` suffix are built from Zimbra Network Edition. You need a valid Zimbra License to use it. You can obtain [Zimbra Trial License](https://www.zimbra.com/connect/forms/?form=trial-license) to try out.
+The images with `-ne` suffix are built from Zimbra Network Edition installer. You need a valid Zimbra License to use it. You can obtain [Zimbra Trial License](https://www.zimbra.com/connect/forms/?form=trial-license) to try out.
 
 ## Support
+
 Use the Github issue to open case.
 
 ## Roadmap
+
 We will continue to keep up with new updates from Zimbra Github.
 
 ## Contributing
+
 We accept contribution. You can reach out to yeak at mailhappen dot com to state your intention.
 
 ## Authors and acknowledgment
+
 Kudos to Zimbra for having FOSS available in Github.
 
 ## License
+
 See LICENSE file.
 
 ## Project status
+
 This is always on-going.
