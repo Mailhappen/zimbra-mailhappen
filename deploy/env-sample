@@ -6,8 +6,8 @@
 #
 
 # Zimbra Version to run
-#VERSION=10.1.10
-VERSION=10.1.11
+VERSION=10.1.10
+#VERSION=10.1.11
 
 # Site Domain
 DEFAULT_DOMAIN="zimbra.lab"
