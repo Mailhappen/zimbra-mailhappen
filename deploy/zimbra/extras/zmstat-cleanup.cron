@@ -1,0 +1,4 @@
+#
+# zmstat_cleanup
+#
+15 0 * * 7 /opt/zimbra/libexec/zmstat-cleanup -k 30

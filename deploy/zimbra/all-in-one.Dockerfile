@@ -10,6 +10,16 @@ COPY --chmod=755 start.sh /supervisor/
 # Adjust container for our use
 RUN sed -i 's/systemctl restart rsyslog.service/supervisorctl restart rsyslog/' /opt/zimbra/libexec/zmsyslogsetup
 
+# Extras
+# logos
+COPY --chmod=444 extras/LoginBanner.png /opt/zimbra/jetty/webapps/zimbra/skins/_base/logos/LoginBanner.png
+COPY --chmod=444 extras/LoginBanner.png /opt/zimbra/jetty/webapps/zimbra/skins/_base/logos/LoginBanner_white.png
+COPY --chmod=444 extras/AppBanner.png /opt/zimbra/jetty/webapps/zimbra/skins/_base/logos/AppBanner.png
+COPY --chmod=444 extras/AppBanner.png /opt/zimbra/jetty/webapps/zimbra/skins/_base/logos/AppBanner_white.png
+# zmstat-cleanup
+COPY --chmod=444 extras/zmstat-cleanup.cron /tmp/zmstat-cleanup.cron
+RUN cat /tmp/zmstat-cleanup.cron >> /opt/zimbra/conf/crontabs/crontab
+
 # zmsetup
 VOLUME /zmsetup
 # all
