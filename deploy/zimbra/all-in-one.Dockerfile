@@ -10,6 +10,10 @@ COPY --chmod=755 start.sh /supervisor/
 # Adjust container for our use
 RUN sed -i 's/systemctl restart rsyslog.service/supervisorctl restart rsyslog/' /opt/zimbra/libexec/zmsyslogsetup
 
+# Prepare files for upgrade use (don't rely on image mount yet)
+RUN mkdir -p /upgrade \
+  && /usr/bin/tar cf - /opt/zimbra/conf /opt/zimbra/common/conf /opt/zimbra/data | tar -C /upgrade -xf -
+
 # Extras
 
 # logos

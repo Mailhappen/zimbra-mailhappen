@@ -25,10 +25,6 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
-      # for upgrade use
-      - type: image
-        source: ${AIO}
-        target: /upgrade
       # zmsetup
       - type: volume
         source: data_ldap1
@@ -94,10 +90,6 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
-      # for upgrade use
-      - type: image
-        source: ${AIO}
-        target: /upgrade
       # zmsetup
       - type: volume
         source: data_ldap2
@@ -161,10 +153,6 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
-      # for upgrade use
-      - type: image
-        source: ${AIO}
-        target: /upgrade
       # zmsetup
       - type: volume
         source: data_mta1
@@ -237,10 +225,6 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
-      # for upgrade use
-      - type: image
-        source: ${AIO}
-        target: /upgrade
       # zmsetup
       - type: volume
         source: data_proxy1
@@ -303,10 +287,6 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
-      # for upgrade use
-      - type: image
-        source: ${AIO}
-        target: /upgrade
       # zmsetup
       - type: volume
         source: data_logger
@@ -393,10 +373,6 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
-      # for upgrade use
-      - type: image
-        source: ${AIO}
-        target: /upgrade
       # zmsetup
       - type: volume
         source: data_mbx1
@@ -483,10 +459,6 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
-      # for upgrade use
-      - type: image
-        source: ${AIO}
-        target: /upgrade
       # zmsetup
       - type: volume
         source: data_onlyoffice

@@ -24,7 +24,8 @@ sleep 5
 
 # publish our tgz in a temp webserver
 cid="/tmp/build.$$"
-docker run -d -p 12312:80 --rm --cidfile $cid -v $ZCS_TGZ:/usr/share/nginx/html/$ZCS.tgz nginx
+ln -sf $(dirname $ZCS_TGZ) data
+docker run -d -p 12312:80 --rm --cidfile $cid -v ./data:/usr/share/nginx/html nginx
 docker build -t yeak/$NAME:$ver \
 	--label name=$NAME \
 	--label version=$ver \
@@ -35,3 +36,4 @@ docker build -t yeak/$NAME:$ver \
 	.
 docker rm -f `cat $cid`
 rm -f $cid
+rm -f data

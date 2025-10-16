@@ -32,10 +32,6 @@ services:
       - zmsetup.in
     stop_grace_period: 3m
     volumes:
-      # for upgrade use
-      - type: image
-        source: ${AIO}
-        target: /upgrade
       # zmsetup
       - type: volume
         source: data
