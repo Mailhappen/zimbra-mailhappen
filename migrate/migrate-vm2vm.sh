@@ -87,16 +87,18 @@ echo "You can suspend mysql at source: flush tables with read lock"
 echo "Or stop mysql:         mysql.server stop"
 echo "And start again later: mysql.server start"
 echo
+echo "For initial copy, just proceed first."
+echo
 echo "!!! NOTE !!! It is best to do this at maintenance or low peak time!"
 echo
-echo -n "Press Enter to continue. "
+echo -n "Press Enter to continue "
 read ignore
 _rsync /opt/zimbra/db/data/ /opt/zimbra/db/data/
 
 echo
 echo "### Done copying DB. You may release the DB lock..."
 echo
-echo -n "Press Enter to continue. "
+echo -n "Press Enter to continue "
 read ignore
 fi
 
@@ -124,21 +126,22 @@ _rsync /opt/zimbra/backup/ /opt/zimbra/backup/ --delete
 fi
 
 echo
-echo -n "## STEP 4: Attempt to upgrade. Proceed? [y/N] "
+echo -n "## STEP 4: Adjust data for upgrade. Proceed? [y/N] "
 echo
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 
-# adjust install history
+echo "Adjusting .install_history"
 sed 's/INSTALLED/UPGRADED/g' /opt/zimbra.bak/.install_history > /tmp/install_history
 cat /root/install_history /tmp/install_history > /opt/zimbra/.install_history
 
-# put back new files introduced in new version
+echo "Copying upgraded files"
 /usr/bin/rsync -av -u /opt/zimbra.bak/conf/ /opt/zimbra/conf/ --exclude localconfig.xml
 /usr/bin/rsync -av -u /opt/zimbra.bak/data/ /opt/zimbra/data/
 [ -d /opt/zimbra/common/conf ] && /usr/bin/rsync -av -u /opt/zimbra.bak/common/conf/ /opt/zimbra/common/conf/
 [ -d /opt/zimbra/license ] && /usr/bin/rsync -av -u /opt/zimbra.bak/license/ /opt/zimbra/license/
 
+echo "Fix permission"
 uid=`id -u zimbra`
 gid=`id -g zimbra`
 chown $uid:$gid /opt/zimbra/conf/localconfig.xml
@@ -148,7 +151,7 @@ $_cmd /opt/zimbra/libexec/zmfixperms -e -v
 fi
 
 echo
-echo "Cmd: /opt/zimbra/libexec/zmsetup.pl -c /root/config.zimbra"
-echo -n "### Press Enter to run command above. Ctrl-c to cancel. "
-read ignore
-/opt/zimbra/libexec/zmsetup.pl -c /root/config.zimbra
+echo "Done. Please run command below to complete the setup/upgrade."
+echo
+echo "  /opt/zimbra/libexec/zmsetup.pl -c /root/config.zimbra"
+echo
