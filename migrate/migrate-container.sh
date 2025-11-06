@@ -1,11 +1,12 @@
 #!/bin/bash
 #
-source_container=zimbra-mailhappen-zimbra-1
-target_local=my-optzimbra-local
-target_juicefs=my-optzimbra-juicefs
+source_container="zimbra-mailhappen-zimbra-1"
+target_local="my-optzimbra-local"
+target_juicefs="my-optzimbra-juicefs"
+docker_image="yeak/singleserver"
 
 # command
-_cmd="docker run --rm --volumes-from $source_container -v $target_local:/local -v $target_juicefs:/juicefs yeak/singleserver"
+_cmd="docker run --rm --volumes-from $source_container -v $target_local:/local -v $target_juicefs:/juicefs $docker_image"
 
 function _rsync() {
   from=$1; shift
@@ -21,6 +22,8 @@ if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 
 # copy to juicefs
 _rsync /zmsetup/ /juicefs/zmsetup/
+_rsync /opt/zimbra/common/etc/java/cacerts /juicefs/zmsetup/
+_rsync /opt/zimbra/mailboxd/etc/keystore /juicefs/zmsetup/
 _rsync /opt/zimbra/.ssh/ /juicefs/dotssh/
 _rsync /opt/zimbra/ssl/ /juicefs/ssl/ --delete
 _rsync /opt/zimbra/conf/ /juicefs/conf/
@@ -80,7 +83,7 @@ _cmd="docker run --rm \
 --mount type=volume,src=$target_juicefs,volume-subpath=index,dst=/opt/zimbra/index \
 --mount type=volume,src=$target_juicefs,volume-subpath=redolog,dst=/opt/zimbra/redolog \
 --mount type=volume,src=$target_juicefs,volume-subpath=backup,dst=/opt/zimbra/backup \
-yeak/singleserver"
+$docker_image"
 
 uid=`$_cmd id -u zimbra`
 gid=`$_cmd id -g zimbra`

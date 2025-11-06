@@ -18,11 +18,12 @@ if [ ! -f $source_sshkey ]; then
 fi
 
 # Container configuration
-target_local=my-optzimbra-local
-target_juicefs=my-optzimbra-juicefs
+target_local="my-optzimbra-local"
+target_juicefs="my-optzimbra-juicefs"
+docker_image="yeak/singleserver"
 
 # command
-_cmd="docker run --rm -v $source_sshkey:/key -v $target_local:/local -v $target_juicefs:/juicefs yeak/singleserver"
+_cmd="docker run --rm -v $source_sshkey:/key -v $target_local:/local -v $target_juicefs:/juicefs $docker_image"
 _ssh="/usr/bin/ssh -i /key -p $source_sshport -o StrictHostKeyChecking=no"
 
 function _rsync() {
@@ -51,6 +52,8 @@ $_cmd $_ssh $source_sshuser@$source_zimbra \
 # copy to juicefs
 _rsync /tmp/config.zimbra /juicefs/zmsetup/
 _rsync /opt/zimbra/.install_history /juicefs/zmsetup/install_history
+_rsync /opt/zimbra/common/etc/java/cacerts /juicefs/zmsetup/
+_rsync /opt/zimbra/mailboxd/etc/keystore /juicefs/zmsetup/
 _rsync /opt/zimbra/.ssh/ /juicefs/dotssh/
 _rsync /opt/zimbra/ssl/ /juicefs/ssl/ --delete
 _rsync /opt/zimbra/conf/ /juicefs/conf/
@@ -69,6 +72,7 @@ sleep 5
 
 # copy to local
 _rsync /opt/zimbra/data/ /local/data/ --exclude data.mdb --exclude mailboxd/imap-* --exclude amavisd/tmp/ --delete
+/usr/bin/rm -f /local/data/ldap/mdb/db/data.mdb
 _rsync /tmp/data.mdb /local/data/ldap/mdb/db/data.mdb
 fi
 
@@ -109,7 +113,7 @@ _cmd="docker run --rm \
 --mount type=volume,src=$target_juicefs,volume-subpath=index,dst=/opt/zimbra/index \
 --mount type=volume,src=$target_juicefs,volume-subpath=redolog,dst=/opt/zimbra/redolog \
 --mount type=volume,src=$target_juicefs,volume-subpath=backup,dst=/opt/zimbra/backup \
-yeak/singleserver"
+$docker_image"
 
 uid=`$_cmd id -u zimbra`
 gid=`$_cmd id -g zimbra`
