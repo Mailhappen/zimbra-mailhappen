@@ -74,7 +74,7 @@ _rsync /opt/zimbra/.ssh/ /opt/zimbra/.ssh/
 _rsync /opt/zimbra/ssl/ /opt/zimbra/ssl/ --delete
 _rsync /opt/zimbra/conf/ /opt/zimbra/conf/
 _rsync /opt/zimbra/common/conf/ /opt/zimbra/common/conf/
-_rsync /opt/zimbra/zimlets-deployed/ /opt/zimbra/zimletdeployed/ --delete
+_rsync /opt/zimbra/zimlets-deployed/ /opt/zimbra/zimlets-deployed/ --delete
 _rsync /opt/zimbra/redolog/ /opt/zimbra/redolog/ --delete
 _rsync /opt/zimbra/data/ /opt/zimbra/data/ --exclude data.mdb --exclude mailboxd/imap-* --exclude amavisd/tmp/ --delete
 /usr/bin/rm -f /opt/zimbra/data/ldap/mdb/db/data.mdb
@@ -88,8 +88,6 @@ echo "Or stop mysql:         mysql.server stop"
 echo "And start again later: mysql.server start"
 echo
 echo "For initial copy, just proceed first."
-echo
-echo "!!! NOTE !!! It is best to do this at maintenance or low peak time!"
 echo
 echo -n "Press Enter to continue "
 read ignore
@@ -115,7 +113,7 @@ _rsync /opt/zimbra/index/ /opt/zimbra/index/ --delete
 fi
 
 echo
-echo -n "## STEP 3: Copy backup."
+echo "## STEP 3: Copy backup."
 echo "Skip this to do quick upgrade testing. This is optional."
 echo
 echo -n "Copy NOW? [y/N] "
@@ -127,7 +125,6 @@ fi
 
 echo
 echo -n "## STEP 4: Adjust data for upgrade. Proceed? [y/N] "
-echo
 read answer
 if [ "$answer" == "Y" -o "$answer" == "y" ]; then
 
